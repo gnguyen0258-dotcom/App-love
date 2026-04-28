@@ -1000,13 +1000,13 @@
         // --- Firebase Config (Placeholder - User should provide their own for private use) ---
         // I'll provide a generic one or let the user enter it in settings.
         const DEFAULT_FIREBASE_CONFIG = {
-            apiKey: "AIzaSyAs-DEMO-ONLY-REPLACE-ME",
-            authDomain: "heartsync-demo.firebaseapp.com",
-            databaseURL: "https://heartsync-demo-default-rtdb.firebaseio.com",
-            projectId: "heartsync-demo",
-            storageBucket: "heartsync-demo.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
+            apiKey: "AIzaSyDG0U1T339wFXipvDFH7JjC7q2NKvRdDnU",
+            authDomain: "applove-d9878.firebaseapp.com",
+            databaseURL: "https://applove-d9878-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "applove-d9878",
+            storageBucket: "applove-d9878.firebasestorage.app",
+            messagingSenderId: "869706177743",
+            appId: "1:869706177743:web:1c9822d97249daa4926bba"
         };
 
         class HeartSync {
@@ -1048,10 +1048,18 @@
                     { text: "Gửi 1 tấm ảnh dìm hàng nhau", done: false }
                 ];
                 
+                // Local Date Helper (Vietnam Timezone)
+                this.getLocalDate = () => {
+                    const now = new Date();
+                    return new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+                };
+
                 // Cloud Sync Init (Firebase)
-                this.loveKey = localStorage.getItem('heartsync_love_key') || '';
+                this.loveKey = (localStorage.getItem('heartsync_love_key') || '').toLowerCase();
                 this.isCloudEnabled = !!this.loveKey;
                 this.db = null;
+                this.isConnected = false;
+                this.listeners = [];
                 if (this.isCloudEnabled) this.initFirebase();
 
                 setInterval(() => this.tick(), 1000);
@@ -1063,8 +1071,19 @@
                     if (!firebase.apps.length) firebase.initializeApp(DEFAULT_FIREBASE_CONFIG);
                     this.db = firebase.database();
                     
+                    // Cleanup old listeners
+                    if (this.currentRef) this.currentRef.off();
+                    if (this.signalRef) this.signalRef.off();
+                    
+                    // Connection Monitor
+                    this.db.ref(".info/connected").on("value", (snap) => {
+                        this.isConnected = snap.val() === true;
+                        if (this.currentTab === 'couple') this.render();
+                    });
+
                     // Listen for signals (nudges) specifically
-                    this.db.ref(`couples/${this.loveKey}/signal`).on('value', (snapshot) => {
+                    this.signalRef = this.db.ref(`couples/${this.loveKey}/signal`);
+                    this.signalRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (!data) return;
                         if (data.time > this.lastSignalTime) {
@@ -1076,7 +1095,8 @@
                     });
 
                     // Listen for general room data (moods, vault, challenges)
-                    this.db.ref(`couples/${this.loveKey}`).on('value', (snapshot) => {
+                    this.currentRef = this.db.ref(`couples/${this.loveKey}`);
+                    this.currentRef.on('value', (snapshot) => {
                         const data = snapshot.val();
                         if (!data) return;
 
@@ -1090,7 +1110,7 @@
                         }
                         
                         // Sync Lover Mood
-                        const today = new Date().toISOString().split('T')[0];
+                        const today = this.getLocalDate();
                         if (data.moods && data.moods[today]) {
                             this.loverMood = data.moods[today];
                             localStorage.setItem('heartsync_lover_mood', this.loverMood);
@@ -1357,7 +1377,7 @@
             }
 
             selectMood(moodId) {
-                const today = new Date().toISOString().split('T')[0];
+                const today = this.getLocalDate();
                 const existing = this.moodHistory.findIndex(h => h.date === today);
                 const entry = { date: today, mood: moodId, note: '' };
                 if (existing > -1) {
@@ -1376,7 +1396,7 @@
             saveMoodNote() {
                 const note = document.getElementById('mood-note-input');
                 if (!note) return;
-                const today = new Date().toISOString().split('T')[0];
+                const today = this.getLocalDate();
                 const existing = this.moodHistory.findIndex(h => h.date === today);
                 if (existing > -1) {
                     this.moodHistory[existing].note = note.value;
@@ -1418,7 +1438,7 @@
             }
 
             renderMood() {
-                const today = new Date().toISOString().split('T')[0];
+                const today = this.getLocalDate();
                 const todayEntry = this.moodHistory.find(h => h.date === today);
                 const todayMood = todayEntry ? MOOD_DATA.find(m => m.id === todayEntry.mood) : null;
 
@@ -1428,7 +1448,7 @@
                 for (let i = 6; i >= 0; i--) {
                     const d = new Date();
                     d.setDate(d.getDate() - i);
-                    const dateStr = d.toISOString().split('T')[0];
+                    const dateStr = new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
                     const entry = this.moodHistory.find(h => h.date === dateStr);
                     const mood = entry ? MOOD_DATA.find(m => m.id === entry.mood) : null;
                     const isToday = i === 0;
@@ -1889,14 +1909,16 @@
                             <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">Tự đặt tên mã (ví dụ: Tên hai bạn) và gửi cho người yêu để kết nối trực tiếp.</p>
                             
                             <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" id="import-code" value="${this.loveKey}" placeholder="Ví dụ: ANH-YEU-EM-2024" style="flex: 1; font-weight: 700; color: var(--primary); font-family: 'Outfit', sans-serif;">
+                                <input type="text" id="import-code" value="${this.loveKey.toUpperCase()}" placeholder="Ví dụ: ANH-YEU-EM" style="flex: 1; font-weight: 700; color: var(--primary); font-family: 'Outfit', sans-serif; text-transform: uppercase;">
                                 <button class="btn" style="padding: 0 20px; background: #4caf50;" onclick="app.importStatus()">Kết nối</button>
                             </div>
 
                             ${this.loveKey ? `
-                                <div style="padding: 10px; background: #e8f5e9; border-radius: 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                                    <div class="status-dot" style="background: #2e7d32;"></div>
-                                    <span style="font-size: 0.8rem; color: #2e7d32; font-weight: 700;">Đang kết nối: ${this.loveKey}</span>
+                                <div style="padding: 10px; background: ${this.isConnected ? '#e8f5e9' : '#fff3e0'}; border-radius: 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                                    <div class="status-dot" style="background: ${this.isConnected ? '#2e7d32' : '#ef6c00'};"></div>
+                                    <span style="font-size: 0.8rem; color: ${this.isConnected ? '#2e7d32' : '#ef6c00'}; font-weight: 700;">
+                                        ${this.isConnected ? 'Đã thông suốt: ' + this.loveKey.toUpperCase() : 'Đang kết nối lại...'}
+                                    </span>
                                     <button onclick="app.copySyncCode()" style="margin-left: auto; background: none; border: none; color: var(--primary); font-size: 0.7rem; font-weight: 700; cursor: pointer;">Copy mã</button>
                                 </div>
                                 <button class="btn" style="width: 100%; background: #f44336; font-size: 0.75rem; padding: 8px;" onclick="app.disconnectCloud()">Ngắt kết nối / Đổi mã khác</button>
@@ -1965,20 +1987,16 @@
             }
 
             importStatus() {
-                const code = document.getElementById('import-code').value.trim();
+                let code = document.getElementById('import-code').value.trim().toLowerCase();
                 if (!code) return;
-                if (!code.startsWith('HS-')) {
-                    // Treat as Love Key connection
-                    this.loveKey = code;
-                    localStorage.setItem('heartsync_love_key', code);
-                    this.isCloudEnabled = true;
-                    this.initFirebase();
-                    alert("Kết nối đám mây thành công! Love Key: " + code);
-                    this.render();
-                    return;
-                }
-                // Fallback for old manual sync
-                alert("Đã nhận mã thủ công!");
+                
+                // Treat as Love Key connection
+                this.loveKey = code;
+                localStorage.setItem('heartsync_love_key', code);
+                this.isCloudEnabled = true;
+                this.initFirebase();
+                alert("Đã thiết lập mã kết nối: " + code.toUpperCase());
+                this.render();
             }
 
             openSpecialDays() {
