@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="HeartSync">
+  <rect width="512" height="512" rx="112" fill="#E95662"/>
+  <circle cx="392" cy="120" r="34" fill="#24776F"/>
+  <path d="M256 390C226 360 124 286 124 202C124 144 166 108 216 108C239 108 257 118 272 136C288 118 306 108 329 108C379 108 421 144 421 202C421 286 319 360 289 390L272 407L256 390Z" fill="#FFFFFF"/>
+  <path d="M272 136L272 407" stroke="#F7F7F5" stroke-width="2" opacity=".28"/>
+</svg>

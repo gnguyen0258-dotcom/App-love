@@ -1,15 +1,28 @@
 {
   "name": "heartsync-app",
-  "version": "1.0.0",
-  "description": "HeartSync - App thấu hiểu bạn gái với đồng bộ real-time",
-  "main": "server.js",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Khong gian rieng tu va real-time danh cho hai nguoi.",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "node --check api/_firebase-admin.js && node --check api/couple.js && node --check api/message.js && node --check public/firebase-messaging-sw.js",
+    "icons": "node scripts/generate-icons.mjs",
+    "smoke:ui": "node scripts/ui-smoke.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "test:rules": "npx --yes firebase-tools@13.35.1 emulators:exec --only auth,database --project demo-heartsync \"node scripts/rules-smoke.mjs\""
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "socket.io": "^4.7.2"
+    "firebase": "12.16.0",
+    "firebase-admin": "14.1.0",
+    "lucide": "1.24.0"
+  },
+  "devDependencies": {
+    "sharp": "0.35.3",
+    "vite": "8.1.4"
   }
 }

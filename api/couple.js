@@ -1,0 +1,355 @@
+const crypto = require("node:crypto");
+const {
+  adminServices,
+  authenticateRequest,
+  enforceRateLimit,
+  handleApiError,
+  requirePost,
+  sendJson,
+} = require("./_firebase-admin");
+
+const PAIR_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const PAIR_REQUEST_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000;
+const PAIR_CLAIM_LIFETIME_MS = 30 * 1000;
+
+function createPairCode() {
+  const bytes = crypto.randomBytes(8);
+  let code = "";
+  for (let index = 0; index < 8; index += 1) {
+    code += PAIR_CODE_ALPHABET[bytes[index] % PAIR_CODE_ALPHABET.length];
+  }
+  return `${code.slice(0, 4)}-${code.slice(4)}`;
+}
+
+function normalizeCode(value) {
+  return String(value || "")
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "")
+    .replace(/^(.{4})(.{4})$/, "$1-$2");
+}
+
+function isPairCode(value) {
+  return /^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/.test(value);
+}
+
+function pairKey(firstUid, secondUid) {
+  return [firstUid, secondUid].sort().join(":");
+}
+
+function apiError(message, statusCode) {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+}
+
+function publicMember(profile, decodedToken = {}, now = Date.now()) {
+  const fallbackName =
+    decodedToken.name ||
+    profile?.email?.split("@")[0] ||
+    decodedToken.email?.split("@")[0] ||
+    "Thành viên";
+  return {
+    displayName: String(profile?.displayName || fallbackName).slice(0, 60),
+    photoURL: String(profile?.photoURL || decodedToken.picture || "").slice(0, 500),
+    joinedAt: now,
+  };
+}
+
+function indexedUid(value) {
+  return typeof value === "string" ? value : value?.uid;
+}
+
+async function releasePairCode(database, code, uid) {
+  await database.ref(`pairCodes/${code}`).transaction((current) => {
+    if (indexedUid(current) === uid) return null;
+    return current;
+  });
+}
+
+async function ensurePairCode(database, uid) {
+  const profileRef = database.ref(`users/${uid}`);
+  const profile = (await profileRef.get()).val() || {};
+  const existingCode = normalizeCode(profile.pairCode);
+
+  if (isPairCode(existingCode)) {
+    const now = Date.now();
+    const result = await database.ref(`pairCodes/${existingCode}`).transaction((current) => {
+      const owner = indexedUid(current);
+      if (owner && owner !== uid) return;
+      return { uid, createdAt: Number(current?.createdAt) || now };
+    });
+    if (result.committed) return existingCode;
+  }
+
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const code = createPairCode();
+    const now = Date.now();
+    const result = await database.ref(`pairCodes/${code}`).transaction((current) => {
+      if (current) return;
+      return { uid, createdAt: now };
+    });
+    if (!result.committed) continue;
+    try {
+      await profileRef.child("pairCode").set(code);
+      return code;
+    } catch (error) {
+      await releasePairCode(database, code, uid);
+      throw error;
+    }
+  }
+
+  throw new Error("Could not allocate a unique personal pair code.");
+}
+
+function validPairRequest(request, targetUid, now = Date.now()) {
+  return Boolean(
+    request &&
+      request.targetUid === targetUid &&
+      Number(request.expiresAt) > now,
+  );
+}
+
+async function pairingStatus(database, uid) {
+  const code = await ensurePairCode(database, uid);
+  const profile = (await database.ref(`users/${uid}`).get()).val() || {};
+  if (profile.coupleId) return { code, linked: true, coupleId: profile.coupleId };
+
+  const requestRef = database.ref(`pairRequests/${uid}`);
+  const request = (await requestRef.get()).val();
+  if (!request) return { code, linked: false, waiting: false };
+  if (Number(request.expiresAt) <= Date.now()) {
+    await requestRef.remove();
+    return { code, linked: false, waiting: false };
+  }
+
+  const targetProfile = (await database.ref(`users/${request.targetUid}`).get()).val() || {};
+  if (targetProfile.coupleId) {
+    await requestRef.remove();
+    return { code, linked: false, waiting: false };
+  }
+
+  return {
+    code,
+    linked: false,
+    waiting: true,
+    targetCode: request.targetCode,
+    targetName: String(targetProfile.displayName || "Người ấy").slice(0, 60),
+    expiresAt: Number(request.expiresAt),
+  };
+}
+
+async function claimUser(database, uid, operationId, matchKey, now) {
+  const result = await database.ref(`pairClaims/${uid}`).transaction((current) => {
+    const expired = !current || Number(current.expiresAt) <= now;
+    if (!expired && current.operationId !== operationId) return;
+    return {
+      operationId,
+      pairKey: matchKey,
+      expiresAt: now + PAIR_CLAIM_LIFETIME_MS,
+    };
+  });
+  return result.committed && result.snapshot.val()?.operationId === operationId;
+}
+
+async function releaseClaims(database, uids, operationId) {
+  await Promise.all(
+    uids.map((uid) =>
+      database.ref(`pairClaims/${uid}`).transaction((current) => {
+        if (current?.operationId === operationId) return null;
+        return current;
+      }),
+    ),
+  );
+}
+
+async function submitPairCode(database, uid, decodedToken, rawCode) {
+  const ownCode = await ensurePairCode(database, uid);
+  const code = normalizeCode(rawCode);
+  if (!isPairCode(code)) {
+    throw apiError("Mã cá nhân chưa đúng định dạng.", 400);
+  }
+  if (code === ownCode) {
+    throw apiError("Bạn cần nhập mã của người ấy, không phải mã của mình.", 400);
+  }
+
+  const index = (await database.ref(`pairCodes/${code}`).get()).val();
+  const targetUid = indexedUid(index);
+  if (!targetUid) throw apiError("Không tìm thấy tài khoản dùng mã này.", 404);
+  if (targetUid === uid) {
+    throw apiError("Bạn cần nhập mã của người ấy, không phải mã của mình.", 400);
+  }
+
+  const [profileSnapshot, targetProfileSnapshot] = await Promise.all([
+    database.ref(`users/${uid}`).get(),
+    database.ref(`users/${targetUid}`).get(),
+  ]);
+  const profile = profileSnapshot.val() || {};
+  const targetProfile = targetProfileSnapshot.val() || {};
+  if (profile.coupleId) throw apiError("Tài khoản của bạn đã được liên kết.", 409);
+  if (targetProfile.coupleId) throw apiError("Người dùng mã này đã liên kết với tài khoản khác.", 409);
+
+  const now = Date.now();
+  await database.ref(`pairRequests/${uid}`).set({
+    targetUid,
+    targetCode: code,
+    createdAt: now,
+    expiresAt: now + PAIR_REQUEST_LIFETIME_MS,
+  });
+
+  const reciprocal = (await database.ref(`pairRequests/${targetUid}`).get()).val();
+  const targetName = String(targetProfile.displayName || "Người ấy").slice(0, 60);
+  if (!validPairRequest(reciprocal, uid, now)) {
+    return {
+      code: ownCode,
+      matched: false,
+      waiting: true,
+      targetCode: code,
+      targetName,
+      expiresAt: now + PAIR_REQUEST_LIFETIME_MS,
+    };
+  }
+
+  const operationId = crypto.randomUUID();
+  const matchKey = pairKey(uid, targetUid);
+  const claimOrder = [uid, targetUid].sort();
+  const claimed = [];
+  for (const claimUid of claimOrder) {
+    if (!(await claimUser(database, claimUid, operationId, matchKey, now))) {
+      await releaseClaims(database, claimed, operationId);
+      return {
+        code: ownCode,
+        matched: false,
+        waiting: true,
+        processing: true,
+        targetCode: code,
+        targetName,
+      };
+    }
+    claimed.push(claimUid);
+  }
+
+  try {
+    const [latestProfileSnapshot, latestTargetSnapshot, ownRequestSnapshot, theirRequestSnapshot] =
+      await Promise.all([
+        database.ref(`users/${uid}`).get(),
+        database.ref(`users/${targetUid}`).get(),
+        database.ref(`pairRequests/${uid}`).get(),
+        database.ref(`pairRequests/${targetUid}`).get(),
+      ]);
+    const latestProfile = latestProfileSnapshot.val() || {};
+    const latestTarget = latestTargetSnapshot.val() || {};
+
+    if (latestProfile.coupleId || latestTarget.coupleId) {
+      if (latestProfile.coupleId && latestProfile.coupleId === latestTarget.coupleId) {
+        await releaseClaims(database, claimed, operationId);
+        return { code: ownCode, matched: true, coupleId: latestProfile.coupleId };
+      }
+      throw apiError("Một trong hai tài khoản vừa được liên kết ở nơi khác.", 409);
+    }
+
+    if (
+      !validPairRequest(ownRequestSnapshot.val(), targetUid) ||
+      !validPairRequest(theirRequestSnapshot.val(), uid)
+    ) {
+      await releaseClaims(database, claimed, operationId);
+      return { code: ownCode, matched: false, waiting: true, targetCode: code, targetName };
+    }
+
+    const matchedAt = Date.now();
+    const coupleId = crypto.randomUUID().replaceAll("-", "");
+    await database.ref().update({
+      [`couples/${coupleId}/meta`]: {
+        status: "active",
+        pairingMethod: "mutual-code",
+        createdAt: matchedAt,
+        createdBy: uid,
+      },
+      [`couples/${coupleId}/members/${uid}`]: publicMember(latestProfile, decodedToken, matchedAt),
+      [`couples/${coupleId}/members/${targetUid}`]: publicMember(latestTarget, {}, matchedAt),
+      [`users/${uid}/coupleId`]: coupleId,
+      [`users/${targetUid}/coupleId`]: coupleId,
+      [`pairRequests/${uid}`]: null,
+      [`pairRequests/${targetUid}`]: null,
+      [`pairClaims/${uid}`]: null,
+      [`pairClaims/${targetUid}`]: null,
+    });
+    return { code: ownCode, matched: true, coupleId };
+  } catch (error) {
+    await releaseClaims(database, claimed, operationId);
+    throw error;
+  }
+}
+
+async function leaveCouple(database, uid) {
+  const profileRef = database.ref(`users/${uid}`);
+  const profile = (await profileRef.get()).val() || {};
+  if (!profile.coupleId) {
+    await database.ref(`pairRequests/${uid}`).remove();
+    return { left: true };
+  }
+
+  const coupleId = profile.coupleId;
+  const couple = (await database.ref(`couples/${coupleId}`).get()).val() || {};
+  const memberUids = [...new Set([uid, ...Object.keys(couple.members || {})])];
+  const memberProfiles = await Promise.all(
+    memberUids.map((memberUid) => database.ref(`users/${memberUid}`).get()),
+  );
+  const updates = {
+    [`couples/${coupleId}/members`]: null,
+    [`couples/${coupleId}/presence`]: null,
+    [`couples/${coupleId}/meta/status`]: "closed",
+    [`couples/${coupleId}/meta/closedAt`]: Date.now(),
+    [`couples/${coupleId}/meta/closedBy`]: uid,
+  };
+  memberUids.forEach((memberUid, index) => {
+    if (memberProfiles[index].val()?.coupleId === coupleId) {
+      updates[`users/${memberUid}/coupleId`] = null;
+    }
+    updates[`pairRequests/${memberUid}`] = null;
+    updates[`pairClaims/${memberUid}`] = null;
+  });
+  if (couple.meta?.inviteCode) updates[`invites/${couple.meta.inviteCode}`] = null;
+  await database.ref().update(updates);
+  return { left: true };
+}
+
+module.exports = async function handler(request, response) {
+  if (!requirePost(request, response)) return;
+  try {
+    const decodedToken = await authenticateRequest(request);
+    const { database } = adminServices();
+    const action = request.body?.action;
+    const intervals = { status: 300, "submit-code": 1000, leave: 1500 };
+    if (!Object.hasOwn(intervals, action)) {
+      throw apiError("Thao tác ghép đôi không hợp lệ.", 400);
+    }
+    await enforceRateLimit(database, decodedToken.uid, `couple-${action}`, intervals[action]);
+
+    let result;
+    if (action === "status") result = await pairingStatus(database, decodedToken.uid);
+    else if (action === "submit-code") {
+      result = await submitPairCode(
+        database,
+        decodedToken.uid,
+        decodedToken,
+        request.body?.code,
+      );
+    } else result = await leaveCouple(database, decodedToken.uid);
+    sendJson(response, 200, result);
+  } catch (error) {
+    handleApiError(response, error);
+  }
+};
+
+module.exports._test = {
+  createPairCode,
+  ensurePairCode,
+  isPairCode,
+  leaveCouple,
+  normalizeCode,
+  pairKey,
+  pairingStatus,
+  submitPairCode,
+  validPairRequest,
+};
