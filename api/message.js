@@ -6,6 +6,11 @@ const {
   requirePost,
   sendJson,
 } = require("./_firebase-admin");
+const chatMedia = require("../shared/chat-media.json");
+
+const stickersById = new Map(
+  chatMedia.stickerPacks.flatMap((pack) => pack.items).map((sticker) => [sticker.id, sticker]),
+);
 
 const invalidTokenCodes = new Set([
   "messaging/invalid-registration-token",
@@ -18,6 +23,14 @@ function cleanText(value) {
 
 function cleanNickname(value) {
   return String(value || "").trim().replace(/\s+/g, " ").slice(0, 32);
+}
+
+function cleanStickerId(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function stickerForId(value) {
+  return stickersById.get(cleanStickerId(value)) || null;
 }
 
 function senderDisplayName(couple, uid, fallbackName) {
@@ -40,8 +53,11 @@ async function sendPush({ database, messaging, partnerUid, message }) {
   if (!devices.length) return { sent: 0 };
 
   const showPreview = Boolean(recipient.preferences?.showMessagePreview);
+  const previewText = message.kind === "sticker"
+    ? `đã gửi sticker “${message.text}”.`
+    : message.text;
   const body = showPreview
-    ? `${message.senderName}: ${message.text}`.slice(0, 180)
+    ? `${message.senderName}: ${previewText}`.slice(0, 180)
     : `${message.senderName} vừa gửi cho bạn một lời nhắn.`;
 
   const result = await messaging.sendEachForMulticast({
@@ -78,8 +94,19 @@ module.exports = async function handler(request, response) {
     const { database, messaging } = adminServices();
     await enforceRateLimit(database, decodedToken.uid, "message", 650);
 
-    const text = cleanText(request.body?.text);
-    const kind = request.body?.kind === "nudge" ? "nudge" : "message";
+    const requestedKind = request.body?.kind;
+    const kind = requestedKind === "nudge"
+      ? "nudge"
+      : requestedKind === "sticker"
+        ? "sticker"
+        : "message";
+    const sticker = kind === "sticker" ? stickerForId(request.body?.stickerId) : null;
+    const text = sticker ? sticker.label : cleanText(request.body?.text);
+    if (kind === "sticker" && !sticker) {
+      const error = new Error("Sticker chưa có trong thư viện HeartSync.");
+      error.statusCode = 400;
+      throw error;
+    }
     if (!text || text.length > 1000) {
       const error = new Error("Lời nhắn cần từ 1 đến 1000 ký tự.");
       error.statusCode = 400;
@@ -115,6 +142,7 @@ module.exports = async function handler(request, response) {
       senderName: senderDisplayName(couple, decodedToken.uid, decodedToken.name),
       text,
       kind,
+      ...(sticker ? { stickerId: sticker.id } : {}),
       createdAt: Date.now(),
     };
     await messageRef.set(message);
@@ -132,4 +160,10 @@ module.exports = async function handler(request, response) {
   }
 };
 
-module.exports._test = { cleanNickname, cleanText, senderDisplayName };
+module.exports._test = {
+  cleanNickname,
+  cleanStickerId,
+  cleanText,
+  senderDisplayName,
+  stickerForId,
+};

@@ -5,6 +5,7 @@ HeartSync là PWA riêng tư dành cho hai tài khoản đã liên kết. Phase 
 - Firebase Authentication với phiên đăng nhập được giữ trên thiết bị.
 - Mỗi Gmail có một mã cá nhân; chỉ ghép đôi khi hai tài khoản đã nhập mã của nhau.
 - Check-in hằng ngày, nhịp yêu thương và trò chuyện real-time.
+- Thư viện biểu tượng và sticker HeartSync trong khung trò chuyện.
 - Bộ đếm ngày yêu và các cột mốc kỷ niệm.
 - Kho lưu trữ sở thích, số đo và những điều cần ghi nhớ.
 - Theo dõi chu kỳ có lịch ghi nhận và dự báo tham khảo.
@@ -88,6 +89,10 @@ Google Authentication dùng `signInWithPopup()` trên mọi thiết bị. Không
 ## Biệt danh đồng bộ
 
 Trong tab `Hai đứa`, cả hai thành viên có thể đặt biệt danh cho mình và người ấy rồi lưu một lần. Dữ liệu nằm tại `couples/{coupleId}/shared/nicknames/{uid}`, tối đa 32 ký tự và chỉ chấp nhận UID đang thuộc cặp. Biệt danh được ưu tiên trong thanh tiêu đề, danh sách thành viên, tin nhắn, lịch và thông báo đẩy; tên Google gốc không bị thay đổi. Để trống một ô sẽ xóa biệt danh và dùng lại tên Google.
+
+## Biểu tượng và sticker
+
+Tab `Tin nhắn` có thư viện emoji chuẩn và 24 sticker HeartSync nguyên bản trong `shared/chat-media.json`. Bộ chọn mô phỏng thao tác quen thuộc của các ứng dụng nhắn tin nhưng không đóng gói tài sản độc quyền của Instagram hoặc Messenger. Emoji được chèn vào nội dung văn bản; sticker được gửi bằng `kind: "sticker"` và một `stickerId` đã được API đối chiếu với catalog. Firebase chỉ lưu ID, nhãn và metadata tin nhắn, không lưu Base64 hoặc file ảnh sticker.
 
 ## Deploy
 

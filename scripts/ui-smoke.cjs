@@ -302,6 +302,38 @@ async function main() {
   interactions.messageSent = await evaluate(
     "Array.from(document.querySelectorAll('.message-bubble p')).some((node) => node.textContent === 'Tin nhắn kiểm thử')",
   );
+  await evaluate(
+    "document.querySelector('[data-action=\"toggle-chat-picker\"][data-picker=\"emoji\"]').click()",
+  );
+  interactions.emojiPickerOpened = await evaluate(
+    "Boolean(document.querySelector('.emoji-library .emoji-button'))",
+  );
+  await evaluate(`(() => {
+    const emoji = document.querySelector('.emoji-library .emoji-button');
+    window.__selectedEmoji = emoji.textContent;
+    emoji.click();
+  })()`);
+  interactions.emojiInserted = await evaluate(
+    "document.getElementById('message-input').value.includes(window.__selectedEmoji)",
+  );
+  await evaluate(
+    "document.querySelector('[data-action=\"toggle-chat-picker\"][data-picker=\"sticker\"]').click()",
+  );
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  audits.push(await audit("chat-sticker-picker"));
+  await screenshot("heartsync-cdp-chat-sticker-picker.png");
+  interactions.stickerPickerOpened = await evaluate(
+    "document.querySelectorAll('.sticker-library .sticker-button').length === 24",
+  );
+  await evaluate(`(() => {
+    const sticker = document.querySelector('.sticker-library .sticker-button');
+    window.__sentStickerLabel = sticker.querySelector('strong').textContent;
+    sticker.click();
+  })()`);
+  await new Promise((resolve) => setTimeout(resolve, 350));
+  interactions.stickerSent = await evaluate(
+    "Array.from(document.querySelectorAll('.message-sticker .sticker-art strong')).some((node) => node.textContent === window.__sentStickerLabel)",
+  );
 
   await evaluate(
     "document.querySelector('[data-action=\"navigate\"][data-view=\"today\"]').click()",
@@ -411,6 +443,17 @@ async function main() {
         await screenshot("heartsync-cdp-" + tool + "-desktop.png");
       }
     }
+    await send(
+      "Page.navigate",
+      { url: baseUrl + "/?preview=app&view=chat" },
+      sessionId,
+    );
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    await evaluate(
+      "document.querySelector('[data-action=\"toggle-chat-picker\"][data-picker=\"sticker\"]').click()",
+    );
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    audits.push(await audit("chat-picker-" + viewport.width));
   }
 
   for (const viewport of [

@@ -359,8 +359,8 @@ function updateAvatar(avatarData) {
   return apiRequest("/api/couple", { action: "update-avatar", avatarData });
 }
 
-function sendMessage({ text, kind = "message" }) {
-  return apiRequest("/api/message", { text, kind });
+function sendMessage({ text, kind = "message", stickerId = "" }) {
+  return apiRequest("/api/message", { text, kind, stickerId });
 }
 
 async function notificationCapability() {

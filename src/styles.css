@@ -1222,12 +1222,230 @@ select:focus-visible {
   color: rgba(255, 255, 255, 0.72);
 }
 
+.message-sticker {
+  width: 142px;
+  max-width: 46%;
+  align-self: flex-start;
+}
+
+.message-sticker--mine {
+  align-self: flex-end;
+}
+
+.message-sticker .sticker-art {
+  width: 142px;
+  max-width: 100%;
+}
+
+.message-sticker small {
+  display: block;
+  margin-top: 5px;
+  color: var(--ink-soft);
+  font-size: 0.64rem;
+}
+
+.message-sticker--mine small {
+  text-align: right;
+}
+
+.composer-dock {
+  min-width: 0;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.chat-picker {
+  max-height: min(290px, 42dvh);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-bottom: 1px solid var(--line);
+  background: #fbfbfa;
+  animation: chatPickerIn 160ms ease-out both;
+}
+
+.chat-picker__toolbar {
+  min-height: 54px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chat-picker__tabs {
+  width: min(280px, calc(100% - 50px));
+  padding: 3px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-quiet);
+}
+
+.chat-picker__tabs button {
+  min-height: 36px;
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chat-picker__tabs button[aria-selected="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(49, 37, 42, 0.08);
+}
+
+.chat-picker__tabs svg {
+  width: 17px;
+  height: 17px;
+}
+
+.chat-picker__toolbar .icon-button {
+  width: 36px;
+  height: 36px;
+}
+
+.chat-picker__body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px;
+}
+
+.emoji-library,
+.sticker-library {
+  display: grid;
+  gap: 18px;
+}
+
+.media-group h3 {
+  margin: 0 0 9px;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 4px;
+}
+
+.emoji-button {
+  width: 100%;
+  aspect-ratio: 1;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 1.45rem;
+  cursor: pointer;
+}
+
+.emoji-button:hover,
+.emoji-button:focus-visible {
+  background: var(--surface-quiet);
+}
+
+.sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 9px;
+}
+
+.sticker-button {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  cursor: pointer;
+}
+
+.sticker-art {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 11px 8px 10px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  place-items: center;
+  gap: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(36, 33, 36, 0.09);
+  border-radius: var(--radius);
+  transition: transform 140ms ease, border-color 140ms ease;
+}
+
+.sticker-button:hover .sticker-art,
+.sticker-button:focus-visible .sticker-art {
+  transform: translateY(-2px);
+  border-color: rgba(36, 33, 36, 0.2);
+}
+
+.sticker-art__symbol {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  align-self: end;
+  overflow: hidden;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.sticker-art strong {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  align-self: start;
+  overflow-wrap: anywhere;
+  font-size: 0.68rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.sticker-art--coral { background: #ffe3e5; color: #a82f3c; }
+.sticker-art--gold { background: #fff0c4; color: #79550a; }
+.sticker-art--lilac { background: #eee6fa; color: #60447e; }
+.sticker-art--mint { background: #dff1e9; color: #245f53; }
+.sticker-art--rose { background: #f9e3ed; color: #8d3f64; }
+.sticker-art--sky { background: #e2eef7; color: #355f7b; }
+
+.composer-tools {
+  display: grid;
+  grid-template-columns: repeat(2, 42px);
+  gap: 5px;
+}
+
+.composer-tools .icon-button.is-active {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
 .composer {
   padding: 14px;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: end;
   gap: 10px;
-  border-top: 1px solid var(--line);
   background: var(--surface);
 }
 
@@ -1249,6 +1467,11 @@ select:focus-visible {
   width: 48px;
   min-height: 48px;
   padding: 0;
+}
+
+@keyframes chatPickerIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .couple-grid,
@@ -2911,6 +3134,56 @@ select:focus-visible {
 
   .message-bubble {
     max-width: 84%;
+  }
+
+  .message-sticker {
+    max-width: 54%;
+  }
+
+  .chat-picker {
+    max-height: min(300px, 44dvh);
+  }
+
+  .chat-picker__body {
+    padding: 12px;
+  }
+
+  .sticker-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .sticker-art {
+    padding: 9px 6px 8px;
+  }
+
+  .sticker-art__symbol {
+    font-size: 2rem;
+  }
+
+  .composer {
+    padding: 10px;
+    gap: 7px;
+  }
+
+  .composer-tools {
+    grid-template-columns: repeat(2, 36px);
+    gap: 4px;
+  }
+
+  .composer-tools .icon-button {
+    width: 36px;
+    height: 44px;
+  }
+
+  .composer textarea {
+    min-height: 44px;
+    padding: 10px 11px;
+  }
+
+  .composer .btn {
+    width: 44px;
+    min-height: 44px;
   }
 
   .toast-host {

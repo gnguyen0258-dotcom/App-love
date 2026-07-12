@@ -33,8 +33,10 @@ import {
   Send,
   Settings,
   ShieldCheck,
+  SmilePlus,
   Smartphone,
   Sparkles,
+  Sticker,
   StickyNote,
   Timer,
   TicketCheck,
@@ -44,10 +46,12 @@ import {
   UsersRound,
   Utensils,
   Wifi,
+  X,
   createIcons,
 } from "lucide";
 import { firebaseService } from "./firebase-client.js";
 import { createDemoService } from "./demo-service.js";
+import chatMedia from "../shared/chat-media.json";
 
 const ICONS = {
   Archive,
@@ -83,8 +87,10 @@ const ICONS = {
   Send,
   Settings,
   ShieldCheck,
+  SmilePlus,
   Smartphone,
   Sparkles,
+  Sticker,
   StickyNote,
   Timer,
   TicketCheck,
@@ -94,6 +100,7 @@ const ICONS = {
   UsersRound,
   Utensils,
   Wifi,
+  X,
 };
 
 const params = new URLSearchParams(window.location.search);
@@ -126,6 +133,10 @@ const nudgeLabels = {
   kiss: "Gửi một nụ hôn",
   heart: "Tim mình đang nhớ bạn",
 };
+const stickersById = new Map(
+  chatMedia.stickerPacks.flatMap((pack) => pack.items).map((sticker) => [sticker.id, sticker]),
+);
+const stickerTones = new Set(["coral", "gold", "lilac", "mint", "rose", "sky"]);
 
 const dailyQuestions = [
   "Khoảnh khắc gần đây nào khiến bạn thấy được người ấy yêu thương?",
@@ -187,6 +198,7 @@ const state = {
   busy: false,
   error: "",
   messageDraft: "",
+  chatPicker: null,
   dailyAnswerDraft: "",
   checkinDraft: { mood: "", need: "", note: "" },
   notification: { supported: false, permission: "default", registered: false },
@@ -231,6 +243,14 @@ function safeAvatarData(value) {
 
 function cleanNickname(value) {
   return String(value || "").trim().replace(/\s+/g, " ").slice(0, 32);
+}
+
+function stickerForId(value) {
+  return stickersById.get(String(value || "").trim().toLowerCase()) || null;
+}
+
+function stickerTone(value) {
+  return stickerTones.has(value) ? value : "coral";
 }
 
 async function prepareAvatarData(file) {
@@ -964,16 +984,22 @@ function waitingMarkup() {
   `;
 }
 
+function messagePreviewText(message) {
+  if (message.kind !== "sticker") return message.text || "";
+  const sticker = stickerForId(message.stickerId);
+  return sticker ? `Sticker: ${sticker.label}` : message.text || "Sticker";
+}
+
 function recentActivityMarkup() {
   const recent = state.messages.slice(-4).reverse();
   if (!recent.length) return `<p class="message-empty">Lời nhắn đầu tiên sẽ xuất hiện ở đây.</p>`;
   return `<div class="activity-list">
     ${recent.map((message) => `
       <div class="activity-item">
-        <span class="activity-icon"><i data-lucide="${message.kind === "nudge" ? "heart" : "message-circle"}"></i></span>
+        <span class="activity-icon"><i data-lucide="${message.kind === "nudge" ? "heart" : message.kind === "sticker" ? "sticker" : "message-circle"}"></i></span>
         <div>
           <p>${escapeHTML(message.senderId === state.user.uid ? "Bạn" : memberDisplayName(message.senderId, message.senderName || "Người ấy"))}</p>
-          <small>${escapeHTML(message.text)}</small>
+          <small>${escapeHTML(messagePreviewText(message))}</small>
         </div>
         <span class="activity-time">${formatTime(message.createdAt)}</span>
       </div>
@@ -996,13 +1022,80 @@ function renderChat() {
         <div class="message-list" id="message-list" aria-live="polite">
           ${messageListMarkup()}
         </div>
-        <form class="composer" data-form="message">
-          <label class="sr-only" for="message-input">Lời nhắn</label>
-          <textarea id="message-input" name="message" maxlength="1000" rows="1" placeholder="Viết cho người ấy..." ${partner ? "" : "disabled"}>${escapeHTML(state.messageDraft)}</textarea>
-          <button class="btn btn--primary" type="submit" aria-label="Gửi lời nhắn" title="Gửi lời nhắn" ${partner && !state.busy ? "" : "disabled"}><i data-lucide="send"></i></button>
-        </form>
+        <div class="composer-dock">
+          ${chatPickerMarkup()}
+          <form class="composer" data-form="message">
+            <div class="composer-tools" aria-label="Thêm vào tin nhắn">
+              <button class="icon-button ${state.chatPicker === "emoji" ? "is-active" : ""}" type="button" data-action="toggle-chat-picker" data-picker="emoji" aria-label="Mở thư viện biểu tượng" title="Biểu tượng" aria-expanded="${state.chatPicker === "emoji"}" aria-controls="chat-media-picker" ${partner ? "" : "disabled"}><i data-lucide="smile-plus"></i></button>
+              <button class="icon-button ${state.chatPicker === "sticker" ? "is-active" : ""}" type="button" data-action="toggle-chat-picker" data-picker="sticker" aria-label="Mở thư viện sticker" title="Sticker" aria-expanded="${state.chatPicker === "sticker"}" aria-controls="chat-media-picker" ${partner ? "" : "disabled"}><i data-lucide="sticker"></i></button>
+            </div>
+            <label class="sr-only" for="message-input">Lời nhắn</label>
+            <textarea id="message-input" name="message" maxlength="1000" rows="1" placeholder="Viết cho người ấy..." ${partner ? "" : "disabled"}>${escapeHTML(state.messageDraft)}</textarea>
+            <button class="btn btn--primary" type="submit" aria-label="Gửi lời nhắn" title="Gửi lời nhắn" ${partner && !state.busy ? "" : "disabled"}><i data-lucide="send"></i></button>
+          </form>
+        </div>
       </section>
     </main>
+  `;
+}
+
+function chatPickerMarkup() {
+  if (!state.chatPicker) return "";
+  const emojiActive = state.chatPicker === "emoji";
+  return `
+    <section class="chat-picker" id="chat-media-picker" aria-label="Thư viện biểu tượng và sticker">
+      <div class="chat-picker__toolbar">
+        <div class="chat-picker__tabs" role="tablist" aria-label="Loại nội dung">
+          <button type="button" role="tab" data-action="select-chat-picker" data-picker="emoji" aria-selected="${emojiActive}"><i data-lucide="smile-plus"></i><span>Biểu tượng</span></button>
+          <button type="button" role="tab" data-action="select-chat-picker" data-picker="sticker" aria-selected="${!emojiActive}"><i data-lucide="sticker"></i><span>Sticker</span></button>
+        </div>
+        <button class="icon-button" type="button" data-action="close-chat-picker" aria-label="Đóng thư viện" title="Đóng"><i data-lucide="x"></i></button>
+      </div>
+      <div class="chat-picker__body">
+        ${emojiActive ? emojiLibraryMarkup() : stickerLibraryMarkup()}
+      </div>
+    </section>
+  `;
+}
+
+function emojiLibraryMarkup() {
+  return `<div class="emoji-library">
+    ${chatMedia.emojiGroups.map((group) => `
+      <section class="media-group" aria-labelledby="emoji-group-${escapeHTML(group.id)}">
+        <h3 id="emoji-group-${escapeHTML(group.id)}">${escapeHTML(group.label)}</h3>
+        <div class="emoji-grid">
+          ${group.items.map((emoji) => `
+            <button class="emoji-button" type="button" data-action="insert-emoji" data-emoji="${escapeHTML(emoji)}" aria-label="Chèn ${escapeHTML(emoji)}" title="${escapeHTML(emoji)}">${escapeHTML(emoji)}</button>
+          `).join("")}
+        </div>
+      </section>
+    `).join("")}
+  </div>`;
+}
+
+function stickerLibraryMarkup() {
+  return `<div class="sticker-library">
+    ${chatMedia.stickerPacks.map((pack) => `
+      <section class="media-group" aria-labelledby="sticker-pack-${escapeHTML(pack.id)}">
+        <h3 id="sticker-pack-${escapeHTML(pack.id)}">${escapeHTML(pack.label)}</h3>
+        <div class="sticker-grid">
+          ${pack.items.map((sticker) => `
+            <button class="sticker-button" type="button" data-action="send-sticker" data-sticker-id="${escapeHTML(sticker.id)}" aria-label="Gửi sticker ${escapeHTML(sticker.label)}" title="${escapeHTML(sticker.label)}">
+              ${stickerArtMarkup(sticker)}
+            </button>
+          `).join("")}
+        </div>
+      </section>
+    `).join("")}
+  </div>`;
+}
+
+function stickerArtMarkup(sticker) {
+  return `
+    <span class="sticker-art sticker-art--${stickerTone(sticker.tone)}" role="img" aria-label="${escapeHTML(sticker.label)}">
+      <span class="sticker-art__symbol" aria-hidden="true">${escapeHTML(sticker.symbol)}</span>
+      <strong>${escapeHTML(sticker.label)}</strong>
+    </span>
   `;
 }
 
@@ -1014,6 +1107,15 @@ function messageListMarkup() {
     .map((message) => {
       const mine = message.senderId === state.user.uid;
       const senderName = memberDisplayName(message.senderId, message.senderName || "Người ấy");
+      const sticker = message.kind === "sticker" ? stickerForId(message.stickerId) : null;
+      if (sticker) {
+        return `
+          <div class="message-sticker ${mine ? "message-sticker--mine" : ""}">
+            ${stickerArtMarkup(sticker)}
+            <small>${mine ? "Bạn" : escapeHTML(senderName)} · ${formatTime(message.createdAt)}</small>
+          </div>
+        `;
+      }
       if (message.kind === "nudge") {
         return `<div class="message-bubble message-bubble--nudge">${escapeHTML(mine ? `Bạn: ${message.text}` : `${senderName}: ${message.text}`)}</div>`;
       }
@@ -1721,6 +1823,7 @@ async function handleAuthenticatedUser(user) {
     cleanupCoupleSubscriptions();
     state.profile = null;
     state.notification = { supported: false, permission: "default", registered: false };
+    state.chatPicker = null;
     notificationRestoredFor = null;
     pairingLoadedFor = null;
     state.pairing = { loading: true, code: "", linked: false, waiting: false };
@@ -1799,6 +1902,7 @@ appRoot.addEventListener("click", (event) => {
     if (code) navigator.clipboard.writeText(code).then(() => toast("Đã sao chép mã của bạn."));
   } else if (action === "navigate") {
     state.view = button.dataset.view;
+    if (state.view !== "chat") state.chatPicker = null;
     if (button.dataset.tool) state.toolView = button.dataset.tool;
     syncRoute();
     render();
@@ -1807,6 +1911,45 @@ appRoot.addEventListener("click", (event) => {
     state.toolView = button.dataset.tool;
     syncRoute();
     render();
+  } else if (action === "toggle-chat-picker") {
+    const picker = button.dataset.picker;
+    state.chatPicker = state.chatPicker === picker ? null : picker;
+    render();
+  } else if (action === "select-chat-picker") {
+    state.chatPicker = button.dataset.picker;
+    render();
+  } else if (action === "close-chat-picker") {
+    state.chatPicker = null;
+    render();
+    document.getElementById("message-input")?.focus();
+  } else if (action === "insert-emoji") {
+    const input = document.getElementById("message-input");
+    const emoji = button.dataset.emoji || "";
+    if (!input || !emoji) return;
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? start;
+    const nextValue = `${input.value.slice(0, start)}${emoji}${input.value.slice(end)}`;
+    if (nextValue.length > 1000) {
+      toast("Lời nhắn đã đạt giới hạn 1.000 ký tự.", "error");
+      return;
+    }
+    input.value = nextValue;
+    state.messageDraft = nextValue;
+    const nextCursor = start + emoji.length;
+    input.focus();
+    input.setSelectionRange(nextCursor, nextCursor);
+  } else if (action === "send-sticker") {
+    const sticker = stickerForId(button.dataset.stickerId);
+    if (!sticker || !partnerMember()) return;
+    state.chatPicker = null;
+    runBusy(async () => {
+      await service.sendMessage({
+        text: sticker.label,
+        kind: "sticker",
+        stickerId: sticker.id,
+      });
+      toast("Đã gửi sticker.");
+    });
   } else if (action === "change-cycle-month") {
     state.cycleCursor = shiftMonth(state.cycleCursor, Number(button.dataset.delta));
     render();
@@ -1959,6 +2102,13 @@ appRoot.addEventListener("input", (event) => {
   }
 });
 
+appRoot.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !state.chatPicker) return;
+  state.chatPicker = null;
+  render();
+  document.getElementById("message-input")?.focus();
+});
+
 appRoot.addEventListener("submit", (event) => {
   const form = event.target.closest("form[data-form]");
   if (!form) return;
@@ -2099,6 +2249,7 @@ appRoot.addEventListener("submit", (event) => {
     const text = String(data.get("message") || "").trim();
     if (!text) return;
     state.messageDraft = "";
+    state.chatPicker = null;
     runBusy(async () => {
       await service.sendMessage({ text });
       toast("Đã gửi lời nhắn.");

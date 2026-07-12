@@ -1,0 +1,68 @@
+{
+  "emojiGroups": [
+    {
+      "id": "love",
+      "label": "Yêu thương",
+      "items": ["❤️", "❣️", "🧡", "💛", "💚", "💟", "💙", "💜", "🤎", "🖤", "🤍", "💕", "💞", "💓", "💗", "💖", "💘", "💝", "❤️‍🔥", "❤️‍🩹", "💑", "😘", "🥰", "😍"]
+    },
+    {
+      "id": "feelings",
+      "label": "Cảm xúc",
+      "items": ["😀", "😄", "😆", "😂", "🤣", "😊", "☺️", "🙂", "🙃", "🥺", "😢", "😌", "😍", "🥰", "😘", "😋", "😜", "🤭", "🙈", "😇", "😭", "😤", "😠", "🤯"]
+    },
+    {
+      "id": "gestures",
+      "label": "Cử chỉ",
+      "items": ["👍", "👎", "👌", "✌️", "🤞", "👆", "🤟", "🤘", "👏", "🙌", "👐", "🤲", "🤝", "🙏", "💪", "🤗", "👋", "🤚", "💞", "☝️", "👀", "💋", "💅", "🤍"]
+    },
+    {
+      "id": "daily",
+      "label": "Ngày thường",
+      "items": ["☀️", "🌙", "⭐", "✨", "☕", "🍵", "🍜", "🍕", "🍰", "🍓", "🌹", "🎁", "🎉", "🎬", "🎧", "📸", "🏠", "🚗", "🛵", "✈️", "🌧️", "🔥", "💯", "💤"]
+    }
+  ],
+  "stickerPacks": [
+    {
+      "id": "together",
+      "label": "Hai đứa",
+      "items": [
+        { "id": "hug-tight", "symbol": "🤗", "label": "Ôm thật chặt", "tone": "coral" },
+        { "id": "miss-you", "symbol": "🥺💗", "label": "Nhớ bạn quá", "tone": "lilac" },
+        { "id": "kiss-you", "symbol": "😘", "label": "Hôn một cái", "tone": "rose" },
+        { "id": "my-person", "symbol": "💑", "label": "Người thương của mình", "tone": "mint" },
+        { "id": "love-you", "symbol": "❤️‍🔥", "label": "Yêu bạn", "tone": "coral" },
+        { "id": "heart-home", "symbol": "🏡💞", "label": "Nhà là có nhau", "tone": "sky" },
+        { "id": "holding-hands", "symbol": "🤝💗", "label": "Nắm tay nhé", "tone": "gold" },
+        { "id": "always-us", "symbol": "♾️💖", "label": "Luôn là hai đứa", "tone": "lilac" }
+      ]
+    },
+    {
+      "id": "everyday",
+      "label": "Ngày thường",
+      "items": [
+        { "id": "good-morning", "symbol": "☀️☕", "label": "Chào buổi sáng", "tone": "gold" },
+        { "id": "sleep-well", "symbol": "🌙💤", "label": "Ngủ ngon nhé", "tone": "sky" },
+        { "id": "eat-yet", "symbol": "🍜👀", "label": "Ăn gì chưa?", "tone": "coral" },
+        { "id": "coming-home", "symbol": "🏠🏃", "label": "Mình về đây", "tone": "mint" },
+        { "id": "call-me", "symbol": "📞💗", "label": "Gọi mình nhé", "tone": "rose" },
+        { "id": "busy-now", "symbol": "🧑‍💻💨", "label": "Đang bận một chút", "tone": "sky" },
+        { "id": "on-my-way", "symbol": "🛵✨", "label": "Đang tới đây", "tone": "gold" },
+        { "id": "take-care", "symbol": "🧣💛", "label": "Nhớ giữ sức", "tone": "lilac" }
+      ]
+    },
+    {
+      "id": "reactions",
+      "label": "Cảm xúc",
+      "items": [
+        { "id": "big-laugh", "symbol": "🤣", "label": "Cười xỉu", "tone": "gold" },
+        { "id": "shy-love", "symbol": "🙈💕", "label": "Ngại quá", "tone": "rose" },
+        { "id": "tiny-angry", "symbol": "😤💢", "label": "Hơi giận đó", "tone": "coral" },
+        { "id": "sorry-love", "symbol": "🥹🤍", "label": "Xin lỗi nha", "tone": "sky" },
+        { "id": "proud-you", "symbol": "🥳👏", "label": "Tự hào về bạn", "tone": "mint" },
+        { "id": "cheer-up", "symbol": "📣💪", "label": "Cố lên", "tone": "lilac" },
+        { "id": "happy-dance", "symbol": "💃✨", "label": "Vui quá", "tone": "gold" },
+        { "id": "need-hug", "symbol": "🥺🤗", "label": "Cần một cái ôm", "tone": "rose" }
+      ]
+    }
+  ]
+}

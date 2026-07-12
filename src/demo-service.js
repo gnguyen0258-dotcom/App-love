@@ -349,7 +349,7 @@ export function createDemoService(route = "app") {
       publish("profile", demoProfile);
       return { updated: true, customAvatar: Boolean(avatarData) };
     },
-    async sendMessage({ text, kind = "message" }) {
+    async sendMessage({ text, kind = "message", stickerId = "" }) {
       const senderName = demoCouple.shared.nicknames?.[demoUser.uid] || demoUser.displayName;
       const message = {
         id: crypto.randomUUID(),
@@ -357,6 +357,7 @@ export function createDemoService(route = "app") {
         senderName,
         text,
         kind,
+        ...(stickerId ? { stickerId } : {}),
         createdAt: Date.now(),
       };
       demoMessages = [...demoMessages, message];

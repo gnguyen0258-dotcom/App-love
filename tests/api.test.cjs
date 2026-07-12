@@ -107,6 +107,12 @@ test("message sender names prefer the synchronized nickname", () => {
   );
 });
 
+test("stickers resolve only from the bundled HeartSync catalog", () => {
+  assert.equal(messageHandler._test.cleanStickerId("  HUG-TIGHT "), "hug-tight");
+  assert.equal(messageHandler._test.stickerForId("hug-tight")?.label, "Ôm thật chặt");
+  assert.equal(messageHandler._test.stickerForId("messenger-private-pack"), null);
+});
+
 test("API endpoints reject unsupported methods", async () => {
   const response = responseDouble();
   await coupleHandler({ method: "GET", headers: {} }, response);
