@@ -7,6 +7,8 @@ const chromePath =
   process.env.CHROME_PATH || "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const baseUrl = process.env.HEARTSYNC_URL || "http://127.0.0.1:5173";
 const targetOrigin = new URL(baseUrl).origin;
+let activeChrome = null;
+let activeSocket = null;
 
 async function main() {
   const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), "heartsync-cdp-"));
@@ -23,6 +25,7 @@ async function main() {
     ],
     { stdio: ["ignore", "ignore", "pipe"] },
   );
+  activeChrome = chrome;
 
   let stderr = "";
   const browserWebSocket = await new Promise((resolve, reject) => {
@@ -39,6 +42,7 @@ async function main() {
   });
 
   const socket = new WebSocket(browserWebSocket);
+  activeSocket = socket;
   await new Promise((resolve, reject) => {
     socket.addEventListener("open", resolve, { once: true });
     socket.addEventListener("error", reject, { once: true });
@@ -103,7 +107,6 @@ async function main() {
     sessionId,
   );
   await send("Page.reload", { ignoreCache: true }, sessionId);
-  await new Promise((resolve) => setTimeout(resolve, 1_200));
 
   async function evaluate(expression) {
     const result = await send(
@@ -114,6 +117,20 @@ async function main() {
     if (result.exceptionDetails) throw new Error(result.exceptionDetails.text);
     return result.result.value;
   }
+
+  async function waitFor(expression, label, timeoutMs = 20_000) {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      if (await evaluate(expression).catch(() => false)) return;
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    }
+    throw new Error(`${label} did not become ready within ${timeoutMs}ms`);
+  }
+
+  await waitFor(
+    "Boolean(document.querySelector('[data-action=\"navigate\"][data-view=\"today\"]'))",
+    "App preview",
+  );
 
   async function screenshot(name) {
     const result = await send(
@@ -559,9 +576,13 @@ async function main() {
   console.log(JSON.stringify({ audits, interactions, runtimeErrors }, null, 2));
   socket.close();
   chrome.kill();
+  activeSocket = null;
+  activeChrome = null;
 }
 
 main().catch((error) => {
+  activeSocket?.close();
+  activeChrome?.kill();
   console.error(error);
   process.exitCode = 1;
 });
