@@ -95,6 +95,18 @@ test("message input is trimmed while preserving line breaks", () => {
   assert.equal(messageHandler._test.cleanText("  Xin chào\r\nngười ấy  "), "Xin chào\nngười ấy");
 });
 
+test("message sender names prefer the synchronized nickname", () => {
+  const couple = {
+    members: { "user-a": { displayName: "Google Name" } },
+    shared: { nicknames: { "user-a": "  Bé yêu  " } },
+  };
+  assert.equal(messageHandler._test.senderDisplayName(couple, "user-a"), "Bé yêu");
+  assert.equal(
+    messageHandler._test.senderDisplayName({ members: couple.members }, "user-a"),
+    "Google Name",
+  );
+});
+
 test("API endpoints reject unsupported methods", async () => {
   const response = responseDouble();
   await coupleHandler({ method: "GET", headers: {} }, response);

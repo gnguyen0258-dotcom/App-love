@@ -206,6 +206,16 @@ async function savePreference(uid, key, value) {
   await set(ref(database, `users/${uid}/preferences/${key}`), value);
 }
 
+async function saveNicknames(coupleId, nicknames) {
+  const values = Object.fromEntries(
+    Object.entries(nicknames || {}).map(([uid, value]) => {
+      const nickname = String(value || "").trim().replace(/\s+/g, " ").slice(0, 32);
+      return [uid, nickname || null];
+    }),
+  );
+  await update(ref(database, `couples/${coupleId}/shared/nicknames`), values);
+}
+
 async function saveRelationshipDate(coupleId, uid, startDate) {
   await set(ref(database, `couples/${coupleId}/shared/relationship`), {
     startDate,
@@ -425,6 +435,7 @@ export const firebaseService = {
   stopPresence,
   saveCheckin,
   savePreference,
+  saveNicknames,
   saveRelationshipDate,
   saveVault,
   saveCycle,

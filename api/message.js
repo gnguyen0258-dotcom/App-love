@@ -16,6 +16,16 @@ function cleanText(value) {
   return String(value || "").trim().replace(/\r\n/g, "\n");
 }
 
+function cleanNickname(value) {
+  return String(value || "").trim().replace(/\s+/g, " ").slice(0, 32);
+}
+
+function senderDisplayName(couple, uid, fallbackName) {
+  const nickname = cleanNickname(couple?.shared?.nicknames?.[uid]);
+  if (nickname) return nickname;
+  return String(couple?.members?.[uid]?.displayName || fallbackName || "Người ấy").slice(0, 60);
+}
+
 function appLink() {
   if (process.env.APP_BASE_URL) return `${process.env.APP_BASE_URL.replace(/\/$/, "")}/?view=chat`;
   return "/?view=chat";
@@ -98,12 +108,11 @@ module.exports = async function handler(request, response) {
       throw error;
     }
 
-    const sender = couple.members[decodedToken.uid];
     const messageRef = database.ref(`couples/${profile.coupleId}/messages`).push();
     const message = {
       id: messageRef.key,
       senderId: decodedToken.uid,
-      senderName: String(sender.displayName || decodedToken.name || "Người ấy").slice(0, 60),
+      senderName: senderDisplayName(couple, decodedToken.uid, decodedToken.name),
       text,
       kind,
       createdAt: Date.now(),
@@ -123,4 +132,4 @@ module.exports = async function handler(request, response) {
   }
 };
 
-module.exports._test = { cleanText };
+module.exports._test = { cleanNickname, cleanText, senderDisplayName };

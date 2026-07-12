@@ -73,6 +73,12 @@
           }
         },
         "shared": {
+          "nicknames": {
+            "$uid": {
+              ".write": "auth != null && root.child('couples').child($coupleId).child('members').child(auth.uid).exists() && root.child('couples').child($coupleId).child('members').child($uid).exists()",
+              ".validate": "!newData.exists() || (newData.isString() && newData.val().length > 0 && newData.val().length <= 32)"
+            }
+          },
           "relationship": {
             ".write": "auth != null && root.child('couples').child($coupleId).child('members').child(auth.uid).exists()",
             ".validate": "newData.hasChildren(['startDate', 'updatedAt', 'updatedBy']) && newData.child('startDate').isString() && newData.child('startDate').val().length === 10 && newData.child('updatedAt').isNumber() && newData.child('updatedBy').val() === auth.uid",

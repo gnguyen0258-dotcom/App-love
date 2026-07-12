@@ -320,6 +320,21 @@ async function main() {
   );
 
   await evaluate(
+    "document.querySelector('[data-action=\"navigate\"][data-view=\"couple\"]').click()",
+  );
+  await evaluate(`(() => {
+    const form = document.querySelector('[data-form="nicknames"]');
+    form.querySelectorAll('[data-nickname-uid]').forEach((input) => {
+      input.value = input.dataset.nicknameUid === "demo-giang" ? "Mình" : "Bé yêu";
+    });
+    form.requestSubmit();
+  })()`);
+  await new Promise((resolve) => setTimeout(resolve, 350));
+  interactions.nicknamesSynced = await evaluate(
+    "document.querySelector('.topbar__pair strong')?.textContent.trim() === 'Mình & Bé yêu'",
+  );
+
+  await evaluate(
     "document.querySelector('[data-action=\"navigate\"][data-view=\"settings\"]').click()",
   );
   interactions.refreshAvailable = await evaluate(

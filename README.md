@@ -85,6 +85,10 @@ Nút làm mới xuất hiện ở màn hình đăng nhập, ghép đôi và than
 
 Google Authentication dùng `signInWithPopup()` trên mọi thiết bị. Không tự chuyển sang `signInWithRedirect()` khi popup bị chặn vì Safari 16.1+ chặn bộ nhớ bên thứ ba của Firebase Auth trên domain Vercel. Lệnh mở popup được gọi trước khi giao diện chuyển sang trạng thái bận để giữ nguyên user activation trên Safari.
 
+## Biệt danh đồng bộ
+
+Trong tab `Hai đứa`, cả hai thành viên có thể đặt biệt danh cho mình và người ấy rồi lưu một lần. Dữ liệu nằm tại `couples/{coupleId}/shared/nicknames/{uid}`, tối đa 32 ký tự và chỉ chấp nhận UID đang thuộc cặp. Biệt danh được ưu tiên trong thanh tiêu đề, danh sách thành viên, tin nhắn, lịch và thông báo đẩy; tên Google gốc không bị thay đổi. Để trống một ô sẽ xóa biệt danh và dùng lại tên Google.
+
 ## Deploy
 
 Import repo GitHub vào Vercel với Framework Preset `Vite`. Mỗi lần push nhánh `main`, Vercel build `dist` và triển khai các API trong thư mục `api/`.

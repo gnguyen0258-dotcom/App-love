@@ -226,6 +226,13 @@ try {
     await databaseRequest("GET", `couples/${coupleId}`, { token: second.token }),
     "A non-member must not read the couple",
   );
+  assertDenied(
+    await databaseRequest("PUT", `couples/${coupleId}/shared/nicknames/${second.uid}`, {
+      token: first.token,
+      body: "Nguoi ay",
+    }),
+    "A member cannot assign a nickname to an account outside the couple",
+  );
 
   assertAllowed(
     await databaseRequest("PUT", `couples/${coupleId}/shared/relationship`, {
@@ -330,6 +337,42 @@ try {
       },
     }),
     "The trusted backend can complete the second membership",
+  );
+  assertAllowed(
+    await databaseRequest("PATCH", `couples/${coupleId}/shared/nicknames`, {
+      token: first.token,
+      body: {
+        [first.uid]: "Minh",
+        [second.uid]: "Be yeu",
+      },
+    }),
+    "Either member can save both synchronized nicknames",
+  );
+  const nicknameRead = await databaseRequest("GET", `couples/${coupleId}/shared/nicknames`, {
+    token: second.token,
+  });
+  assertAllowed(nicknameRead, "The partner can read synchronized nicknames");
+  assert.equal(JSON.parse(nicknameRead.text)[first.uid], "Minh");
+  assertAllowed(
+    await databaseRequest("PUT", `couples/${coupleId}/shared/nicknames/${first.uid}`, {
+      token: second.token,
+      body: "Nguoi thuong",
+    }),
+    "The partner can update either nickname",
+  );
+  assertDenied(
+    await databaseRequest("PUT", `couples/${coupleId}/shared/nicknames/${first.uid}`, {
+      token: second.token,
+      body: "x".repeat(33),
+    }),
+    "Nicknames longer than 32 characters must be rejected",
+  );
+  assertDenied(
+    await databaseRequest("PUT", `couples/${coupleId}/shared/nicknames/not-a-member`, {
+      token: first.token,
+      body: "Khong hop le",
+    }),
+    "Clients cannot create nickname entries for unknown members",
   );
   assertAllowed(
     await databaseRequest("PUT", `couples/${coupleId}/shared/dailyQuestions/2026-07-11/${first.uid}`, {

@@ -229,6 +229,10 @@ function safeAvatarData(value) {
     : "";
 }
 
+function cleanNickname(value) {
+  return String(value || "").trim().replace(/\s+/g, " ").slice(0, 32);
+}
+
 async function prepareAvatarData(file) {
   if (!file || (file.type && !file.type.startsWith("image/"))) {
     throw new Error("Hãy chọn một tệp ảnh.");
@@ -517,11 +521,14 @@ function avatarMarkup(person, extraClass = "") {
 
 function avatarEditorMarkup(compact = false) {
   const hasCustomAvatar = Boolean(safeAvatarData(state.profile?.avatarData));
+  const displayName = !compact && state.profile?.coupleId
+    ? myMember().displayName
+    : state.profile.displayName || "Bạn";
   return `
     <div class="avatar-editor ${compact ? "avatar-editor--compact" : ""}">
-      ${avatarMarkup(state.profile, "avatar--profile")}
+      ${avatarMarkup({ ...state.profile, displayName }, "avatar--profile")}
       <div class="avatar-editor__copy">
-        <strong>${escapeHTML(state.profile.displayName || "Bạn")}</strong>
+        <strong>${escapeHTML(displayName)}</strong>
         <span>${hasCustomAvatar ? "Ảnh riêng đang hiển thị cho hai bạn." : "Đang dùng ảnh từ tài khoản Google."}</span>
       </div>
       <div class="avatar-editor__actions">
@@ -711,7 +718,15 @@ function renderPairing() {
 }
 
 function memberEntries() {
-  return Object.entries(state.couple?.members || {}).map(([uid, value]) => ({ uid, ...value }));
+  const nicknames = state.couple?.shared?.nicknames || {};
+  return Object.entries(state.couple?.members || {})
+    .map(([uid, value]) => ({
+      uid,
+      ...value,
+      accountName: value.displayName || "Thành viên",
+      displayName: cleanNickname(nicknames[uid]) || value.displayName || "Thành viên",
+    }))
+    .sort((first, second) => Number(first.uid !== state.user.uid) - Number(second.uid !== state.user.uid));
 }
 
 function myMember() {
@@ -727,6 +742,10 @@ function partnerMember() {
   return memberEntries().find((member) => member.uid !== state.user.uid) || null;
 }
 
+function memberDisplayName(uid, fallback = "Người ấy") {
+  return memberEntries().find((member) => member.uid === uid)?.displayName || fallback;
+}
+
 function partnerOnline() {
   const partner = partnerMember();
   return partner ? Boolean(state.couple?.presence?.[partner.uid]?.online) : false;
@@ -739,9 +758,10 @@ function relationshipDays() {
 }
 
 function renderApp() {
+  const me = myMember();
   const partner = partnerMember();
   const pairName = partner
-    ? `${state.profile.displayName || "Bạn"} & ${partner.displayName || "Người ấy"}`
+    ? `${me.displayName || "Bạn"} & ${partner.displayName || "Người ấy"}`
     : "Đang chờ người ấy";
   const online = partnerOnline();
 
@@ -752,9 +772,9 @@ function renderApp() {
         ${navigationMarkup("desktop")}
         <div class="sidebar-profile">
           <div class="profile-chip">
-            ${avatarMarkup(state.profile)}
+            ${avatarMarkup({ ...state.profile, displayName: me.displayName })}
             <div class="profile-chip__meta">
-              <strong>${escapeHTML(state.profile.displayName || "Bạn")}</strong>
+              <strong>${escapeHTML(me.displayName || "Bạn")}</strong>
               <span>${escapeHTML(state.user.email || "Đã đăng nhập")}</span>
             </div>
           </div>
@@ -952,7 +972,7 @@ function recentActivityMarkup() {
       <div class="activity-item">
         <span class="activity-icon"><i data-lucide="${message.kind === "nudge" ? "heart" : "message-circle"}"></i></span>
         <div>
-          <p>${escapeHTML(message.senderId === state.user.uid ? "Bạn" : message.senderName || "Người ấy")}</p>
+          <p>${escapeHTML(message.senderId === state.user.uid ? "Bạn" : memberDisplayName(message.senderId, message.senderName || "Người ấy"))}</p>
           <small>${escapeHTML(message.text)}</small>
         </div>
         <span class="activity-time">${formatTime(message.createdAt)}</span>
@@ -993,13 +1013,14 @@ function messageListMarkup() {
   return state.messages
     .map((message) => {
       const mine = message.senderId === state.user.uid;
+      const senderName = memberDisplayName(message.senderId, message.senderName || "Người ấy");
       if (message.kind === "nudge") {
-        return `<div class="message-bubble message-bubble--nudge">${escapeHTML(mine ? `Bạn: ${message.text}` : `${message.senderName || "Người ấy"}: ${message.text}`)}</div>`;
+        return `<div class="message-bubble message-bubble--nudge">${escapeHTML(mine ? `Bạn: ${message.text}` : `${senderName}: ${message.text}`)}</div>`;
       }
       return `
         <div class="message-bubble ${mine ? "message-bubble--mine" : ""}">
           <p>${escapeHTML(message.text)}</p>
-          <small>${mine ? "Bạn" : escapeHTML(message.senderName || "Người ấy")} · ${formatTime(message.createdAt)}</small>
+          <small>${mine ? "Bạn" : escapeHTML(senderName)} · ${formatTime(message.createdAt)}</small>
         </div>
       `;
     })
@@ -1481,6 +1502,7 @@ function renderLoveTool() {
 function renderCouple() {
   const members = memberEntries();
   const partner = partnerMember();
+  const nicknames = state.couple?.shared?.nicknames || {};
   return `
     <main class="view" id="main-content">
       <header class="page-head">
@@ -1488,6 +1510,21 @@ function renderCouple() {
         <span class="eyebrow">${members.length}/2 thành viên</span>
       </header>
       <div class="couple-grid">
+        <section class="section-panel nickname-panel">
+          <div class="section-panel__head"><h2>Biệt danh của hai đứa</h2><span>Đồng bộ ngay</span></div>
+          <form class="nickname-form" data-form="nicknames">
+            ${members.map((member, index) => `
+              <div class="field">
+                <label for="nickname-${index}">${member.uid === state.user.uid ? "Biệt danh của bạn" : "Biệt danh người ấy"}</label>
+                <input id="nickname-${index}" data-nickname-uid="${escapeHTML(member.uid)}" maxlength="32" value="${escapeHTML(cleanNickname(nicknames[member.uid]))}" placeholder="${escapeHTML(member.accountName || member.displayName)}" />
+                <small>Tên tài khoản: ${escapeHTML(member.accountName || member.displayName)}</small>
+              </div>
+            `).join("")}
+            <button class="btn btn--primary" type="submit" ${state.busy || !members.length ? "disabled" : ""}><i data-lucide="save"></i> Lưu cho cả hai</button>
+          </form>
+          <p class="nickname-panel__note">Cả hai đều có thể sửa. Để trống một ô để dùng lại tên Google của người đó.</p>
+        </section>
+
         <section class="section-panel">
           <div class="section-panel__head"><h2>Thành viên</h2><span>Đã xác nhận</span></div>
           <div class="member-list">
@@ -1949,6 +1986,16 @@ appRoot.addEventListener("submit", (event) => {
           ? "Hai mã đã khớp. Tài khoản đã được liên kết."
           : "Đã lưu mã người ấy. Đang chờ xác nhận chiều ngược lại.",
       );
+    });
+  } else if (form.dataset.form === "nicknames") {
+    if (!form.reportValidity()) return;
+    const nicknames = Object.fromEntries(
+      [...form.querySelectorAll("[data-nickname-uid]")]
+        .map((input) => [input.dataset.nicknameUid, cleanNickname(input.value)]),
+    );
+    runBusy(async () => {
+      await service.saveNicknames(state.profile.coupleId, nicknames);
+      toast("Biệt danh đã đồng bộ cho cả hai.");
     });
   } else if (form.dataset.form === "daily-question") {
     const answer = String(data.get("answer") || "").trim();

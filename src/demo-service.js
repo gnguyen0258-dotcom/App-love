@@ -43,6 +43,7 @@ let demoCouple = {
     },
   },
   shared: {
+    nicknames: {},
     relationship: {
       startDate: relativeDate(-460),
       updatedAt: now,
@@ -209,6 +210,15 @@ export function createDemoService(route = "app") {
       demoProfile.preferences[key] = value;
       publish("profile", demoProfile);
     },
+    async saveNicknames(_coupleId, nicknames) {
+      demoCouple.shared.nicknames ||= {};
+      Object.entries(nicknames || {}).forEach(([uid, value]) => {
+        const nickname = String(value || "").trim().replace(/\s+/g, " ").slice(0, 32);
+        if (nickname) demoCouple.shared.nicknames[uid] = nickname;
+        else delete demoCouple.shared.nicknames[uid];
+      });
+      publish("couple", demoCouple);
+    },
     async saveRelationshipDate(_coupleId, uid, startDate) {
       demoCouple.shared.relationship = { startDate, updatedAt: Date.now(), updatedBy: uid };
       publish("couple", demoCouple);
@@ -340,10 +350,11 @@ export function createDemoService(route = "app") {
       return { updated: true, customAvatar: Boolean(avatarData) };
     },
     async sendMessage({ text, kind = "message" }) {
+      const senderName = demoCouple.shared.nicknames?.[demoUser.uid] || demoUser.displayName;
       const message = {
         id: crypto.randomUUID(),
         senderId: demoUser.uid,
-        senderName: demoUser.displayName,
+        senderName,
         text,
         kind,
         createdAt: Date.now(),
