@@ -158,6 +158,9 @@ async function main() {
   const interactions = {};
   audits.push(await audit("today"));
   await screenshot("heartsync-cdp-today.png");
+  interactions.partnerCheckinNoteVisible = await evaluate(
+    "document.querySelector('[data-checkin-owner=\"partner\"] [data-checkin-note]')?.textContent.trim() === 'Hôm nay công việc hơi nhiều.'",
+  );
 
   for (const view of ["chat", "tools", "couple", "settings"]) {
     const expression =
@@ -362,6 +365,9 @@ async function main() {
   await new Promise((resolve) => setTimeout(resolve, 350));
   interactions.checkinSaved = await evaluate(
     "document.querySelector('.pulse-person > span:last-child').textContent.trim() === 'Vui vẻ'",
+  );
+  interactions.ownCheckinNoteVisible = await evaluate(
+    "document.querySelector('[data-checkin-owner=\"mine\"] [data-checkin-note]')?.textContent.trim() === 'Check-in kiểm thử'",
   );
 
   await evaluate(

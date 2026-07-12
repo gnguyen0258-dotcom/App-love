@@ -998,6 +998,123 @@ select:focus-visible {
   35% { transform: scale(1.16); }
 }
 
+.checkin-shares {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.checkin-share {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--coral);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.checkin-share--mine {
+  border-top-color: var(--teal);
+}
+
+.checkin-share__head,
+.checkin-share__person {
+  display: flex;
+  align-items: center;
+}
+
+.checkin-share__head {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.checkin-share__head > svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  color: var(--coral);
+}
+
+.checkin-share--mine .checkin-share__head > svg {
+  color: var(--teal);
+}
+
+.checkin-share__person {
+  min-width: 0;
+  gap: 10px;
+}
+
+.checkin-share__person > div {
+  min-width: 0;
+}
+
+.avatar--checkin {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+}
+
+.checkin-share__person strong,
+.checkin-share__person span {
+  display: block;
+}
+
+.checkin-share__person strong {
+  overflow: hidden;
+  font-size: 0.86rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checkin-share__person span {
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+}
+
+.checkin-share__signals {
+  min-height: 27px;
+  margin-top: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.checkin-share__signals span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--surface-quiet);
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.checkin-share__message {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.checkin-share__message small {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+.checkin-share__message p {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.checkin-share__message .checkin-share__empty {
+  color: var(--ink-soft);
+}
+
 .section-panel {
   padding: 24px;
   border: 1px solid var(--line);
@@ -2979,6 +3096,10 @@ select:focus-visible {
     padding: 28px 16px;
     grid-template-columns: 1fr 72px 1fr;
     gap: 8px;
+  }
+
+  .checkin-shares {
+    grid-template-columns: 1fr;
   }
 
   .pair-pulse::before {

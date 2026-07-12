@@ -883,12 +883,71 @@ function renderCurrentView() {
   return renderToday();
 }
 
+function recentCheckinFor(uid, currentTime = Date.now()) {
+  if (!uid) return null;
+  const today = service.todayKey();
+  const records = Object.entries(state.couple?.checkins || {})
+    .map(([dateKey, members]) => ({ dateKey, ...(members?.[uid] || {}) }))
+    .filter((record) => Number(record.updatedAt) > 0)
+    .sort((first, second) => Number(second.updatedAt) - Number(first.updatedAt));
+  const todayRecord = records.find((record) => record.dateKey === today);
+  if (todayRecord) return todayRecord;
+  return records.find((record) => currentTime - Number(record.updatedAt) < 86_400_000) || null;
+}
+
+function checkinMomentLabel(checkin) {
+  if (!checkin) return "Chưa check-in";
+  const today = service.todayKey();
+  const prefix = checkin.dateKey === today
+    ? "Hôm nay"
+    : daysBetween(checkin.dateKey, today) === 1
+      ? "Hôm qua"
+      : formatDate(checkin.dateKey);
+  return `${prefix} · ${formatTime(checkin.updatedAt)}`;
+}
+
+function checkinShareMarkup(member, checkin, mine = false) {
+  const displayName = mine ? "Bạn" : member?.displayName || "Người ấy";
+  const note = String(checkin?.note || "").trim();
+  const emptyMessage = checkin
+    ? mine
+      ? "Bạn chưa viết lời nhắn trong lần check-in này."
+      : `${displayName} chưa viết lời nhắn trong lần check-in này.`
+    : mine
+      ? "Bạn chưa gửi check-in trong 24 giờ qua."
+      : `${displayName} chưa gửi check-in trong 24 giờ qua.`;
+  return `
+    <article class="checkin-share${mine ? " checkin-share--mine" : ""}" data-checkin-owner="${mine ? "mine" : "partner"}" data-checkin-date="${escapeHTML(checkin?.dateKey || "")}">
+      <header class="checkin-share__head">
+        <div class="checkin-share__person">
+          ${avatarMarkup(member || { displayName }, "avatar--checkin")}
+          <div>
+            <strong>${escapeHTML(displayName)}</strong>
+            <span>${escapeHTML(checkinMomentLabel(checkin))}</span>
+          </div>
+        </div>
+        <i data-lucide="mail"></i>
+      </header>
+      <div class="checkin-share__signals">
+        ${checkin?.mood ? `<span>${escapeHTML(checkin.mood)}</span>` : ""}
+        ${checkin?.need ? `<span>${escapeHTML(checkin.need)}</span>` : ""}
+      </div>
+      <div class="checkin-share__message">
+        <small>${mine ? "Lời bạn đã gửi" : `Một câu từ ${escapeHTML(displayName)}`}</small>
+        <p data-checkin-note class="${note ? "" : "checkin-share__empty"}">${escapeHTML(note || emptyMessage)}</p>
+      </div>
+    </article>
+  `;
+}
+
 function renderToday() {
   const me = myMember();
   const partner = partnerMember();
   const today = state.couple?.checkins?.[service.todayKey()] || {};
   const mine = today[state.user.uid] || {};
   const theirs = partner ? today[partner.uid] || {} : {};
+  const mineShared = recentCheckinFor(state.user.uid);
+  const theirsShared = recentCheckinFor(partner?.uid);
   if (!state.checkinDraft.mood && mine.mood) state.checkinDraft.mood = mine.mood;
   if (!state.checkinDraft.need && mine.need) state.checkinDraft.need = mine.need;
   if (!state.checkinDraft.note && mine.note) state.checkinDraft.note = mine.note;
@@ -922,6 +981,11 @@ function renderToday() {
               <strong>${escapeHTML(partner?.displayName || "Người ấy")}</strong>
               <span>${escapeHTML(theirs.mood || (partner ? "Chưa check-in" : "Chưa tham gia"))}</span>
             </div>
+          </section>
+
+          <section class="checkin-shares" aria-label="Lời nhắn check-in của hai bạn" aria-live="polite">
+            ${checkinShareMarkup(me, mineShared, true)}
+            ${checkinShareMarkup(partner, theirsShared)}
           </section>
 
           <section class="section-panel" style="margin-top: 18px;">

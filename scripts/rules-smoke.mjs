@@ -451,6 +451,17 @@ try {
     }),
     "A member can write their own check-in",
   );
+  const partnerCheckinRead = await databaseRequest(
+    "GET",
+    `couples/${coupleId}/checkins/2026-07-11/${first.uid}`,
+    { token: second.token },
+  );
+  assertAllowed(partnerCheckinRead, "A linked partner can read the shared check-in");
+  assert.equal(
+    JSON.parse(partnerCheckinRead.text).note,
+    "Mot ngay on",
+    "The linked partner must receive the shared check-in note",
+  );
   assertDenied(
     await databaseRequest("PUT", `couples/${coupleId}/checkins/2026-07-11/${second.uid}`, {
       token: first.token,
