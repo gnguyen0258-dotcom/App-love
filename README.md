@@ -94,6 +94,10 @@ Trong tab `Hai đứa`, cả hai thành viên có thể đặt biệt danh cho m
 
 Tab `Tin nhắn` có thư viện emoji chuẩn và 24 sticker HeartSync nguyên bản trong `shared/chat-media.json`. Bộ chọn mô phỏng thao tác quen thuộc của các ứng dụng nhắn tin nhưng không đóng gói tài sản độc quyền của Instagram hoặc Messenger. Emoji được chèn vào nội dung văn bản; sticker được gửi bằng `kind: "sticker"` và một `stickerId` đã được API đối chiếu với catalog. Firebase chỉ lưu ID, nhãn và metadata tin nhắn, không lưu Base64 hoặc file ảnh sticker.
 
+## Lịch sử hoạt động 24 giờ
+
+Tab `Tin nhắn` chỉ hiển thị hội thoại trực tiếp và sticker. Các thao tác từ tiện ích như gửi nhịp tim, trả lời câu hỏi, thêm ý tưởng hoặc dùng phiếu được API ghi riêng tại `couples/{coupleId}/activities/{activityId}` và hiển thị trong `Gần đây`. Mỗi bản ghi có `expiresAt = createdAt + 24 giờ`; app đặt timer theo thời điểm hết hạn gần nhất, ẩn đúng từng bản ghi khi đến hạn rồi yêu cầu API xóa riêng các ID đã hết hạn. Nếu cả hai thiết bị cùng ngoại tuyến, dữ liệu hết hạn được ẩn và dọn ngay khi một thiết bị kết nối lại.
+
 ## Deploy
 
 Import repo GitHub vào Vercel với Framework Preset `Vite`. Mỗi lần push nhánh `main`, Vercel build `dist` và triển khai các API trong thư mục `api/`.

@@ -293,6 +293,9 @@ async function main() {
   await evaluate(
     "document.querySelector('[data-action=\"navigate\"][data-view=\"chat\"]').click()",
   );
+  interactions.actionsExcludedFromChat = await evaluate(
+    "!document.querySelector('.message-bubble--nudge') && !document.getElementById('message-list').textContent.includes('Hũ hẹn hò')",
+  );
   await evaluate(`(() => {
     const input = document.getElementById("message-input");
     input.value = "Tin nhắn kiểm thử";
@@ -339,6 +342,15 @@ async function main() {
   await evaluate(
     "document.querySelector('[data-action=\"navigate\"][data-view=\"today\"]').click()",
   );
+  interactions.activitiesShownInRecent = await evaluate(
+    "document.querySelectorAll('.activity-list .activity-item').length >= 5",
+  );
+  interactions.activitiesExpireIndividually = await evaluate(`(() => {
+    const items = Array.from(document.querySelectorAll('.activity-list .activity-item'));
+    return items.length >= 2 && items.every((item) =>
+      Number(item.dataset.expiresAt) - Number(item.dataset.createdAt) === 24 * 60 * 60 * 1000
+    );
+  })()`);
   await evaluate(`(() => {
     document.querySelector('[data-action="choose-mood"][data-value="Vui vẻ"]').click();
     document.querySelector('[data-action="choose-need"][data-value="Cần một cái ôm"]').click();

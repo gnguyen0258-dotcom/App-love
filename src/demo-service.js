@@ -1,5 +1,6 @@
 const now = Date.now();
 const date = new Date().toISOString().slice(0, 10);
+const ACTIVITY_TTL_MS = 24 * 60 * 60 * 1000;
 
 function relativeDate(days) {
   const value = new Date();
@@ -40,6 +41,18 @@ let demoCouple = {
     [date]: {
       "demo-giang": { mood: "Bình yên", need: "Muốn được trò chuyện", note: "Tối nay mình đi dạo nhé.", updatedAt: now - 25 * 60 * 1000 },
       "demo-partner": { mood: "Hơi mệt", need: "Cần một cái ôm", note: "Hôm nay công việc hơi nhiều.", updatedAt: now - 11 * 60 * 1000 },
+    },
+  },
+  activities: {
+    "activity-demo": {
+      id: "activity-demo",
+      actorId: "demo-partner",
+      actorName: "Người ấy",
+      text: "Gửi một cái ôm",
+      type: "nudge-hug",
+      kind: "activity",
+      createdAt: now - 15 * 60 * 1000,
+      expiresAt: now - 15 * 60 * 1000 + ACTIVITY_TTL_MS,
     },
   },
   shared: {
@@ -136,7 +149,6 @@ let demoCouple = {
 let demoMessages = [
   { id: "m1", senderId: "demo-partner", senderName: "Người ấy", text: "Hôm nay anh về lúc mấy giờ?", kind: "message", createdAt: now - 50 * 60 * 1000 },
   { id: "m2", senderId: "demo-giang", senderName: "Giang", text: "Khoảng 7 giờ. Anh mua món em thích nhé?", kind: "message", createdAt: now - 45 * 60 * 1000 },
-  { id: "m3", senderId: "demo-partner", senderName: "Người ấy", text: "Gửi một cái ôm", kind: "nudge", createdAt: now - 15 * 60 * 1000 },
   { id: "m4", senderId: "demo-partner", senderName: "Người ấy", text: "Vậy tối mình đi dạo một vòng nha.", kind: "message", createdAt: now - 10 * 60 * 1000 },
 ];
 
@@ -363,6 +375,37 @@ export function createDemoService(route = "app") {
       demoMessages = [...demoMessages, message];
       publish("messages", demoMessages);
       return { message };
+    },
+    async sendActivity({ text, type }) {
+      const createdAt = Date.now();
+      const id = crypto.randomUUID();
+      const actorName = demoCouple.shared.nicknames?.[demoUser.uid] || demoUser.displayName;
+      const activity = {
+        id,
+        actorId: demoUser.uid,
+        actorName,
+        text,
+        type,
+        kind: "activity",
+        createdAt,
+        expiresAt: createdAt + ACTIVITY_TTL_MS,
+      };
+      demoCouple.activities ||= {};
+      demoCouple.activities[id] = activity;
+      publish("couple", demoCouple);
+      return { activity };
+    },
+    async deleteExpiredActivities(activityIds) {
+      const currentTime = Date.now();
+      let deleted = 0;
+      for (const id of activityIds || []) {
+        if (Number(demoCouple.activities?.[id]?.expiresAt) <= currentTime) {
+          delete demoCouple.activities[id];
+          deleted += 1;
+        }
+      }
+      if (deleted) publish("couple", demoCouple);
+      return { deleted };
     },
     notificationCapability: async () => ({ supported: true, permission: "default", registered: false }),
     enableNotifications: async () => ({ supported: true, permission: "granted", registered: true }),

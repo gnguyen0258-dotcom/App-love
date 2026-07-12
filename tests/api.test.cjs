@@ -113,6 +113,52 @@ test("stickers resolve only from the bundled HeartSync catalog", () => {
   assert.equal(messageHandler._test.stickerForId("messenger-private-pack"), null);
 });
 
+test("activities expire exactly 24 hours after their own creation time", () => {
+  const firstCreatedAt = Date.UTC(2026, 6, 13, 1, 0);
+  const secondCreatedAt = Date.UTC(2026, 6, 13, 1, 59);
+  const details = { id: "activity", uid: "user-a", senderName: "A", text: "Test", type: "nudge-heart" };
+  const first = messageHandler._test.buildActivity(details, firstCreatedAt);
+  const second = messageHandler._test.buildActivity({ ...details, id: "activity-2" }, secondCreatedAt);
+
+  assert.equal(first.expiresAt, Date.UTC(2026, 6, 14, 1, 0));
+  assert.equal(second.expiresAt, Date.UTC(2026, 6, 14, 1, 59));
+  assert.equal(second.expiresAt - first.expiresAt, 59 * 60 * 1000);
+  assert.equal(messageHandler._test.activityTypeFor("nudge-heart"), "nudge-heart");
+  assert.equal(messageHandler._test.activityTypeFor("forged-action"), null);
+});
+
+test("activity cleanup removes only requested records that have expired", async () => {
+  const currentTime = Date.UTC(2026, 6, 14, 2, 0);
+  const activities = {
+    expired: { expiresAt: currentTime - 1 },
+    active: { expiresAt: currentTime + 60_000 },
+  };
+  const database = {
+    ref(path) {
+      const match = /^couples\/couple-a\/activities\/(.+)$/.exec(path);
+      if (match) return { get: async () => ({ val: () => activities[match[1]] || null }) };
+      if (path === "couples/couple-a") {
+        return {
+          update: async (updates) => {
+            Object.keys(updates).forEach((key) => delete activities[key.split("/")[1]]);
+          },
+        };
+      }
+      throw new Error(`Unexpected path: ${path}`);
+    },
+  };
+
+  const deleted = await messageHandler._test.cleanupExpiredActivities(
+    database,
+    "couple-a",
+    ["expired", "active", "invalid.id"],
+    currentTime,
+  );
+  assert.equal(deleted, 1);
+  assert.equal(activities.expired, undefined);
+  assert.ok(activities.active);
+});
+
 test("API endpoints reject unsupported methods", async () => {
   const response = responseDouble();
   await coupleHandler({ method: "GET", headers: {} }, response);

@@ -64,6 +64,10 @@
           ".write": false,
           ".indexOn": ["createdAt"]
         },
+        "activities": {
+          ".write": false,
+          ".indexOn": ["createdAt", "expiresAt"]
+        },
         "checkins": {
           "$date": {
             "$uid": {

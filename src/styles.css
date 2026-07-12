@@ -1088,8 +1088,12 @@ select:focus-visible {
 }
 
 .activity-list {
+  max-height: 430px;
+  padding-right: 4px;
   display: grid;
   gap: 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .activity-item {
@@ -1123,6 +1127,18 @@ select:focus-visible {
 .activity-time {
   color: var(--ink-soft);
   font-size: 0.68rem;
+}
+
+.activity-item small {
+  display: block;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.activity-empty {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
 }
 
 .chat-layout {

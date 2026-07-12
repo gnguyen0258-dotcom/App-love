@@ -212,6 +212,8 @@ let activeCoupleId = null;
 let notificationRestoredFor = null;
 let pairingLoadedFor = null;
 let relationshipClockInterval = null;
+let activityExpiryTimer = null;
+let activityCleanupRetryTimer = null;
 let busyOperationId = 0;
 
 function escapeHTML(value = "") {
@@ -965,7 +967,7 @@ function renderToday() {
           <section class="section-panel">
             <div class="section-panel__head">
               <h2>Gần đây</h2>
-              <span>${state.messages.length} lời nhắn</span>
+              <span>${activeActivities().length} hoạt động</span>
             </div>
             ${recentActivityMarkup()}
           </section>
@@ -984,24 +986,39 @@ function waitingMarkup() {
   `;
 }
 
-function messagePreviewText(message) {
-  if (message.kind !== "sticker") return message.text || "";
-  const sticker = stickerForId(message.stickerId);
-  return sticker ? `Sticker: ${sticker.label}` : message.text || "Sticker";
+function activityEntries() {
+  return Object.entries(state.couple?.activities || {})
+    .map(([id, activity]) => ({ id, ...activity }))
+    .filter((activity) => Number(activity.createdAt) > 0 && Number(activity.expiresAt) > 0);
+}
+
+function activeActivities(currentTime = Date.now()) {
+  return activityEntries()
+    .filter((activity) => Number(activity.expiresAt) > currentTime)
+    .sort((first, second) => Number(second.createdAt) - Number(first.createdAt));
+}
+
+function activityIconName(type) {
+  if (String(type).startsWith("nudge")) return "heart";
+  if (type === "daily-answer") return "sticky-note";
+  if (type === "date-idea") return "dices";
+  if (type === "love-coupon" || type === "coupon-redeemed") return "ticket-check";
+  if (type === "surprise") return "party-popper";
+  return "sparkles";
 }
 
 function recentActivityMarkup() {
-  const recent = state.messages.slice(-4).reverse();
-  if (!recent.length) return `<p class="message-empty">Lời nhắn đầu tiên sẽ xuất hiện ở đây.</p>`;
+  const recent = activeActivities();
+  if (!recent.length) return `<p class="activity-empty">Chưa có hoạt động nào trong 24 giờ qua.</p>`;
   return `<div class="activity-list">
-    ${recent.map((message) => `
-      <div class="activity-item">
-        <span class="activity-icon"><i data-lucide="${message.kind === "nudge" ? "heart" : message.kind === "sticker" ? "sticker" : "message-circle"}"></i></span>
+    ${recent.map((activity) => `
+      <div class="activity-item" data-activity-id="${escapeHTML(activity.id)}" data-created-at="${Number(activity.createdAt)}" data-expires-at="${Number(activity.expiresAt)}">
+        <span class="activity-icon"><i data-lucide="${activityIconName(activity.type)}"></i></span>
         <div>
-          <p>${escapeHTML(message.senderId === state.user.uid ? "Bạn" : memberDisplayName(message.senderId, message.senderName || "Người ấy"))}</p>
-          <small>${escapeHTML(messagePreviewText(message))}</small>
+          <p>${escapeHTML(activity.actorId === state.user.uid ? "Bạn" : memberDisplayName(activity.actorId, activity.actorName || "Người ấy"))}</p>
+          <small>${escapeHTML(activity.text || "Hoạt động mới")}</small>
         </div>
-        <span class="activity-time">${formatTime(message.createdAt)}</span>
+        <span class="activity-time">${formatTime(activity.createdAt)}</span>
       </div>
     `).join("")}
   </div>`;
@@ -1099,11 +1116,16 @@ function stickerArtMarkup(sticker) {
   `;
 }
 
+function chatMessages() {
+  return state.messages.filter((message) => !["activity", "nudge"].includes(message.kind));
+}
+
 function messageListMarkup() {
-  if (!state.messages.length) {
+  const messages = chatMessages();
+  if (!messages.length) {
     return `<div class="message-empty"><i data-lucide="sparkles"></i><p>Chưa có lời nhắn. Bắt đầu bằng một câu thật tự nhiên.</p></div>`;
   }
-  return state.messages
+  return messages
     .map((message) => {
       const mine = message.senderId === state.user.uid;
       const senderName = memberDisplayName(message.senderId, message.senderName || "Người ấy");
@@ -1770,7 +1792,48 @@ function toast(message, type = "success") {
   window.setTimeout(() => element.remove(), 3200);
 }
 
+function clearActivityExpiryTimer() {
+  if (activityExpiryTimer) window.clearTimeout(activityExpiryTimer);
+  if (activityCleanupRetryTimer) window.clearTimeout(activityCleanupRetryTimer);
+  activityExpiryTimer = null;
+  activityCleanupRetryTimer = null;
+}
+
+function scheduleActivityExpiry() {
+  clearActivityExpiryTimer();
+  const coupleId = state.profile?.coupleId;
+  if (!coupleId || !state.couple) return;
+
+  const currentTime = Date.now();
+  const activities = activityEntries();
+  const expiredIds = activities
+    .filter((activity) => Number(activity.expiresAt) <= currentTime)
+    .map((activity) => activity.id);
+  if (expiredIds.length) {
+    service.deleteExpiredActivities(expiredIds).catch((error) => {
+      console.warn("Expired activities could not be removed", error);
+      if (activityCleanupRetryTimer) return;
+      activityCleanupRetryTimer = window.setTimeout(() => {
+        activityCleanupRetryTimer = null;
+        scheduleActivityExpiry();
+      }, 30_000);
+    });
+  }
+
+  const nextExpiry = activities
+    .map((activity) => Number(activity.expiresAt))
+    .filter((expiresAt) => expiresAt > currentTime)
+    .sort((first, second) => first - second)[0];
+  if (!nextExpiry) return;
+  activityExpiryTimer = window.setTimeout(() => {
+    activityExpiryTimer = null;
+    render();
+    scheduleActivityExpiry();
+  }, Math.max(50, nextExpiry - currentTime + 25));
+}
+
 function cleanupCoupleSubscriptions() {
+  clearActivityExpiryTimer();
   coupleUnsubscribe?.();
   messagesUnsubscribe?.();
   coupleUnsubscribe = null;
@@ -1787,6 +1850,7 @@ function bindCouple(coupleId) {
   activeCoupleId = coupleId;
   coupleUnsubscribe = service.watchCouple(coupleId, (couple) => {
     state.couple = couple;
+    scheduleActivityExpiry();
     render();
   });
   messagesUnsubscribe = service.watchMessages(coupleId, (messages) => {
@@ -2002,7 +2066,7 @@ appRoot.addEventListener("click", (event) => {
   } else if (action === "send-surprise") {
     const text = randomItem(surpriseMessages);
     runBusy(async () => {
-      await service.sendMessage({ text, kind: "nudge" });
+      await service.sendActivity({ text, type: "surprise" });
       navigator.vibrate?.([80, 40, 120]);
       toast("Bất ngờ nhỏ đã bay đến người ấy.");
     });
@@ -2028,17 +2092,20 @@ appRoot.addEventListener("click", (event) => {
     const coupon = loveCoupons().find((item) => item.id === button.dataset.couponId);
     runBusy(async () => {
       await service.redeemLoveCoupon(state.profile.coupleId, state.user.uid, button.dataset.couponId);
-      service.sendMessage({
+      await service.sendActivity({
         text: `Mình vừa dùng phiếu “${coupon?.title || "yêu thương"}”.`,
-        kind: "nudge",
-      }).catch(() => {});
+        type: "coupon-redeemed",
+      });
       toast("Đã sử dụng phiếu yêu thương.");
     });
   } else if (action === "send-nudge") {
     const kind = button.dataset.kind;
     runBusy(async () => {
       document.getElementById("pulse-center")?.classList.add("is-beating");
-      await service.sendMessage({ text: nudgeLabels[kind] || nudgeLabels.heart, kind: "nudge" });
+      await service.sendActivity({
+        text: nudgeLabels[kind] || nudgeLabels.heart,
+        type: `nudge-${kind}`,
+      });
       toast("Đã gửi đến người ấy.");
     });
   } else if (action === "enable-notifications") {
@@ -2158,10 +2225,10 @@ appRoot.addEventListener("submit", (event) => {
         answer,
       );
       state.dailyAnswerDraft = "";
-      service.sendMessage({
+      await service.sendActivity({
         text: "Mình đã trả lời câu hỏi hôm nay. Đến lượt bạn mở đáp án nhé.",
-        kind: "nudge",
-      }).catch(() => {});
+        type: "daily-answer",
+      });
       toast("Đã cất câu trả lời của bạn.");
     });
   } else if (form.dataset.form === "date-idea") {
@@ -2169,10 +2236,10 @@ appRoot.addEventListener("submit", (event) => {
     if (!form.reportValidity() || !idea) return;
     runBusy(async () => {
       await service.addDateIdea(state.profile.coupleId, state.user.uid, idea);
-      service.sendMessage({
+      await service.sendActivity({
         text: "Mình vừa thêm một ý tưởng mới vào Hũ hẹn hò.",
-        kind: "nudge",
-      }).catch(() => {});
+        type: "date-idea",
+      });
       toast("Đã thả ý tưởng vào hũ.");
     });
   } else if (form.dataset.form === "love-coupon") {
@@ -2185,7 +2252,10 @@ appRoot.addEventListener("submit", (event) => {
         title,
         note,
       });
-      service.sendMessage({ text: `Bạn vừa nhận phiếu “${title}”.`, kind: "nudge" }).catch(() => {});
+      await service.sendActivity({
+        text: `Mình vừa gửi phiếu “${title}”.`,
+        type: "love-coupon",
+      });
       toast("Phiếu yêu thương đã được gửi.");
     });
   } else if (form.dataset.form === "relationship-date") {
@@ -2272,8 +2342,15 @@ async function start() {
   }
 }
 
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible" || !state.profile?.coupleId) return;
+  render();
+  scheduleActivityExpiry();
+});
+
 window.addEventListener("beforeunload", () => {
   if (relationshipClockInterval) window.clearInterval(relationshipClockInterval);
+  clearActivityExpiryTimer();
   authUnsubscribe?.();
   profileUnsubscribe?.();
   cleanupCoupleSubscriptions();

@@ -363,6 +363,21 @@ function sendMessage({ text, kind = "message", stickerId = "" }) {
   return apiRequest("/api/message", { text, kind, stickerId });
 }
 
+function sendActivity({ text, type }) {
+  return apiRequest("/api/message", {
+    kind: "activity",
+    activityType: type,
+    text,
+  });
+}
+
+function deleteExpiredActivities(activityIds) {
+  return apiRequest("/api/message", {
+    action: "cleanup-activities",
+    activityIds,
+  });
+}
+
 async function notificationCapability() {
   if (!("Notification" in window) || !("serviceWorker" in navigator)) {
     return { supported: false, permission: "unsupported", registered: false };
@@ -452,6 +467,8 @@ export const firebaseService = {
   leaveCouple,
   updateAvatar,
   sendMessage,
+  sendActivity,
+  deleteExpiredActivities,
   notificationCapability,
   enableNotifications,
   restoreNotifications,

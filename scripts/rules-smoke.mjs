@@ -471,6 +471,19 @@ try {
     "Client message writes must go through the verified API",
   );
   assertDenied(
+    await databaseRequest("PUT", `couples/${coupleId}/activities/fake-activity`, {
+      token: first.token,
+      body: {
+        actorId: first.uid,
+        text: "Bypass activity API",
+        type: "nudge-heart",
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 86_400_000,
+      },
+    }),
+    "Client activity writes must go through the verified API",
+  );
+  assertDenied(
     await databaseRequest("PUT", `couples/${coupleId}/members/${second.uid}`, {
       token: first.token,
       body: { displayName: "Tu them thanh vien", joinedAt: Date.now() },
