@@ -3,13 +3,11 @@ import {
   browserLocalPersistence,
   createUserWithEmailAndPassword,
   getAuth,
-  getRedirectResult,
   GoogleAuthProvider,
   onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -79,12 +77,6 @@ function deviceId() {
   return value;
 }
 
-function isStandaloneIOS() {
-  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
-  return ios && standalone;
-}
-
 function friendlyAuthError(error) {
   const messages = {
     "auth/email-already-in-use": "Email này đã có tài khoản.",
@@ -92,7 +84,9 @@ function friendlyAuthError(error) {
     "auth/invalid-email": "Email chưa đúng định dạng.",
     "auth/missing-password": "Hãy nhập mật khẩu.",
     "auth/weak-password": "Mật khẩu cần ít nhất 6 ký tự.",
+    "auth/popup-blocked": "Safari đang chặn cửa sổ Google. Hãy tắt Chặn cửa sổ bật lên rồi thử lại.",
     "auth/popup-closed-by-user": "Cửa sổ đăng nhập đã được đóng.",
+    "auth/web-storage-unsupported": "Safari đang chặn lưu phiên đăng nhập. Hãy cho phép cookie và thử lại.",
     "auth/unauthorized-domain": "Domain này chưa được cho phép trong Firebase Authentication.",
     "auth/operation-not-allowed": "Phương thức đăng nhập này chưa được bật trong Firebase.",
     "auth/network-request-failed": "Không thể kết nối. Hãy kiểm tra mạng và thử lại.",
@@ -102,11 +96,6 @@ function friendlyAuthError(error) {
 
 async function initSession() {
   await setPersistence(auth, browserLocalPersistence);
-  try {
-    await getRedirectResult(auth);
-  } catch (error) {
-    throw new Error(friendlyAuthError(error));
-  }
 }
 
 function watchAuth(callback) {
@@ -115,16 +104,8 @@ function watchAuth(callback) {
 
 async function signInGoogle() {
   try {
-    if (isStandaloneIOS()) {
-      await signInWithRedirect(auth, googleProvider);
-      return null;
-    }
     return await signInWithPopup(auth, googleProvider);
   } catch (error) {
-    if (error?.code === "auth/popup-blocked") {
-      await signInWithRedirect(auth, googleProvider);
-      return null;
-    }
     throw new Error(friendlyAuthError(error));
   }
 }

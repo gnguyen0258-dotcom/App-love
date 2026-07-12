@@ -83,6 +83,8 @@ Sau khi đăng nhập, người dùng có thể đổi ảnh ở màn hình ghé
 
 Nút làm mới xuất hiện ở màn hình đăng nhập, ghép đôi và thanh trên cùng của ứng dụng. Nút này tải lại trang nhưng không đăng xuất tài khoản vì Firebase Auth vẫn giữ phiên trên thiết bị.
 
+Google Authentication dùng `signInWithPopup()` trên mọi thiết bị. Không tự chuyển sang `signInWithRedirect()` khi popup bị chặn vì Safari 16.1+ chặn bộ nhớ bên thứ ba của Firebase Auth trên domain Vercel. Lệnh mở popup được gọi trước khi giao diện chuyển sang trạng thái bận để giữ nguyên user activation trên Safari.
+
 ## Deploy
 
 Import repo GitHub vào Vercel với Framework Preset `Vite`. Mỗi lần push nhánh `main`, Vercel build `dist` và triển khai các API trong thư mục `api/`.

@@ -1725,13 +1725,14 @@ function handleForegroundMessage(payload) {
   toast(`${title}: ${body}`);
 }
 
-async function runBusy(task) {
+async function runBusy(task, { startBeforeRender = false } = {}) {
   const operationId = ++busyOperationId;
   state.busy = true;
   state.error = "";
-  render();
   try {
-    await task();
+    const pendingTask = startBeforeRender ? task() : null;
+    render();
+    await (startBeforeRender ? pendingTask : task());
   } catch (error) {
     if (operationId !== busyOperationId) return;
     state.error = error.message || "Không thể hoàn tất thao tác.";
@@ -1755,7 +1756,7 @@ appRoot.addEventListener("click", (event) => {
     state.error = "";
     render();
   } else if (action === "google-auth") {
-    runBusy(() => service.signInGoogle());
+    runBusy(() => service.signInGoogle(), { startBeforeRender: true });
   } else if (action === "copy-personal-code") {
     const code = state.pairing.code;
     if (code) navigator.clipboard.writeText(code).then(() => toast("Đã sao chép mã của bạn."));
