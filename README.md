@@ -60,6 +60,10 @@ APP_BASE_URL
 
 Không commit private key hoặc service-account JSON lên GitHub. Có thể dùng một biến `FIREBASE_SERVICE_ACCOUNT_JSON` thay cho ba biến Admin riêng lẻ.
 
+## Tương thích Vercel Functions
+
+`firebase-admin` đang được khóa ở `13.6.1`. Bản `14.x` kéo `jwks-rsa 4.x` và `jose 6` chỉ hỗ trợ ESM; loader CommonJS của Vercel Functions có thể dừng với `ERR_REQUIRE_ESM` trước khi handler chạy. Chỉ nâng phiên bản sau khi `npm run check` và bốn kiểm tra API trên Preview Deployment đều qua.
+
 ## Dữ liệu chung và kiểm thử
 
 Tính ngày, Kho lưu trữ, Chu kỳ, Lịch và Góc yêu nằm dưới `couples/{coupleId}/shared`. Cả hai thành viên đã liên kết đều có thể đọc dữ liệu chung. Câu hỏi mỗi ngày chỉ cho phép từng người sửa câu trả lời của chính mình; ý tưởng hẹn hò chỉ người tạo được xóa; phiếu chỉ người được nhận mới có thể sử dụng. Dữ liệu Chu kỳ là dữ liệu nhạy cảm; chỉ nhập khi cả hai đã thống nhất chia sẻ. Dự báo chu kỳ không dùng để tránh thai, chẩn đoán hoặc thay thế tư vấn y tế.
