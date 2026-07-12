@@ -324,6 +324,13 @@ async function main() {
   await evaluate(
     "document.querySelector('[data-action=\"select-tool\"][data-tool=\"love\"]').click()",
   );
+  interactions.dailyEncouragementVisible = await evaluate(`(() => {
+    const panel = document.querySelector('[data-daily-encouragement]');
+    const quote = panel?.querySelector('blockquote')?.textContent.trim() || '';
+    return /^\\d{4}-\\d{2}-\\d{2}$/.test(panel?.dataset.date || '') &&
+      quote.includes('xứng đáng với một ngày dịu dàng') &&
+      panel.textContent.includes('Lời nhắc chung của hai đứa');
+  })()`);
   await evaluate(`(() => {
     const form = document.querySelector('[data-form="daily-question"]');
     form.querySelector('[name="answer"]').value = "Mình thấy được yêu khi bạn nhớ những điều rất nhỏ.";

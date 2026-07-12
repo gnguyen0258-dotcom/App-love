@@ -365,6 +365,10 @@ function updatePulseBackground(imageData) {
   return apiRequest("/api/couple", { action: "update-pulse-background", imageData });
 }
 
+function ensureDailyEncouragement() {
+  return apiRequest("/api/couple", { action: "daily-encouragement" });
+}
+
 function sendMessage({ text, kind = "message", stickerId = "" }) {
   return apiRequest("/api/message", { text, kind, stickerId });
 }
@@ -473,6 +477,7 @@ export const firebaseService = {
   leaveCouple,
   updateAvatar,
   updatePulseBackground,
+  ensureDailyEncouragement,
   sendMessage,
   sendActivity,
   deleteExpiredActivities,

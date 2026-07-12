@@ -26,6 +26,7 @@ import {
   Mail,
   MessageCircle,
   Plus,
+  Quote,
   PartyPopper,
   Ruler,
   RefreshCw,
@@ -38,6 +39,7 @@ import {
   Sparkles,
   Sticker,
   StickyNote,
+  Sunrise,
   Timer,
   TicketCheck,
   Trash2,
@@ -85,6 +87,7 @@ const ICONS = {
   Mail,
   MessageCircle,
   Plus,
+  Quote,
   PartyPopper,
   Ruler,
   RefreshCw,
@@ -97,6 +100,7 @@ const ICONS = {
   Sparkles,
   Sticker,
   StickyNote,
+  Sunrise,
   Timer,
   TicketCheck,
   Trash2,
@@ -190,6 +194,10 @@ const surpriseMessages = [
   "Một bất ngờ nhỏ đang tìm đường đến chỗ bạn.",
 ];
 
+function emptyEncouragementRequest() {
+  return { requestedDate: "", loading: false, error: "", record: null };
+}
+
 const state = {
   user: null,
   profile: null,
@@ -208,6 +216,7 @@ const state = {
   chatPicker: null,
   emojiGroup: "feelings",
   dailyAnswerDraft: "",
+  encouragementRequest: emptyEncouragementRequest(),
   checkinDraft: { mood: "", need: "", note: "" },
   notification: { supported: false, permission: "default", registered: false },
 };
@@ -222,6 +231,8 @@ let pairingLoadedFor = null;
 let relationshipClockInterval = null;
 let activityExpiryTimer = null;
 let activityCleanupRetryTimer = null;
+let dailyRolloverTimer = null;
+let observedDailyDate = service.todayKey();
 let busyOperationId = 0;
 
 function escapeHTML(value = "") {
@@ -487,6 +498,30 @@ function calendarEvents() {
 function questionOfDay() {
   const index = Math.abs(Math.floor(dateOrdinal(service.todayKey()))) % dailyQuestions.length;
   return dailyQuestions[index];
+}
+
+function validDailyEncouragement(value, dateKey = service.todayKey()) {
+  return value &&
+    value.date === dateKey &&
+    /^\d{4}-\d{2}-\d{2}$/.test(value.date) &&
+    typeof value.quoteId === "string" &&
+    typeof value.text === "string" &&
+    value.text.length > 0 &&
+    value.text.length <= 300 &&
+    Number(value.assignedAt) > 0;
+}
+
+function dailyEncouragement() {
+  const dateKey = service.todayKey();
+  const shared = state.couple?.shared?.dailyEncouragement?.current;
+  if (validDailyEncouragement(shared, dateKey)) return shared;
+  const requested = state.encouragementRequest.record;
+  return validDailyEncouragement(requested, dateKey) ? requested : null;
+}
+
+function dailyEncouragementDateLabel(dateKey) {
+  const label = formatDate(dateKey, { weekday: "long", month: "long" });
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 function dateIdeas() {
@@ -1733,6 +1768,8 @@ function renderCalendarTool() {
 function renderLoveTool() {
   const partner = partnerMember();
   const today = service.todayKey();
+  const encouragement = dailyEncouragement();
+  const encouragementError = state.encouragementRequest.error;
   const answers = state.couple?.shared?.dailyQuestions?.[today] || {};
   const myAnswer = answers[state.user.uid] || null;
   const partnerAnswer = partner ? answers[partner.uid] || null : null;
@@ -1750,6 +1787,36 @@ function renderLoveTool() {
 
   return `
     <div class="love-layout">
+      <section class="daily-encouragement-panel" data-daily-encouragement data-date="${encouragement ? escapeHTML(encouragement.date) : ""}" aria-live="polite">
+        <header class="daily-encouragement__head">
+          <div>
+            <p class="eyebrow"><i data-lucide="sunrise"></i> Mỗi ngày một câu</p>
+            <h2>Khởi đầu ngày mới</h2>
+          </div>
+          <time datetime="${escapeHTML(today)}">${escapeHTML(dailyEncouragementDateLabel(today))}</time>
+        </header>
+        ${encouragement ? `
+          <div class="daily-encouragement__quote">
+            <span class="daily-encouragement__mark"><i data-lucide="quote"></i></span>
+            <blockquote>${escapeHTML(encouragement.text)}</blockquote>
+          </div>
+          <footer class="daily-encouragement__foot">
+            <span><i data-lucide="users-round"></i> Lời nhắc chung của hai đứa</span>
+            <span><i data-lucide="sunrise"></i> Ngày mai gặp một câu mới</span>
+          </footer>
+        ` : encouragementError ? `
+          <div class="daily-encouragement__status daily-encouragement__status--error">
+            <div><strong>Chưa thể lấy lời nhắn hôm nay.</strong><span>${escapeHTML(encouragementError)}</span></div>
+            <button class="icon-button" type="button" data-action="retry-daily-encouragement" aria-label="Thử lại lời nhắn hôm nay" title="Thử lại"><i data-lucide="refresh-cw"></i></button>
+          </div>
+        ` : `
+          <div class="daily-encouragement__status" role="status">
+            <i class="is-spinning" data-lucide="refresh-cw"></i>
+            <span>Đang chọn một lời nhắn cho hôm nay...</span>
+          </div>
+        `}
+      </section>
+
       <section class="love-signal">
         <div>
           <p class="eyebrow">Một chạm nhỏ</p>
@@ -2026,6 +2093,63 @@ function toast(message, type = "success") {
   window.setTimeout(() => element.remove(), 3200);
 }
 
+async function maybeEnsureDailyEncouragement({ force = false } = {}) {
+  const coupleId = state.profile?.coupleId;
+  const requestDate = service.todayKey();
+  if (!state.user || !coupleId || !state.couple) return;
+  if (dailyEncouragement() && !force) {
+    state.encouragementRequest = {
+      requestedDate: requestDate,
+      loading: false,
+      error: "",
+      record: null,
+    };
+    return;
+  }
+  if (state.encouragementRequest.loading) return;
+  if (!force && state.encouragementRequest.requestedDate === requestDate) return;
+
+  state.encouragementRequest = {
+    requestedDate: requestDate,
+    loading: true,
+    error: "",
+    record: null,
+  };
+  render();
+  try {
+    const result = await service.ensureDailyEncouragement();
+    if (state.profile?.coupleId !== coupleId) return;
+    state.encouragementRequest.record = result?.encouragement || null;
+  } catch (error) {
+    if (state.profile?.coupleId !== coupleId) return;
+    state.encouragementRequest.error = error.message || "Kết nối chưa ổn định.";
+  } finally {
+    if (state.profile?.coupleId === coupleId) {
+      state.encouragementRequest.loading = false;
+      render();
+    }
+  }
+}
+
+function scheduleDailyRollover() {
+  if (dailyRolloverTimer) window.clearTimeout(dailyRolloverTimer);
+  const currentTime = new Date();
+  const nextDay = new Date(currentTime);
+  nextDay.setHours(24, 0, 1, 0);
+  dailyRolloverTimer = window.setTimeout(handleDailyRollover, nextDay - currentTime);
+}
+
+function handleDailyRollover() {
+  const currentDate = service.todayKey();
+  if (currentDate !== observedDailyDate) {
+    observedDailyDate = currentDate;
+    state.encouragementRequest = emptyEncouragementRequest();
+    render();
+  }
+  maybeEnsureDailyEncouragement();
+  scheduleDailyRollover();
+}
+
 function clearActivityExpiryTimer() {
   if (activityExpiryTimer) window.clearTimeout(activityExpiryTimer);
   if (activityCleanupRetryTimer) window.clearTimeout(activityCleanupRetryTimer);
@@ -2076,6 +2200,7 @@ function cleanupCoupleSubscriptions() {
   service.stopPresence();
   state.couple = null;
   state.messages = [];
+  state.encouragementRequest = emptyEncouragementRequest();
 }
 
 function bindCouple(coupleId) {
@@ -2086,6 +2211,7 @@ function bindCouple(coupleId) {
     state.couple = couple;
     scheduleActivityExpiry();
     render();
+    maybeEnsureDailyEncouragement();
   });
   messagesUnsubscribe = service.watchMessages(coupleId, (messages) => {
     state.messages = messages;
@@ -2288,6 +2414,10 @@ appRoot.addEventListener("click", (event) => {
     state.view = "settings";
     syncRoute();
     render();
+  } else if (action === "retry-daily-encouragement") {
+    state.encouragementRequest.requestedDate = "";
+    state.encouragementRequest.error = "";
+    maybeEnsureDailyEncouragement({ force: true });
   } else if (action === "choose-avatar") {
     document.getElementById("avatar-file-input")?.click();
   } else if (action === "remove-avatar") {
@@ -2576,6 +2706,7 @@ async function start() {
     await service.initSession();
     authUnsubscribe = service.watchAuth(handleAuthenticatedUser);
     relationshipClockInterval ||= window.setInterval(updateRelationshipClock, 1_000);
+    scheduleDailyRollover();
     if ("serviceWorker" in navigator && !isPreview) {
       navigator.serviceWorker.register("/firebase-messaging-sw.js", { scope: "/" }).catch(() => {});
     }
@@ -2588,12 +2719,14 @@ async function start() {
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "visible" || !state.profile?.coupleId) return;
+  handleDailyRollover();
   render();
   scheduleActivityExpiry();
 });
 
 window.addEventListener("beforeunload", () => {
   if (relationshipClockInterval) window.clearInterval(relationshipClockInterval);
+  if (dailyRolloverTimer) window.clearTimeout(dailyRolloverTimer);
   clearActivityExpiryTimer();
   authUnsubscribe?.();
   profileUnsubscribe?.();

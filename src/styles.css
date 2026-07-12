@@ -2743,9 +2743,144 @@ select:focus-visible {
   align-items: start;
 }
 
+.daily-encouragement-panel,
 .love-signal,
 .daily-question-panel {
   grid-column: 1 / -1;
+}
+
+.daily-encouragement-panel {
+  padding: clamp(22px, 3vw, 34px);
+  overflow: hidden;
+  border: 1px solid #c8ddd8;
+  border-left: 5px solid var(--teal);
+  border-radius: var(--radius);
+  background: #eef7f4;
+}
+
+.daily-encouragement__head,
+.daily-encouragement__foot,
+.daily-encouragement__quote,
+.daily-encouragement__status {
+  display: flex;
+  align-items: center;
+}
+
+.daily-encouragement__head {
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.daily-encouragement__head .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.daily-encouragement__head .eyebrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daily-encouragement__head h2 {
+  margin: 4px 0 0;
+  font-size: 1rem;
+}
+
+.daily-encouragement__head time {
+  color: var(--teal);
+  font-size: 0.74rem;
+  font-weight: 750;
+}
+
+.daily-encouragement__quote {
+  max-width: 980px;
+  margin: clamp(24px, 4vw, 38px) 0;
+  align-items: flex-start;
+  gap: clamp(14px, 2vw, 22px);
+}
+
+.daily-encouragement__mark {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(36, 119, 111, 0.24);
+  border-radius: 50%;
+  color: var(--teal);
+}
+
+.daily-encouragement__mark svg {
+  width: 20px;
+  height: 20px;
+}
+
+.daily-encouragement__quote blockquote {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  font-weight: 550;
+  line-height: 1.14;
+}
+
+.daily-encouragement__foot {
+  padding-top: 14px;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid rgba(36, 119, 111, 0.16);
+  color: #52706b;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.daily-encouragement__foot span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.daily-encouragement__foot svg {
+  width: 15px;
+  height: 15px;
+}
+
+.daily-encouragement__status {
+  min-height: 104px;
+  justify-content: center;
+  gap: 10px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.daily-encouragement__status > svg {
+  width: 19px;
+  height: 19px;
+  color: var(--teal);
+}
+
+.daily-encouragement__status--error {
+  justify-content: space-between;
+  color: var(--danger);
+}
+
+.daily-encouragement__status--error div {
+  display: grid;
+  gap: 3px;
+}
+
+.daily-encouragement__status--error span {
+  color: var(--ink-soft);
+}
+
+.is-spinning {
+  animation: interfaceSpin 900ms linear infinite;
+}
+
+@keyframes interfaceSpin {
+  to { transform: rotate(360deg); }
 }
 
 .love-signal {
@@ -3203,6 +3338,7 @@ select:focus-visible {
   .vault-form > .form-actions,
   .cycle-summary,
   .event-list-panel,
+  .daily-encouragement-panel,
   .love-signal,
   .daily-question-panel {
     grid-column: 1;
@@ -3435,6 +3571,22 @@ select:focus-visible {
 
   .love-signal__button {
     width: 100%;
+  }
+
+  .daily-encouragement__head,
+  .daily-encouragement__foot {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .daily-encouragement__quote {
+    margin: 22px 0;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .daily-encouragement__mark {
+    display: none;
   }
 
   .daily-answer-form,

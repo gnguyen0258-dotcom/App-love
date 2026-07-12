@@ -1,0 +1,2166 @@
+{
+  "version": 1,
+  "timezone": "Asia/Ho_Chi_Minh",
+  "items": [
+    {
+      "id": "o01-a01",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o01-a02",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o01-a03",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o01-a04",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o01-a05",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o01-a06",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o01-a07",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o01-a08",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o01-a09",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o01-a10",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o01-a11",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o01-a12",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o01-a13",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o01-a14",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o01-a15",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o01-a16",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o01-a17",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o01-a18",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o01-a19",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o01-a20",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o01-a21",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o01-a22",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o01-a23",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o01-a24",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o01-a25",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o01-a26",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o01-a27",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o01-a28",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o01-a29",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o01-a30",
+      "text": "Hôm nay, hai đứa hãy nhớ rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o02-a01",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o02-a02",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o02-a03",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o02-a04",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o02-a05",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o02-a06",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o02-a07",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o02-a08",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o02-a09",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o02-a10",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o02-a11",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o02-a12",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o02-a13",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o02-a14",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o02-a15",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o02-a16",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o02-a17",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o02-a18",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o02-a19",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o02-a20",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o02-a21",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o02-a22",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o02-a23",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o02-a24",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o02-a25",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o02-a26",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o02-a27",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o02-a28",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o02-a29",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o02-a30",
+      "text": "Bắt đầu ngày mới, mình cùng tin rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o03-a01",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o03-a02",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o03-a03",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o03-a04",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o03-a05",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o03-a06",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o03-a07",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o03-a08",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o03-a09",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o03-a10",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o03-a11",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o03-a12",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o03-a13",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o03-a14",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o03-a15",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o03-a16",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o03-a17",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o03-a18",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o03-a19",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o03-a20",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o03-a21",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o03-a22",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o03-a23",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o03-a24",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o03-a25",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o03-a26",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o03-a27",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o03-a28",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o03-a29",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o03-a30",
+      "text": "Dù hôm nay bận đến đâu, đừng quên rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o04-a01",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o04-a02",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o04-a03",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o04-a04",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o04-a05",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o04-a06",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o04-a07",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o04-a08",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o04-a09",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o04-a10",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o04-a11",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o04-a12",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o04-a13",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o04-a14",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o04-a15",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o04-a16",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o04-a17",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o04-a18",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o04-a19",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o04-a20",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o04-a21",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o04-a22",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o04-a23",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o04-a24",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o04-a25",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o04-a26",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o04-a27",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o04-a28",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o04-a29",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o04-a30",
+      "text": "Trước khi bước vào ngày mới, hai đứa hãy mang theo niềm tin rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o05-a01",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o05-a02",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o05-a03",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o05-a04",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o05-a05",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o05-a06",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o05-a07",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o05-a08",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o05-a09",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o05-a10",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o05-a11",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o05-a12",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o05-a13",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o05-a14",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o05-a15",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o05-a16",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o05-a17",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o05-a18",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o05-a19",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o05-a20",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o05-a21",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o05-a22",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o05-a23",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o05-a24",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o05-a25",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o05-a26",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o05-a27",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o05-a28",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o05-a29",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o05-a30",
+      "text": "Sáng nay, mình nhắc nhau một điều nhỏ: mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o06-a01",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o06-a02",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o06-a03",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o06-a04",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o06-a05",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o06-a06",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o06-a07",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o06-a08",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o06-a09",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o06-a10",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o06-a11",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o06-a12",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o06-a13",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o06-a14",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o06-a15",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o06-a16",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o06-a17",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o06-a18",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o06-a19",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o06-a20",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o06-a21",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o06-a22",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o06-a23",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o06-a24",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o06-a25",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o06-a26",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o06-a27",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o06-a28",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o06-a29",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o06-a30",
+      "text": "Ngày mới sẽ dịu dàng hơn khi hai đứa nhớ rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o07-a01",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o07-a02",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o07-a03",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o07-a04",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o07-a05",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o07-a06",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o07-a07",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o07-a08",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o07-a09",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o07-a10",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o07-a11",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o07-a12",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o07-a13",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o07-a14",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o07-a15",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o07-a16",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o07-a17",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o07-a18",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o07-a19",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o07-a20",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o07-a21",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o07-a22",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o07-a23",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o07-a24",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o07-a25",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o07-a26",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o07-a27",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o07-a28",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o07-a29",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o07-a30",
+      "text": "Hôm nay, mình cứ bình tĩnh và tin rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o08-a01",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o08-a02",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o08-a03",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o08-a04",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o08-a05",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o08-a06",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o08-a07",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o08-a08",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o08-a09",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o08-a10",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o08-a11",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o08-a12",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o08-a13",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o08-a14",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o08-a15",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o08-a16",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o08-a17",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o08-a18",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o08-a19",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o08-a20",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o08-a21",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o08-a22",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o08-a23",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o08-a24",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o08-a25",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o08-a26",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o08-a27",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o08-a28",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o08-a29",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o08-a30",
+      "text": "Hai đứa có thể bắt đầu buổi sáng bằng việc nhớ rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o09-a01",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o09-a02",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o09-a03",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o09-a04",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o09-a05",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o09-a06",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o09-a07",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o09-a08",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o09-a09",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o09-a10",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o09-a11",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o09-a12",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o09-a13",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o09-a14",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o09-a15",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o09-a16",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o09-a17",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o09-a18",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o09-a19",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o09-a20",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o09-a21",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o09-a22",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o09-a23",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o09-a24",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o09-a25",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o09-a26",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o09-a27",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o09-a28",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o09-a29",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o09-a30",
+      "text": "Một ngày mới lại đến, và điều đáng giữ trong tim là mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o10-a01",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o10-a02",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o10-a03",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o10-a04",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o10-a05",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o10-a06",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o10-a07",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o10-a08",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o10-a09",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o10-a10",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o10-a11",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o10-a12",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o10-a13",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o10-a14",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o10-a15",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o10-a16",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o10-a17",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o10-a18",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o10-a19",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o10-a20",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o10-a21",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o10-a22",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o10-a23",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o10-a24",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o10-a25",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o10-a26",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o10-a27",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o10-a28",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o10-a29",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o10-a30",
+      "text": "Khi mặt trời lên, mình cùng nhắc nhau rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o11-a01",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o11-a02",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o11-a03",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o11-a04",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o11-a05",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o11-a06",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o11-a07",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o11-a08",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o11-a09",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o11-a10",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o11-a11",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o11-a12",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o11-a13",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o11-a14",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o11-a15",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o11-a16",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o11-a17",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o11-a18",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o11-a19",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o11-a20",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o11-a21",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o11-a22",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o11-a23",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o11-a24",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o11-a25",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o11-a26",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o11-a27",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o11-a28",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o11-a29",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o11-a30",
+      "text": "Hôm nay, dù mọi chuyện diễn ra thế nào, hãy nhớ rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o12-a01",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o12-a02",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o12-a03",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o12-a04",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o12-a05",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o12-a06",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o12-a07",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o12-a08",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o12-a09",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o12-a10",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o12-a11",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o12-a12",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o12-a13",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o12-a14",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o12-a15",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o12-a16",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o12-a17",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o12-a18",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o12-a19",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o12-a20",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o12-a21",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o12-a22",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o12-a23",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o12-a24",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o12-a25",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o12-a26",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o12-a27",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o12-a28",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o12-a29",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o12-a30",
+      "text": "Buổi sáng này, hai đứa cùng chọn tin rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o13-a01",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o13-a02",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o13-a03",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o13-a04",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o13-a05",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o13-a06",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o13-a07",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o13-a08",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o13-a09",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o13-a10",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o13-a11",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o13-a12",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o13-a13",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o13-a14",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o13-a15",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o13-a16",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o13-a17",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o13-a18",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o13-a19",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o13-a20",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o13-a21",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o13-a22",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o13-a23",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o13-a24",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o13-a25",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o13-a26",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o13-a27",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o13-a28",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o13-a29",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o13-a30",
+      "text": "Trước những việc đang chờ phía trước, mình hãy nhớ rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o14-a01",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o14-a02",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o14-a03",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o14-a04",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o14-a05",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o14-a06",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o14-a07",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o14-a08",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o14-a09",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o14-a10",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o14-a11",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o14-a12",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o14-a13",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o14-a14",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o14-a15",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o14-a16",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o14-a17",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o14-a18",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o14-a19",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o14-a20",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o14-a21",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o14-a22",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o14-a23",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o14-a24",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o14-a25",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o14-a26",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o14-a27",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o14-a28",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o14-a29",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o14-a30",
+      "text": "Hôm nay là một cơ hội mới để hai đứa tin rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o15-a01",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o15-a02",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o15-a03",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o15-a04",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o15-a05",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o15-a06",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o15-a07",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o15-a08",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o15-a09",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o15-a10",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o15-a11",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o15-a12",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o15-a13",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o15-a14",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o15-a15",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o15-a16",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o15-a17",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o15-a18",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o15-a19",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o15-a20",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o15-a21",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o15-a22",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o15-a23",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o15-a24",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o15-a25",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o15-a26",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o15-a27",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o15-a28",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o15-a29",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o15-a30",
+      "text": "Mỗi sáng, điều đầu tiên mình nên nhớ là mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o16-a01",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o16-a02",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o16-a03",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o16-a04",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o16-a05",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o16-a06",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o16-a07",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o16-a08",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o16-a09",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o16-a10",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o16-a11",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o16-a12",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o16-a13",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o16-a14",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o16-a15",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o16-a16",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o16-a17",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o16-a18",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o16-a19",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o16-a20",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o16-a21",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o16-a22",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o16-a23",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o16-a24",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o16-a25",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o16-a26",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o16-a27",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o16-a28",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o16-a29",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o16-a30",
+      "text": "Ngày hôm nay sẽ có ý nghĩa hơn khi mình biết rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o17-a01",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o17-a02",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o17-a03",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o17-a04",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o17-a05",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o17-a06",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o17-a07",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o17-a08",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o17-a09",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o17-a10",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o17-a11",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o17-a12",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o17-a13",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o17-a14",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o17-a15",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o17-a16",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o17-a17",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o17-a18",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o17-a19",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o17-a20",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o17-a21",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o17-a22",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o17-a23",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o17-a24",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o17-a25",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o17-a26",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o17-a27",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o17-a28",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o17-a29",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o17-a30",
+      "text": "Hai đứa hãy bước vào ngày mới với suy nghĩ rằng mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    },
+    {
+      "id": "o18-a01",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: cả hai đều xứng đáng với một ngày dịu dàng."
+    },
+    {
+      "id": "o18-a02",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mình không cần hoàn hảo để vẫn đáng tự hào."
+    },
+    {
+      "id": "o18-a03",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mỗi cố gắng nhỏ hôm nay đều có ý nghĩa."
+    },
+    {
+      "id": "o18-a04",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: chỉ cần cùng một phía, chuyện khó rồi cũng sẽ nhẹ hơn."
+    },
+    {
+      "id": "o18-a05",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: hai đứa luôn có một nơi bình yên trong nhau."
+    },
+    {
+      "id": "o18-a06",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: một lời hỏi han đúng lúc có thể làm cả ngày ấm hơn."
+    },
+    {
+      "id": "o18-a07",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mình có thể đi chậm, miễn là không bỏ quên nhau."
+    },
+    {
+      "id": "o18-a08",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: hôm nay vẫn còn rất nhiều điều tốt đẹp đang chờ."
+    },
+    {
+      "id": "o18-a09",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: cả hai đã mạnh mẽ hơn những gì mình thường nghĩ."
+    },
+    {
+      "id": "o18-a10",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: một ngày chưa trọn vẹn vẫn có thể chứa nhiều khoảnh khắc đẹp."
+    },
+    {
+      "id": "o18-a11",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: yêu thương được tạo nên từ những điều nhỏ mình làm mỗi ngày."
+    },
+    {
+      "id": "o18-a12",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mỗi người đều có quyền mệt, nghỉ và bắt đầu lại."
+    },
+    {
+      "id": "o18-a13",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: hai đứa không phải tự mình gánh hết mọi chuyện."
+    },
+    {
+      "id": "o18-a14",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mình luôn có thể chọn nói với nhau bằng sự dịu dàng."
+    },
+    {
+      "id": "o18-a15",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: những bước tiến bé vẫn là bước tiến thật sự."
+    },
+    {
+      "id": "o18-a16",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: một cái ôm và một câu chân thành đôi khi đã là đủ."
+    },
+    {
+      "id": "o18-a17",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mình đang cùng nhau xây nên điều đáng quý từng ngày."
+    },
+    {
+      "id": "o18-a18",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: khó khăn hôm nay không quyết định niềm vui của ngày mai."
+    },
+    {
+      "id": "o18-a19",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: cả hai đều có những điểm mạnh đáng được nhìn thấy."
+    },
+    {
+      "id": "o18-a20",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: chỉ cần còn lắng nghe, mình vẫn luôn tìm được đường về với nhau."
+    },
+    {
+      "id": "o18-a21",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: hạnh phúc không cần ồn ào mới trở nên có thật."
+    },
+    {
+      "id": "o18-a22",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: sự hiện diện của mỗi người đều làm cuộc sống người kia tốt hơn."
+    },
+    {
+      "id": "o18-a23",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mình có thể cùng biến một ngày bình thường thành kỷ niệm đẹp."
+    },
+    {
+      "id": "o18-a24",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: điều tốt nhất hôm nay có thể bắt đầu từ một nụ cười dành cho nhau."
+    },
+    {
+      "id": "o18-a25",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: cả hai đều xứng đáng được yêu thương theo cách khiến mình thấy an toàn."
+    },
+    {
+      "id": "o18-a26",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mỗi lần lựa chọn thấu hiểu là một lần tình yêu lớn thêm."
+    },
+    {
+      "id": "o18-a27",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mình có đủ kiên nhẫn để đi qua ngày hôm nay từng việc một."
+    },
+    {
+      "id": "o18-a28",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: hai đứa đã đi được một chặng đáng tự hào và vẫn còn nhiều điều đẹp phía trước."
+    },
+    {
+      "id": "o18-a29",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: không cần giải quyết mọi thứ ngay lúc này; ở bên nhau đã là một khởi đầu."
+    },
+    {
+      "id": "o18-a30",
+      "text": "Sáng nay, mình gửi cho nhau một lời nhắc: mỗi ngày cùng nhau đều là một cơ hội để yêu nhau tốt hơn."
+    }
+  ]
+}

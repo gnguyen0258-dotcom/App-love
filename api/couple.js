@@ -7,6 +7,7 @@ const {
   requirePost,
   sendJson,
 } = require("./_firebase-admin");
+const dailyEncouragementCatalog = require("../shared/daily-encouragement.json");
 
 const PAIR_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const PAIR_REQUEST_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000;
@@ -15,6 +16,71 @@ const MAX_AVATAR_DATA_LENGTH = 160_000;
 const MAX_AVATAR_BYTES = 120_000;
 const MAX_BACKGROUND_DATA_LENGTH = 360_000;
 const MAX_BACKGROUND_BYTES = 270_000;
+const DAILY_ENCOURAGEMENTS = dailyEncouragementCatalog.items;
+const DAILY_ENCOURAGEMENT_IDS = new Set(DAILY_ENCOURAGEMENTS.map((item) => item.id));
+
+function dateKeyInTimeZone(value = new Date(), timeZone = dailyEncouragementCatalog.timezone) {
+  const parts = new Intl.DateTimeFormat("en", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(value);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function fallbackDailyEncouragement(dateKey, randomIndex) {
+  const [year, month, day] = dateKey.split("-");
+  const quote = DAILY_ENCOURAGEMENTS[randomIndex(DAILY_ENCOURAGEMENTS.length)];
+  const continuation = `${quote.text.charAt(0).toLowerCase()}${quote.text.slice(1)}`;
+  return {
+    quoteId: `date-${dateKey}`,
+    text: `Dành riêng cho ngày ${day}/${month}/${year}: ${continuation}`,
+  };
+}
+
+function buildDailyEncouragementState(
+  currentValue,
+  dateKey,
+  assignedAt = Date.now(),
+  randomIndex = (length) => crypto.randomInt(length),
+) {
+  const currentState = currentValue && typeof currentValue === "object" ? currentValue : {};
+  const current = currentState.current;
+  if (
+    current?.date === dateKey &&
+    typeof current.quoteId === "string" &&
+    typeof current.text === "string" &&
+    current.text.length > 0 &&
+    Number(current.assignedAt) > 0
+  ) {
+    return { changed: false, current, state: currentState };
+  }
+
+  const used = Object.fromEntries(
+    Object.entries(currentState.used || {}).filter(
+      ([quoteId, usedDate]) => DAILY_ENCOURAGEMENT_IDS.has(quoteId) && /^\d{4}-\d{2}-\d{2}$/.test(usedDate),
+    ),
+  );
+  const available = DAILY_ENCOURAGEMENTS.filter((quote) => !Object.hasOwn(used, quote.id));
+  const selected = available.length
+    ? available[randomIndex(available.length)]
+    : fallbackDailyEncouragement(dateKey, randomIndex);
+  const nextCurrent = {
+    date: dateKey,
+    quoteId: selected.id || selected.quoteId,
+    text: selected.text,
+    assignedAt,
+  };
+  if (available.length) used[nextCurrent.quoteId] = dateKey;
+
+  return {
+    changed: true,
+    current: nextCurrent,
+    state: { current: nextCurrent, used },
+  };
+}
 
 function createPairCode() {
   const bytes = crypto.randomBytes(8);
@@ -397,6 +463,30 @@ async function updatePulseBackground(database, uid, rawBackgroundData) {
   return { updated: true, customBackground: Boolean(imageData) };
 }
 
+async function ensureDailyEncouragement(database, uid, options = {}) {
+  const profile = (await database.ref(`users/${uid}`).get()).val() || {};
+  if (!profile.coupleId) throw apiError("Tài khoản chưa liên kết với người ấy.", 409);
+  const memberSnapshot = await database.ref(`couples/${profile.coupleId}/members/${uid}`).get();
+  if (!memberSnapshot.exists()) throw apiError("Bạn không còn quyền xem không gian này.", 403);
+
+  const dateKey = options.dateKey || dateKeyInTimeZone(options.date || new Date());
+  const assignedAt = options.assignedAt || Date.now();
+  const encouragementRef = database.ref(
+    `couples/${profile.coupleId}/shared/dailyEncouragement`,
+  );
+  const result = await encouragementRef.transaction((current) =>
+    buildDailyEncouragementState(
+      current,
+      dateKey,
+      assignedAt,
+      options.randomIndex,
+    ).state,
+  );
+  const encouragement = result.snapshot?.val()?.current;
+  if (!encouragement) throw apiError("Chưa thể chọn lời nhắn cho hôm nay.", 500);
+  return { encouragement };
+}
+
 module.exports = async function handler(request, response) {
   if (!requirePost(request, response)) return;
   try {
@@ -408,6 +498,7 @@ module.exports = async function handler(request, response) {
       "submit-code": 1000,
       "update-avatar": 1000,
       "update-pulse-background": 1500,
+      "daily-encouragement": 500,
       leave: 1500,
     };
     if (!Object.hasOwn(intervals, action)) {
@@ -432,6 +523,8 @@ module.exports = async function handler(request, response) {
         decodedToken.uid,
         request.body?.imageData,
       );
+    } else if (action === "daily-encouragement") {
+      result = await ensureDailyEncouragement(database, decodedToken.uid);
     } else result = await leaveCouple(database, decodedToken.uid);
     sendJson(response, 200, result);
   } catch (error) {
@@ -441,7 +534,10 @@ module.exports = async function handler(request, response) {
 
 module.exports._test = {
   createPairCode,
+  buildDailyEncouragementState,
+  dateKeyInTimeZone,
   ensurePairCode,
+  ensureDailyEncouragement,
   isPairCode,
   leaveCouple,
   normalizeCode,

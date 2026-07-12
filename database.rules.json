@@ -154,6 +154,9 @@
               }
             }
           },
+          "dailyEncouragement": {
+            ".write": false
+          },
           "dateIdeas": {
             "$ideaId": {
               ".write": "auth != null && root.child('couples').child($coupleId).child('members').child(auth.uid).exists() && ((!data.exists() && newData.child('createdBy').val() === auth.uid) || (data.exists() && data.child('createdBy').val() === auth.uid))",

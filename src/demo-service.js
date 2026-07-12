@@ -1,5 +1,6 @@
 const now = Date.now();
-const date = new Date().toISOString().slice(0, 10);
+const localNow = new Date(now);
+const date = new Date(now - localNow.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 const ACTIVITY_TTL_MS = 24 * 60 * 60 * 1000;
 
 function relativeDate(days) {
@@ -112,6 +113,15 @@ let demoCouple = {
           updatedAt: now - 18 * 60 * 1000,
         },
       },
+    },
+    dailyEncouragement: {
+      current: {
+        date,
+        quoteId: "o01-a01",
+        text: "Hôm nay, hai đứa hãy nhớ rằng cả hai đều xứng đáng với một ngày dịu dàng.",
+        assignedAt: now - 30 * 60 * 1000,
+      },
+      used: { "o01-a01": date },
     },
     dateIdeas: {
       "idea-1": { text: "Đi ăn món chưa ai trong hai đứa từng thử", createdBy: "demo-giang", createdAt: now - 3_600_000 },
@@ -375,6 +385,21 @@ export function createDemoService(route = "app") {
       }
       publish("couple", demoCouple);
       return { updated: true, customBackground: Boolean(imageData) };
+    },
+    async ensureDailyEncouragement() {
+      if (demoCouple.shared.dailyEncouragement?.current?.date !== date) {
+        demoCouple.shared.dailyEncouragement = {
+          current: {
+            date,
+            quoteId: `demo-${date}`,
+            text: "Ngày mới đã đến; hai đứa cứ bình tĩnh, tử tế và luôn ở cùng một phía nhé.",
+            assignedAt: Date.now(),
+          },
+          used: demoCouple.shared.dailyEncouragement?.used || {},
+        };
+        publish("couple", demoCouple);
+      }
+      return { encouragement: demoCouple.shared.dailyEncouragement.current };
     },
     async sendMessage({ text, kind = "message", stickerId = "" }) {
       const senderName = demoCouple.shared.nicknames?.[demoUser.uid] || demoUser.displayName;

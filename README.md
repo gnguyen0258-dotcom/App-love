@@ -10,7 +10,7 @@ HeartSync là PWA riêng tư dành cho hai tài khoản đã liên kết. Phase 
 - Kho lưu trữ sở thích, số đo và những điều cần ghi nhớ.
 - Theo dõi chu kỳ có lịch ghi nhận và dự báo tham khảo.
 - Lịch sự kiện chung cho hai tài khoản.
-- Góc yêu với câu hỏi mỗi ngày, Hũ hẹn hò, Phiếu yêu thương và tín hiệu bất ngờ.
+- Góc yêu với lời động viên chung không lặp lại mỗi ngày, câu hỏi mỗi ngày, Hũ hẹn hò, Phiếu yêu thương và tín hiệu bất ngờ.
 - Web Push qua Firebase Cloud Messaging khi app ở nền hoặc đã đóng.
 - Nội dung lời nhắn trên màn hình khóa được ẩn mặc định.
 
@@ -68,6 +68,8 @@ Không commit private key hoặc service-account JSON lên GitHub. Có thể dù
 ## Dữ liệu chung và kiểm thử
 
 Tính ngày, Kho lưu trữ, Chu kỳ, Lịch và Góc yêu nằm dưới `couples/{coupleId}/shared`. Cả hai thành viên đã liên kết đều có thể đọc dữ liệu chung. Câu hỏi mỗi ngày chỉ cho phép từng người sửa câu trả lời của chính mình; ý tưởng hẹn hò chỉ người tạo được xóa; phiếu chỉ người được nhận mới có thể sử dụng. Dữ liệu Chu kỳ là dữ liệu nhạy cảm; chỉ nhập khi cả hai đã thống nhất chia sẻ. Dự báo chu kỳ không dùng để tránh thai, chẩn đoán hoặc thay thế tư vấn y tế.
+
+Lời động viên mỗi ngày được chọn từ 540 câu tại `shared/daily-encouragement.json`. Vercel Function dùng transaction để hai thiết bị luôn nhận cùng một câu tại `shared/dailyEncouragement/current`, đồng thời lưu các ID đã dùng để không chọn lại. Ngày mới được tính theo múi giờ `Asia/Ho_Chi_Minh`; khi kho câu có sẵn đã dùng hết, câu dự phòng chứa ngày cụ thể và một thành phần ngẫu nhiên nên toàn bộ nội dung vẫn không trùng.
 
 Mã cá nhân được Vercel Function cấp ở lần đăng nhập đầu tiên. Chỉ chủ tài khoản đọc được mã của mình. Bảng tra mã, yêu cầu ghép và khóa chống ghép trùng đều bị Firebase Rules chặn hoàn toàn với trình duyệt.
 

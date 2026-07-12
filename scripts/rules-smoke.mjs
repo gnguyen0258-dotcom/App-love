@@ -402,6 +402,20 @@ try {
     }),
     "A member cannot answer the daily question for their partner",
   );
+  assertDenied(
+    await databaseRequest("PUT", `couples/${coupleId}/shared/dailyEncouragement`, {
+      token: first.token,
+      body: {
+        current: {
+          date: "2026-07-11",
+          quoteId: "forged",
+          text: "Bypass trusted daily selection",
+          assignedAt: Date.now(),
+        },
+      },
+    }),
+    "Daily encouragement selection must go through the trusted API",
+  );
   assertAllowed(
     await databaseRequest("PUT", `couples/${coupleId}/shared/dateIdeas/cute-idea`, {
       token: first.token,
