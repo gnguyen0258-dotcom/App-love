@@ -69,8 +69,8 @@ test("custom avatars sync to an existing couple member without recreating a remo
         return {
           transaction: async (update) => {
             const next = update(member);
-            if (next !== undefined) member = next;
-            return { committed: next !== undefined };
+            member = next;
+            return { committed: true };
           },
         };
       }

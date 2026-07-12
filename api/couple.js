@@ -355,7 +355,8 @@ async function updateAvatar(database, uid, rawAvatarData) {
   await database.ref(`users/${uid}/avatarData`).set(avatarData || null);
   if (profile.coupleId) {
     await database.ref(`couples/${profile.coupleId}/members/${uid}`).transaction((current) => {
-      if (!current) return;
+      // A cold transaction starts with null, then retries with server data after a hash mismatch.
+      if (!current) return null;
       const member = { ...current };
       if (avatarData) member.avatarData = avatarData;
       else delete member.avatarData;
