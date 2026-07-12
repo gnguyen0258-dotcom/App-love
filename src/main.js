@@ -206,6 +206,7 @@ const state = {
   error: "",
   messageDraft: "",
   chatPicker: null,
+  emojiGroup: "feelings",
   dailyAnswerDraft: "",
   checkinDraft: { mood: "", need: "", note: "" },
   notification: { supported: false, permission: "default", registered: false },
@@ -1229,17 +1230,25 @@ function chatPickerMarkup() {
 }
 
 function emojiLibraryMarkup() {
+  const activeGroup = chatMedia.emojiGroups.find((group) => group.id === state.emojiGroup)
+    || chatMedia.emojiGroups[0];
   return `<div class="emoji-library">
-    ${chatMedia.emojiGroups.map((group) => `
-      <section class="media-group" aria-labelledby="emoji-group-${escapeHTML(group.id)}">
-        <h3 id="emoji-group-${escapeHTML(group.id)}">${escapeHTML(group.label)}</h3>
+    <nav class="emoji-category-nav" role="tablist" aria-label="Nhóm biểu tượng">
+      ${chatMedia.emojiGroups.map((group) => `
+        <button type="button" role="tab" id="emoji-tab-${escapeHTML(group.id)}" data-action="select-emoji-group" data-group-id="${escapeHTML(group.id)}" aria-controls="emoji-group-panel" aria-selected="${group.id === activeGroup.id}" title="${escapeHTML(group.label)}">
+          <span aria-hidden="true">${escapeHTML(group.icon || group.items[0])}</span>
+          <span class="sr-only">${escapeHTML(group.label)}</span>
+        </button>
+      `).join("")}
+    </nav>
+    <section class="media-group" id="emoji-group-panel" role="tabpanel" aria-labelledby="emoji-tab-${escapeHTML(activeGroup.id)}">
+        <h3>${escapeHTML(activeGroup.label)}</h3>
         <div class="emoji-grid">
-          ${group.items.map((emoji) => `
+          ${activeGroup.items.map((emoji) => `
             <button class="emoji-button" type="button" data-action="insert-emoji" data-emoji="${escapeHTML(emoji)}" aria-label="Chèn ${escapeHTML(emoji)}" title="${escapeHTML(emoji)}">${escapeHTML(emoji)}</button>
           `).join("")}
         </div>
       </section>
-    `).join("")}
   </div>`;
 }
 
@@ -2211,6 +2220,10 @@ appRoot.addEventListener("click", (event) => {
     state.chatPicker = null;
     render();
     document.getElementById("message-input")?.focus();
+  } else if (action === "select-emoji-group") {
+    if (!chatMedia.emojiGroups.some((group) => group.id === button.dataset.groupId)) return;
+    state.emojiGroup = button.dataset.groupId;
+    render();
   } else if (action === "insert-emoji") {
     const input = document.getElementById("message-input");
     const emoji = button.dataset.emoji || "";

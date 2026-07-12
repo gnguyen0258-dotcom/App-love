@@ -102,7 +102,7 @@ Trong tab `Hai đứa`, cả hai thành viên có thể đặt biệt danh cho m
 
 ## Biểu tượng và sticker
 
-Tab `Tin nhắn` có thư viện emoji chuẩn và 24 sticker HeartSync nguyên bản trong `shared/chat-media.json`. Bộ chọn mô phỏng thao tác quen thuộc của các ứng dụng nhắn tin nhưng không đóng gói tài sản độc quyền của Instagram hoặc Messenger. Emoji được chèn vào nội dung văn bản; sticker được gửi bằng `kind: "sticker"` và một `stickerId` đã được API đối chiếu với catalog. Firebase chỉ lưu ID, nhãn và metadata tin nhắn, không lưu Base64 hoặc file ảnh sticker.
+Tab `Tin nhắn` có hơn 1.100 emoji Unicode được chia thành 7 nhóm và 24 sticker HeartSync nguyên bản trong `shared/chat-media.json`. Danh mục emoji được sinh bằng `npm run emoji-catalog`, tự loại trùng trên toàn thư viện và có thanh chọn nhóm gọn nhẹ cho điện thoại. Bộ chọn mô phỏng thao tác quen thuộc của các ứng dụng nhắn tin nhưng không đóng gói tài sản độc quyền của Instagram hoặc Messenger. Emoji được chèn vào nội dung văn bản; sticker được gửi bằng `kind: "sticker"` và một `stickerId` đã được API đối chiếu với catalog. Firebase chỉ lưu ID, nhãn và metadata tin nhắn, không lưu Base64 hoặc file ảnh sticker.
 
 ## Lịch sử hoạt động 24 giờ
 

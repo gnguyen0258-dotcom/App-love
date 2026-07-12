@@ -396,8 +396,27 @@ async function main() {
   interactions.emojiPickerOpened = await evaluate(
     "Boolean(document.querySelector('.emoji-library .emoji-button'))",
   );
+  interactions.emojiCatalogExpanded = await evaluate(`(() => {
+    const values = Array.from(
+      document.querySelectorAll('.emoji-library .emoji-button'),
+      (button) => button.dataset.emoji,
+    );
+    return document.querySelectorAll('.emoji-category-nav [role="tab"]').length === 7 &&
+      values.length >= 70 &&
+      values.includes('🤡');
+  })()`);
+  await evaluate(
+    "document.querySelector('[data-action=\"select-emoji-group\"][data-group-id=\"animals\"]').click()",
+  );
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  interactions.emojiGroupSelected = await evaluate(
+    "document.querySelector('[data-action=\"select-emoji-group\"][data-group-id=\"animals\"]').getAttribute('aria-selected') === 'true' && document.querySelector('.emoji-library h3').textContent.includes('Động vật') && Array.from(document.querySelectorAll('.emoji-button')).some((button) => button.dataset.emoji === '🦄')",
+  );
+  audits.push(await audit("chat-emoji-picker"));
+  await screenshot("heartsync-cdp-chat-emoji-picker.png");
   await evaluate(`(() => {
-    const emoji = document.querySelector('.emoji-library .emoji-button');
+    const emoji = Array.from(document.querySelectorAll('.emoji-library .emoji-button'))
+      .find((button) => button.dataset.emoji === '🦄');
     window.__selectedEmoji = emoji.textContent;
     emoji.click();
   })()`);
@@ -554,6 +573,14 @@ async function main() {
     );
     await new Promise((resolve) => setTimeout(resolve, 100));
     audits.push(await audit("chat-picker-" + viewport.width));
+    await evaluate(
+      "document.querySelector('[data-action=\"select-chat-picker\"][data-picker=\"emoji\"]').click()",
+    );
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    audits.push(await audit("emoji-picker-" + viewport.width));
+    if (viewport.width === 1440) {
+      await screenshot("heartsync-cdp-emoji-picker-desktop.png");
+    }
   }
 
   for (const viewport of [
