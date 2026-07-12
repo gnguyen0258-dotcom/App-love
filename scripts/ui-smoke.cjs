@@ -6,6 +6,7 @@ const path = require("node:path");
 const chromePath =
   process.env.CHROME_PATH || "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const baseUrl = process.env.HEARTSYNC_URL || "http://127.0.0.1:5173";
+const targetOrigin = new URL(baseUrl).origin;
 
 async function main() {
   const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), "heartsync-cdp-"));
@@ -72,14 +73,14 @@ async function main() {
   let targets;
   for (let attempt = 0; attempt < 30; attempt += 1) {
     targets = (await send("Target.getTargets")).targetInfos;
-    if (targets.some((target) => target.type === "page" && target.url.includes("127.0.0.1"))) {
+    if (targets.some((target) => target.type === "page" && target.url.startsWith(targetOrigin))) {
       break;
     }
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   const target = targets.find(
-    (item) => item.type === "page" && item.url.includes("127.0.0.1"),
+    (item) => item.type === "page" && item.url.startsWith(targetOrigin),
   );
   if (!target) throw new Error("Page target not found");
   const attached = await send("Target.attachToTarget", {
