@@ -1366,6 +1366,10 @@ select:focus-visible {
   line-height: 1.55;
 }
 
+.settings-profile-panel {
+  border-top: 3px solid var(--teal);
+}
+
 .switch {
   width: 48px;
   height: 28px;

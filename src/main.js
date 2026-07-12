@@ -1548,6 +1548,12 @@ function renderSettings() {
         <div><p>Tài khoản và thiết bị</p><h1 class="page-title">Cài đặt</h1></div>
       </header>
       <div class="settings-grid">
+        <section class="section-panel settings-profile-panel">
+          <div class="section-panel__head"><h2>Ảnh đại diện</h2><i data-lucide="user-round"></i></div>
+          ${avatarEditorMarkup()}
+          <p class="avatar-editor__note">Chọn ảnh từ điện thoại. Ảnh được tự cắt vuông, nén và chỉ hiển thị cho hai tài khoản đã liên kết.</p>
+        </section>
+
         <section class="section-panel">
           <div class="section-panel__head"><h2>Thông báo</h2><i data-lucide="bell"></i></div>
           <div class="setting-row">
@@ -1568,12 +1574,6 @@ function renderSettings() {
             <i data-lucide="check"></i>
           </div>
           <button class="btn btn--secondary" type="button" data-action="logout"><i data-lucide="log-out"></i> Đăng xuất thiết bị này</button>
-        </section>
-
-        <section class="section-panel">
-          <div class="section-panel__head"><h2>Hồ sơ</h2><i data-lucide="user-round"></i></div>
-          ${avatarEditorMarkup()}
-          <p class="avatar-editor__note">Ảnh được tự cắt vuông và nén trước khi đồng bộ. Chỉ hai tài khoản đã liên kết nhìn thấy ảnh này.</p>
         </section>
 
         <section class="section-panel">
