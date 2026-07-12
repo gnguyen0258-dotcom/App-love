@@ -54,6 +54,47 @@ test("custom avatars reject unsupported or forged image data", () => {
   );
 });
 
+test("shared pulse backgrounds accept real raster images and allow reset", () => {
+  assert.equal(coupleHandler._test.normalizeBackgroundData(validPngAvatar), validPngAvatar);
+  assert.equal(coupleHandler._test.normalizeBackgroundData(""), "");
+  assert.equal(coupleHandler._test.normalizeBackgroundData(null), "");
+});
+
+test("shared pulse backgrounds reject forged or oversized images", () => {
+  const fakeWebp = `data:image/webp;base64,${Buffer.alloc(64, 1).toString("base64")}`;
+  assert.throws(() => coupleHandler._test.normalizeBackgroundData(fakeWebp), /hợp lệ/i);
+  assert.throws(
+    () => coupleHandler._test.normalizeBackgroundData(`data:image/png;base64,${"A".repeat(360_004)}`),
+    /quá lớn/i,
+  );
+});
+
+test("shared pulse backgrounds replace the previous image and allow reset", async () => {
+  let storedBackground = "not-set";
+  const database = {
+    ref(path) {
+      if (path === "users/user-a") {
+        return { get: async () => ({ val: () => ({ coupleId: "couple-a" }) }) };
+      }
+      if (path === "couples/couple-a/members/user-a") {
+        return { get: async () => ({ exists: () => true }) };
+      }
+      if (path === "couples/couple-a/shared/pulseBackground") {
+        return { set: async (value) => { storedBackground = value; } };
+      }
+      throw new Error(`Unexpected path: ${path}`);
+    },
+  };
+
+  await coupleHandler._test.updatePulseBackground(database, "user-a", validPngAvatar);
+  assert.equal(storedBackground.imageData, validPngAvatar);
+  assert.equal(storedBackground.updatedBy, "user-a");
+  assert.equal(typeof storedBackground.updatedAt, "number");
+
+  await coupleHandler._test.updatePulseBackground(database, "user-a", "");
+  assert.equal(storedBackground, null);
+});
+
 test("custom avatars sync to an existing couple member without recreating a removed member", async () => {
   let profileAvatar;
   let member = { displayName: "User A", joinedAt: 1 };

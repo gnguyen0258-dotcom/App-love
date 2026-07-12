@@ -66,10 +66,12 @@ let demoCouple = {
       favoriteFoods: "Bún chả, lẩu Thái, sushi",
       favoriteDrinks: "Trà đào ít đường, cacao nóng",
       favoriteFlowers: "Hoa linh lan, tulip trắng",
+      bodyGender: "female",
       height: "160",
       weight: "48",
       chest: "82",
       waist: "64",
+      footLength: "24.1",
       notes: "Không thích rau mùi. Khi mệt chỉ cần được ôm và nghe kể chuyện.",
       updatedAt: now,
       updatedBy: "demo-partner",
@@ -360,6 +362,19 @@ export function createDemoService(route = "app") {
       }
       publish("profile", demoProfile);
       return { updated: true, customAvatar: Boolean(avatarData) };
+    },
+    async updatePulseBackground(imageData) {
+      if (imageData) {
+        demoCouple.shared.pulseBackground = {
+          imageData,
+          updatedAt: Date.now(),
+          updatedBy: demoUser.uid,
+        };
+      } else {
+        delete demoCouple.shared.pulseBackground;
+      }
+      publish("couple", demoCouple);
+      return { updated: true, customBackground: Boolean(imageData) };
     },
     async sendMessage({ text, kind = "message", stickerId = "" }) {
       const senderName = demoCouple.shared.nicknames?.[demoUser.uid] || demoUser.displayName;

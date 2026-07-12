@@ -275,6 +275,20 @@ try {
     "A member can save the shared vault",
   );
   assertAllowed(
+    await databaseRequest("PATCH", `couples/${coupleId}/shared/vault`, {
+      token: first.token,
+      body: { bodyGender: "female", footLength: "24.1", updatedAt: Date.now() },
+    }),
+    "A member can save gender and foot length for size guidance",
+  );
+  assertDenied(
+    await databaseRequest("PATCH", `couples/${coupleId}/shared/vault`, {
+      token: first.token,
+      body: { bodyGender: "forged", updatedAt: Date.now() },
+    }),
+    "The vault rejects unsupported gender values",
+  );
+  assertAllowed(
     await databaseRequest("PUT", `couples/${coupleId}/shared/cycle`, {
       token: first.token,
       body: {

@@ -86,6 +86,16 @@ Nút làm mới xuất hiện ở màn hình đăng nhập, ghép đôi và than
 
 Google Authentication dùng `signInWithPopup()` trên mọi thiết bị. Không tự chuyển sang `signInWithRedirect()` khi popup bị chặn vì Safari 16.1+ chặn bộ nhớ bên thứ ba của Firebase Auth trên domain Vercel. Lệnh mở popup được gọi trước khi giao diện chuyển sang trạng thái bận để giữ nguyên user activation trên Safari.
 
+## Ảnh nền nhịp đôi
+
+Nút máy ảnh trên khung Nhịp đôi cho phép một trong hai thành viên chọn ảnh nền chung hoặc trở về nền xanh mặc định. Ảnh được cắt theo tỷ lệ 16:9, nén WebP ngay trên thiết bị và kiểm tra lại chữ ký tệp ở Vercel Function. Realtime Database chỉ giữ bản hiện tại tại `couples/{coupleId}/shared/pulseBackground`; đổi ảnh là ghi đè nên dung lượng không tăng theo lịch sử.
+
+## Hướng dẫn size quần áo và giày
+
+Kho lưu trữ có bộ chọn bảng Nam/Nữ. Size quần áo dùng các khoảng chiều cao và cân nặng trong bảng tham chiếu; khi hai chỉ số trả về hai mức khác nhau, app ưu tiên mức lớn hơn để hạn chế bị chật. Các mức ngoài S–XXL được ngoại suy theo bước chiều cao/cân nặng sát biên thành XS, 2XS, 3XL, 4XL và tiếp tục tương tự.
+
+Size giày nhận chiều dài chân theo centimet và trả đồng thời VN, US, UK. Giá trị nằm giữa hai hàng được nội suy rồi làm tròn đến nửa size; giá trị ngoài bảng dùng độ chênh của hai hàng gần biên nhất. Đây là size tham khảo, form giày và từng hãng vẫn có thể chênh lệch.
+
 ## Biệt danh đồng bộ
 
 Trong tab `Hai đứa`, cả hai thành viên có thể đặt biệt danh cho mình và người ấy rồi lưu một lần. Dữ liệu nằm tại `couples/{coupleId}/shared/nicknames/{uid}`, tối đa 32 ký tự và chỉ chấp nhận UID đang thuộc cặp. Biệt danh được ưu tiên trong thanh tiêu đề, danh sách thành viên, tin nhắn, lịch và thông báo đẩy; tên Google gốc không bị thay đổi. Để trống một ô sẽ xóa biệt danh và dùng lại tên Google.

@@ -923,15 +923,61 @@ select:focus-visible {
   content: "";
   position: absolute;
   inset: 28px;
+  z-index: 1;
   border: 1px solid rgba(255, 255, 255, 0.18);
   pointer-events: none;
+}
+
+.pair-pulse--custom {
+  background-position: center;
+  background-size: cover;
+}
+
+.pair-pulse--custom::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(rgba(16, 68, 63, 0.58), rgba(16, 68, 63, 0.74));
+  pointer-events: none;
+}
+
+.pulse-background-actions {
+  display: flex;
+  gap: 7px;
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  z-index: 3;
+}
+
+.pulse-background-button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  border-radius: 50%;
+  background: rgba(20, 58, 55, 0.46);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.pulse-background-button:hover {
+  background: var(--coral);
+}
+
+.pulse-background-button svg {
+  width: 17px;
+  height: 17px;
 }
 
 .pulse-person {
   min-width: 0;
   text-align: center;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .pulse-person .avatar {
@@ -960,7 +1006,7 @@ select:focus-visible {
   justify-items: center;
   gap: 10px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .pulse-center__heart {
@@ -2021,6 +2067,52 @@ select:focus-visible {
   align-items: stretch;
 }
 
+.size-gender-control {
+  min-width: 0;
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+}
+
+.size-gender-control legend {
+  margin-bottom: 7px;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.size-gender-control > div {
+  width: min(100%, 310px);
+  padding: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-quiet);
+}
+
+.size-gender-control label span {
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.size-gender-control input:checked + span {
+  background: var(--surface);
+  color: var(--teal);
+  box-shadow: 0 3px 10px rgba(49, 37, 42, 0.08);
+}
+
+.size-gender-control input:focus-visible + span {
+  outline: 3px solid rgba(36, 119, 111, 0.26);
+  outline-offset: 1px;
+}
+
 .measurement-field > div {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -2043,6 +2135,13 @@ select:focus-visible {
   font-weight: 800;
 }
 
+.size-method-note,
+.shoe-size-detail {
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+}
+
 .size-result {
   min-height: 140px;
   padding: 22px;
@@ -2059,6 +2158,11 @@ select:focus-visible {
   color: var(--teal);
 }
 
+.size-result small {
+  max-width: 180px;
+  line-height: 1.45;
+}
+
 .size-result span {
   font-size: 0.7rem;
   font-weight: 800;
@@ -2071,6 +2175,101 @@ select:focus-visible {
   font-family: "Newsreader", Georgia, serif;
   font-size: clamp(2.2rem, 5vw, 3.8rem);
   font-weight: 600;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.shoe-guide {
+  margin-top: 26px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.shoe-guide__head,
+.shoe-guide__head > div,
+.shoe-guide__layout {
+  display: flex;
+}
+
+.shoe-guide__head {
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.shoe-guide__head > div {
+  align-items: baseline;
+  gap: 9px;
+}
+
+.shoe-guide__head h3 {
+  margin: 0;
+}
+
+.shoe-guide__head span {
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.shoe-guide__head svg {
+  width: 19px;
+  height: 19px;
+}
+
+.shoe-guide__layout {
+  margin-top: 14px;
+  align-items: end;
+  gap: 14px;
+}
+
+.shoe-length-field {
+  width: min(100%, 240px);
+  flex: 0 0 auto;
+}
+
+.shoe-size-results {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(70px, 1fr));
+  gap: 8px;
+  flex: 1;
+}
+
+.shoe-size-results > div {
+  min-height: 76px;
+  padding: 10px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-quiet);
+}
+
+.shoe-size-results > div:nth-child(1) {
+  border-top: 3px solid var(--teal);
+}
+
+.shoe-size-results > div:nth-child(2) {
+  border-top: 3px solid var(--coral);
+}
+
+.shoe-size-results > div:nth-child(3) {
+  border-top: 3px solid var(--gold);
+}
+
+.shoe-size-results span {
+  color: var(--ink-soft);
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+
+.shoe-size-results strong {
+  max-width: 100%;
+  margin-top: 2px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1.45rem;
   line-height: 1;
   overflow-wrap: anywhere;
 }
@@ -2978,6 +3177,15 @@ select:focus-visible {
 
   .pair-pulse {
     min-height: 270px;
+  }
+
+  .shoe-guide__layout {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .shoe-length-field {
+    width: 100%;
   }
 
   .chat-layout {

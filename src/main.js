@@ -51,6 +51,11 @@ import {
 } from "lucide";
 import { firebaseService } from "./firebase-client.js";
 import { createDemoService } from "./demo-service.js";
+import {
+  clothingRecommendation,
+  normalizeGender,
+  shoeRecommendation,
+} from "./size-guide.mjs";
 import chatMedia from "../shared/chat-media.json";
 
 const ICONS = {
@@ -124,6 +129,8 @@ const requestedTool = params.get("tool");
 const now = new Date();
 const MAX_AVATAR_FILE_BYTES = 12 * 1024 * 1024;
 const MAX_AVATAR_DATA_LENGTH = 150_000;
+const MAX_BACKGROUND_FILE_BYTES = 15 * 1024 * 1024;
+const MAX_BACKGROUND_DATA_LENGTH = 340_000;
 
 const moods = ["Vui vẻ", "Bình yên", "Hơi mệt", "Lo lắng", "Buồn", "Cần nghỉ"];
 const needs = ["Muốn được trò chuyện", "Cần một cái ôm", "Cần không gian", "Muốn đi đâu đó"];
@@ -243,6 +250,14 @@ function safeAvatarData(value) {
     : "";
 }
 
+function safeBackgroundData(value) {
+  const data = String(value || "");
+  if (data.length > 360_000) return "";
+  return /^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(data)
+    ? escapeHTML(data)
+    : "";
+}
+
 function cleanNickname(value) {
   return String(value || "").trim().replace(/\s+/g, " ").slice(0, 32);
 }
@@ -255,12 +270,19 @@ function stickerTone(value) {
   return stickerTones.has(value) ? value : "coral";
 }
 
-async function prepareAvatarData(file) {
+async function prepareImageData(file, {
+  maxFileBytes,
+  maxDataLength,
+  aspectRatio,
+  variants,
+  fill,
+  label,
+}) {
   if (!file || (file.type && !file.type.startsWith("image/"))) {
     throw new Error("Hãy chọn một tệp ảnh.");
   }
-  if (file.size > MAX_AVATAR_FILE_BYTES) {
-    throw new Error("Ảnh gốc quá lớn. Hãy chọn ảnh dưới 12MB.");
+  if (file.size > maxFileBytes) {
+    throw new Error(`${label} gốc quá lớn. Hãy chọn tệp nhỏ hơn.`);
   }
 
   const objectUrl = URL.createObjectURL(file);
@@ -274,30 +296,69 @@ async function prepareAvatarData(file) {
     });
     if (!image.naturalWidth || !image.naturalHeight) throw new Error("Ảnh chưa hợp lệ.");
 
-    const cropSize = Math.min(image.naturalWidth, image.naturalHeight);
-    const sourceX = (image.naturalWidth - cropSize) / 2;
-    const sourceY = (image.naturalHeight - cropSize) / 2;
-    for (const [size, quality] of [[256, 0.82], [224, 0.76], [192, 0.7], [160, 0.64]]) {
+    const sourceAspect = image.naturalWidth / image.naturalHeight;
+    const sourceWidth = sourceAspect > aspectRatio
+      ? image.naturalHeight * aspectRatio
+      : image.naturalWidth;
+    const sourceHeight = sourceAspect > aspectRatio
+      ? image.naturalHeight
+      : image.naturalWidth / aspectRatio;
+    const sourceX = (image.naturalWidth - sourceWidth) / 2;
+    const sourceY = (image.naturalHeight - sourceHeight) / 2;
+    for (const [width, quality] of variants) {
+      const height = Math.max(1, Math.round(width / aspectRatio));
       const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
+      canvas.width = width;
+      canvas.height = height;
       const context = canvas.getContext("2d");
       if (!context) throw new Error("Thiết bị chưa thể xử lý ảnh.");
-      context.fillStyle = "#f7f7f5";
-      context.fillRect(0, 0, size, size);
+      context.fillStyle = fill;
+      context.fillRect(0, 0, width, height);
       context.imageSmoothingEnabled = true;
       context.imageSmoothingQuality = "high";
-      context.drawImage(image, sourceX, sourceY, cropSize, cropSize, 0, 0, size, size);
+      context.drawImage(
+        image,
+        sourceX,
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        0,
+        0,
+        width,
+        height,
+      );
       const webp = canvas.toDataURL("image/webp", quality);
-      const avatarData = webp.startsWith("data:image/webp")
+      const imageData = webp.startsWith("data:image/webp")
         ? webp
         : canvas.toDataURL("image/jpeg", quality);
-      if (avatarData.length <= MAX_AVATAR_DATA_LENGTH) return avatarData;
+      if (imageData.length <= maxDataLength) return imageData;
     }
-    throw new Error("Ảnh vẫn quá lớn sau khi nén. Hãy chọn ảnh khác.");
+    throw new Error(`${label} vẫn quá lớn sau khi nén. Hãy chọn ảnh khác.`);
   } finally {
     URL.revokeObjectURL(objectUrl);
   }
+}
+
+function prepareAvatarData(file) {
+  return prepareImageData(file, {
+    maxFileBytes: MAX_AVATAR_FILE_BYTES,
+    maxDataLength: MAX_AVATAR_DATA_LENGTH,
+    aspectRatio: 1,
+    variants: [[256, 0.82], [224, 0.76], [192, 0.7], [160, 0.64]],
+    fill: "#f7f7f5",
+    label: "Ảnh đại diện",
+  });
+}
+
+function prepareBackgroundData(file) {
+  return prepareImageData(file, {
+    maxFileBytes: MAX_BACKGROUND_FILE_BYTES,
+    maxDataLength: MAX_BACKGROUND_DATA_LENGTH,
+    aspectRatio: 16 / 9,
+    variants: [[1280, 0.8], [1080, 0.74], [900, 0.68], [720, 0.62]],
+    fill: "#24776f",
+    label: "Ảnh nền",
+  });
 }
 
 function localDateKey(date = new Date()) {
@@ -375,7 +436,13 @@ function relationshipStartDate() {
 
 function vaultData() {
   const shared = state.couple?.shared?.vault;
-  if (shared) return shared;
+  if (shared) {
+    return {
+      ...shared,
+      bodyGender: normalizeGender(shared.bodyGender),
+      footLength: String(shared.footLength || ""),
+    };
+  }
 
   const legacy = readLegacyJSON("heartsync_vault");
   const items = Array.isArray(legacy) ? Object.fromEntries(legacy.map((item) => [item.id, item])) : {};
@@ -387,6 +454,8 @@ function vaultData() {
     weight: String(items.size?.weight || ""),
     chest: String(items.size?.chest || ""),
     waist: String(items.size?.waist || ""),
+    bodyGender: "female",
+    footLength: "",
     notes: String(items.hates?.notes || ""),
   };
 }
@@ -510,18 +579,26 @@ function relationshipMilestones(startDate) {
   return upcoming.map((day) => ({ day, date: addDaysToKey(startDate, day - 1) }));
 }
 
-function suggestedSize(vault) {
-  const height = Number.parseFloat(vault.height);
-  const chest = Number.parseFloat(vault.chest);
-  const waist = Number.parseFloat(vault.waist);
-  if (![height, chest, waist].some(Number.isFinite)) return "Chưa đủ dữ liệu";
-  if ((height >= 146 && height <= 151) || (chest >= 74 && chest <= 82) || (waist >= 63 && waist <= 66.5)) return "S";
-  if ((height >= 152 && height <= 157) || (chest >= 83 && chest <= 92) || (waist >= 67 && waist <= 71.5)) return "M";
-  if ((height >= 158 && height <= 163) || (chest >= 93 && chest <= 102) || (waist >= 72 && waist <= 76.5)) return "L";
-  if ((height >= 164 && height <= 166) || (chest >= 103 && chest <= 107) || (waist >= 77 && waist <= 79)) return "XL";
-  if ((height >= 167 && height <= 169) || (chest >= 108 && chest <= 112) || (waist >= 79.5 && waist <= 81.5)) return "2XL";
-  if (height > 169) return "3XL+";
-  return "Chưa xác định";
+function clothingResultDetail(result) {
+  if (result.size === "—") return "Nhập chiều cao hoặc cân nặng để tính.";
+  const dimensions = [
+    result.heightSize ? `chiều cao ${result.heightSize}` : "",
+    result.weightSize ? `cân nặng ${result.weightSize}` : "",
+  ].filter(Boolean).join(", ");
+  const fitNote = result.heightSize && result.weightSize && result.heightSize !== result.weightSize
+    ? " Chọn mức lớn hơn để hạn chế bị chật."
+    : "";
+  const extrapolation = result.extrapolated
+    ? " Kết quả ngoài bảng được ngoại suy từ bước size gần nhất."
+    : "";
+  return `Bảng ${result.genderLabel.toLowerCase()}: ${dimensions}.${fitNote}${extrapolation}`;
+}
+
+function shoeResultDetail(result) {
+  if (result.us === "—") return "Nhập chiều dài chân để quy đổi.";
+  return result.extrapolated
+    ? `Bảng giày ${result.genderLabel.toLowerCase()} · ngoại suy từ hai hàng gần biên nhất.`
+    : `Đối chiếu theo bảng giày ${result.genderLabel.toLowerCase()}.`;
 }
 
 function initials(name = "Bạn") {
@@ -943,6 +1020,7 @@ function checkinShareMarkup(member, checkin, mine = false) {
 function renderToday() {
   const me = myMember();
   const partner = partnerMember();
+  const pulseBackground = safeBackgroundData(state.couple?.shared?.pulseBackground?.imageData);
   const today = state.couple?.checkins?.[service.todayKey()] || {};
   const mine = today[state.user.uid] || {};
   const theirs = partner ? today[partner.uid] || {} : {};
@@ -964,7 +1042,18 @@ function renderToday() {
 
       <div class="today-grid">
         <div>
-          <section class="pair-pulse" aria-label="Nhịp đôi hôm nay">
+          <section class="pair-pulse${pulseBackground ? " pair-pulse--custom" : ""}" aria-label="Nhịp đôi hôm nay"${pulseBackground ? ` style="background-image: url('${pulseBackground}')"` : ""}>
+            <div class="pulse-background-actions">
+              <input class="sr-only" id="pulse-background-file-input" type="file" accept="image/jpeg,image/png,image/webp" />
+              <button class="pulse-background-button" type="button" data-action="choose-pulse-background" title="Đổi ảnh nền chung" aria-label="Đổi ảnh nền chung" ${state.busy ? "disabled" : ""}>
+                <i data-lucide="camera"></i>
+              </button>
+              ${pulseBackground ? `
+                <button class="pulse-background-button" type="button" data-action="remove-pulse-background" title="Dùng lại nền xanh" aria-label="Dùng lại nền xanh" ${state.busy ? "disabled" : ""}>
+                  <i data-lucide="trash-2"></i>
+                </button>
+              ` : ""}
+            </div>
             <div class="pulse-person">
               ${avatarMarkup(me)}
               <strong>${escapeHTML(me.displayName || "Bạn")}</strong>
@@ -1311,6 +1400,15 @@ function updateRelationshipClock() {
 
 function renderVaultTool() {
   const vault = vaultData();
+  const clothing = clothingRecommendation({
+    gender: vault.bodyGender,
+    height: vault.height,
+    weight: vault.weight,
+  });
+  const shoes = shoeRecommendation({
+    gender: vault.bodyGender,
+    footLength: vault.footLength,
+  });
   const hasLegacy = !state.couple?.shared?.vault && Array.isArray(readLegacyJSON("heartsync_vault"));
   return `
     <form class="vault-form" data-form="vault">
@@ -1345,25 +1443,64 @@ function renderVaultTool() {
 
       <section class="section-panel vault-section">
         <div class="section-panel__head"><h2>Size và chỉ số cơ thể</h2><i data-lucide="ruler"></i></div>
+        <fieldset class="size-gender-control">
+          <legend>Chọn bảng size</legend>
+          <div>
+            <label>
+              <input class="sr-only" type="radio" name="bodyGender" value="female" ${vault.bodyGender === "female" ? "checked" : ""} />
+              <span>Nữ</span>
+            </label>
+            <label>
+              <input class="sr-only" type="radio" name="bodyGender" value="male" ${vault.bodyGender === "male" ? "checked" : ""} />
+              <span>Nam</span>
+            </label>
+          </div>
+        </fieldset>
         <div class="measurement-layout">
-          <div class="measurement-grid">
-            ${[
-              ["height", "Chiều cao", vault.height, "cm"],
-              ["weight", "Cân nặng", vault.weight, "kg"],
-              ["chest", "Vòng ngực", vault.chest, "cm"],
-              ["waist", "Vòng eo", vault.waist, "cm"],
-            ].map(([name, label, value, unit]) => `
-              <div class="field measurement-field">
-                <label for="vault-${name}">${label}</label>
-                <div><input id="vault-${name}" name="${name}" type="number" inputmode="decimal" min="0" max="300" step="0.1" value="${escapeHTML(value)}" /><span>${unit}</span></div>
-              </div>
-            `).join("")}
+          <div>
+            <div class="measurement-grid">
+              ${[
+                ["height", "Chiều cao", vault.height, "cm", 100, 230],
+                ["weight", "Cân nặng", vault.weight, "kg", 20, 250],
+                ["chest", "Vòng ngực", vault.chest, "cm", 30, 250],
+                ["waist", "Vòng eo", vault.waist, "cm", 30, 250],
+              ].map(([name, label, value, unit, minimum, maximum]) => `
+                <div class="field measurement-field">
+                  <label for="vault-${name}">${label}</label>
+                  <div><input id="vault-${name}" name="${name}" type="number" inputmode="decimal" min="${minimum}" max="${maximum}" step="0.1" value="${escapeHTML(value)}" /><span>${unit}</span></div>
+                </div>
+              `).join("")}
+            </div>
+            <p class="size-method-note">Vòng ngực và vòng eo được lưu để đối chiếu khi mua hàng; size áo dùng bảng chiều cao và cân nặng.</p>
           </div>
           <div class="size-result" aria-live="polite">
-            <span>Size tham khảo</span>
-            <strong id="vault-size-result">${escapeHTML(suggestedSize(vault))}</strong>
-            <small>Dựa trên bảng size từ bản cũ</small>
+            <span id="vault-size-label">Size áo ${escapeHTML(clothing.genderLabel)}</span>
+            <strong id="vault-size-result">${escapeHTML(clothing.size)}</strong>
+            <small id="vault-size-detail">${escapeHTML(clothingResultDetail(clothing))}</small>
           </div>
+        </div>
+
+        <div class="shoe-guide">
+          <div class="shoe-guide__head">
+            <div><h3>Size giày</h3><span>VN · US · UK</span></div>
+            <i data-lucide="ruler"></i>
+          </div>
+          <div class="shoe-guide__layout">
+            <div class="field measurement-field shoe-length-field">
+              <label for="vault-foot-length">Chiều dài chân</label>
+              <div><input id="vault-foot-length" name="footLength" type="number" inputmode="decimal" min="18" max="36" step="0.1" value="${escapeHTML(vault.footLength)}" /><span>cm</span></div>
+            </div>
+            <div class="shoe-size-results" aria-live="polite">
+              ${[
+                ["vn", "VN", shoes.vn],
+                ["us", "US", shoes.us],
+                ["uk", "UK", shoes.uk],
+              ].map(([key, label, value]) => `
+                <div><span>${label}</span><strong id="vault-shoe-${key}">${escapeHTML(value)}</strong></div>
+              `).join("")}
+            </div>
+          </div>
+          <p class="shoe-size-detail" id="vault-shoe-detail">${escapeHTML(shoeResultDetail(shoes))}</p>
         </div>
       </section>
 
@@ -1381,6 +1518,30 @@ function renderVaultTool() {
       </div>
     </form>
   `;
+}
+
+function updateVaultSizeResults(form) {
+  if (!form) return;
+  const data = new FormData(form);
+  const gender = normalizeGender(data.get("bodyGender"));
+  const clothing = clothingRecommendation({
+    gender,
+    height: data.get("height"),
+    weight: data.get("weight"),
+  });
+  const shoes = shoeRecommendation({ gender, footLength: data.get("footLength") });
+  const clothingLabel = document.getElementById("vault-size-label");
+  const clothingValue = document.getElementById("vault-size-result");
+  const clothingDetail = document.getElementById("vault-size-detail");
+  if (clothingLabel) clothingLabel.textContent = `Size áo ${clothing.genderLabel}`;
+  if (clothingValue) clothingValue.textContent = clothing.size;
+  if (clothingDetail) clothingDetail.textContent = clothingResultDetail(clothing);
+  for (const key of ["vn", "us", "uk"]) {
+    const output = document.getElementById(`vault-shoe-${key}`);
+    if (output) output.textContent = shoes[key];
+  }
+  const shoeDetail = document.getElementById("vault-shoe-detail");
+  if (shoeDetail) shoeDetail.textContent = shoeResultDetail(shoes);
 }
 
 function renderCycleTool() {
@@ -2121,6 +2282,13 @@ appRoot.addEventListener("click", (event) => {
       await service.updateAvatar("");
       toast("Đã dùng lại ảnh từ tài khoản Google.");
     });
+  } else if (action === "choose-pulse-background") {
+    document.getElementById("pulse-background-file-input")?.click();
+  } else if (action === "remove-pulse-background") {
+    runBusy(async () => {
+      await service.updatePulseBackground("");
+      toast("Đã dùng lại nền xanh mặc định.");
+    });
   } else if (action === "choose-mood") {
     state.checkinDraft.mood = button.dataset.value;
     render();
@@ -2200,10 +2368,18 @@ appRoot.addEventListener("click", (event) => {
 });
 
 appRoot.addEventListener("change", (event) => {
-  if (event.target.id !== "avatar-file-input") return;
+  if (!["avatar-file-input", "pulse-background-file-input"].includes(event.target.id)) return;
   const [file] = event.target.files || [];
   event.target.value = "";
   if (!file) return;
+  if (event.target.id === "pulse-background-file-input") {
+    runBusy(async () => {
+      const imageData = await prepareBackgroundData(file);
+      await service.updatePulseBackground(imageData);
+      toast("Ảnh nền chung đã được đồng bộ.");
+    });
+    return;
+  }
   runBusy(async () => {
     const avatarData = await prepareAvatarData(file);
     await service.updateAvatar(avatarData);
@@ -2218,18 +2394,9 @@ appRoot.addEventListener("input", (event) => {
   if (event.target.id === "event-date" && dateFromKey(event.target.value)) {
     state.selectedEventDate = event.target.value;
   }
-  if (["height", "weight", "chest", "waist"].includes(event.target.name)) {
+  if (["bodyGender", "height", "weight", "chest", "waist", "footLength"].includes(event.target.name)) {
     const form = event.target.closest("form[data-form=\"vault\"]");
-    const output = document.getElementById("vault-size-result");
-    if (form && output) {
-      const data = new FormData(form);
-      output.textContent = suggestedSize({
-        height: data.get("height"),
-        weight: data.get("weight"),
-        chest: data.get("chest"),
-        waist: data.get("waist"),
-      });
-    }
+    updateVaultSizeResults(form);
   }
 });
 
@@ -2336,7 +2503,7 @@ appRoot.addEventListener("submit", (event) => {
   } else if (form.dataset.form === "vault") {
     if (!form.reportValidity()) return;
     const vault = Object.fromEntries(
-      ["favoriteFoods", "favoriteDrinks", "favoriteFlowers", "height", "weight", "chest", "waist", "notes"]
+      ["favoriteFoods", "favoriteDrinks", "favoriteFlowers", "bodyGender", "height", "weight", "chest", "waist", "footLength", "notes"]
         .map((key) => [key, String(data.get(key) || "").trim()]),
     );
     runBusy(async () => {

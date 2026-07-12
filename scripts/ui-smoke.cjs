@@ -178,6 +178,38 @@ async function main() {
   interactions.partnerCheckinNoteVisible = await evaluate(
     "document.querySelector('[data-checkin-owner=\"partner\"] [data-checkin-note]')?.textContent.trim() === 'Hôm nay công việc hơi nhiều.'",
   );
+  await evaluate(`new Promise((resolve, reject) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 640;
+    canvas.height = 360;
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#df7861";
+    context.fillRect(0, 0, 640, 360);
+    context.fillStyle = "#1f766e";
+    context.fillRect(320, 0, 320, 360);
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error("Could not create background fixture"));
+        return;
+      }
+      const input = document.getElementById("pulse-background-file-input");
+      const transfer = new DataTransfer();
+      transfer.items.add(new File([blob], "pulse-background.png", { type: "image/png" }));
+      input.files = transfer.files;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+      resolve();
+    }, "image/png");
+  })`);
+  await new Promise((resolve) => setTimeout(resolve, 650));
+  interactions.pulseBackgroundUpdated = await evaluate(
+    "document.querySelector('.pair-pulse--custom')?.getAttribute('style')?.includes('data:image/') === true",
+  );
+  await screenshot("heartsync-cdp-custom-background.png");
+  await evaluate("document.querySelector('[data-action=\"remove-pulse-background\"]').click()");
+  await new Promise((resolve) => setTimeout(resolve, 350));
+  interactions.pulseBackgroundRemoved = await evaluate(
+    "!document.querySelector('.pair-pulse--custom')",
+  );
 
   for (const view of ["chat", "tools", "couple", "settings"]) {
     const expression =
@@ -219,14 +251,46 @@ async function main() {
   await evaluate(
     "document.querySelector('[data-action=\"select-tool\"][data-tool=\"vault\"]').click()",
   );
+  await evaluate("document.querySelector('.size-gender-control').scrollIntoView({ block: 'start' })");
+  await new Promise((resolve) => setTimeout(resolve, 120));
+  await screenshot("heartsync-cdp-vault-sizing-mobile.png");
   await evaluate(`(() => {
+    const values = { height: "149", weight: "55", chest: "100", waist: "55", footLength: "24.1" };
+    Object.entries(values).forEach(([name, value]) => {
+      const input = document.querySelector('[data-form="vault"] [name="' + name + '"]');
+      input.value = value;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  })()`);
+  interactions.femaleClothingSizeCalculated = await evaluate(
+    "document.getElementById('vault-size-result')?.textContent.trim() === 'XL'",
+  );
+  interactions.femaleShoeSizeConverted = await evaluate(`(() =>
+    document.getElementById('vault-shoe-vn')?.textContent.trim() === '38–39' &&
+    document.getElementById('vault-shoe-us')?.textContent.trim() === '8' &&
+    document.getElementById('vault-shoe-uk')?.textContent.trim() === '6'
+  )()`);
+  await evaluate(`(() => {
+    const male = document.querySelector('[name="bodyGender"][value="male"]');
+    male.checked = true;
+    male.dispatchEvent(new Event("input", { bubbles: true }));
+  })()`);
+  interactions.maleShoeSizeConverted = await evaluate(`(() =>
+    document.getElementById('vault-shoe-vn')?.textContent.trim() === '39–40' &&
+    document.getElementById('vault-shoe-us')?.textContent.trim() === '6.5' &&
+    document.getElementById('vault-shoe-uk')?.textContent.trim() === '6'
+  )()`);
+  await evaluate(`(() => {
+    const female = document.querySelector('[name="bodyGender"][value="female"]');
+    female.checked = true;
+    female.dispatchEvent(new Event("input", { bubbles: true }));
     const notes = document.getElementById("vault-notes");
     notes.value = "Ghi chú kiểm thử kho chung";
     notes.closest("form").requestSubmit();
   })()`);
   await new Promise((resolve) => setTimeout(resolve, 350));
   interactions.vaultSaved = await evaluate(
-    "document.getElementById('vault-notes')?.value === 'Ghi chú kiểm thử kho chung'",
+    "document.getElementById('vault-notes')?.value === 'Ghi chú kiểm thử kho chung' && document.getElementById('vault-foot-length')?.value === '24.1'",
   );
 
   await evaluate(

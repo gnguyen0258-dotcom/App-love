@@ -229,10 +229,12 @@ async function saveVault(coupleId, uid, vault) {
     favoriteFoods: String(vault.favoriteFoods || "").slice(0, 600),
     favoriteDrinks: String(vault.favoriteDrinks || "").slice(0, 600),
     favoriteFlowers: String(vault.favoriteFlowers || "").slice(0, 300),
+    bodyGender: vault.bodyGender === "male" ? "male" : "female",
     height: String(vault.height || "").slice(0, 20),
     weight: String(vault.weight || "").slice(0, 20),
     chest: String(vault.chest || "").slice(0, 20),
     waist: String(vault.waist || "").slice(0, 20),
+    footLength: String(vault.footLength || "").slice(0, 20),
     notes: String(vault.notes || "").slice(0, 1200),
     updatedAt: serverTimestamp(),
     updatedBy: uid,
@@ -359,6 +361,10 @@ function updateAvatar(avatarData) {
   return apiRequest("/api/couple", { action: "update-avatar", avatarData });
 }
 
+function updatePulseBackground(imageData) {
+  return apiRequest("/api/couple", { action: "update-pulse-background", imageData });
+}
+
 function sendMessage({ text, kind = "message", stickerId = "" }) {
   return apiRequest("/api/message", { text, kind, stickerId });
 }
@@ -466,6 +472,7 @@ export const firebaseService = {
   submitPairCode,
   leaveCouple,
   updateAvatar,
+  updatePulseBackground,
   sendMessage,
   sendActivity,
   deleteExpiredActivities,
