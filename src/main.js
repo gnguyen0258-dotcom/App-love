@@ -6,6 +6,7 @@ import {
   BellRing,
   CalendarDays,
   Calculator,
+  Camera,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -27,6 +28,7 @@ import {
   Plus,
   PartyPopper,
   Ruler,
+  RefreshCw,
   Save,
   Send,
   Settings,
@@ -54,6 +56,7 @@ const ICONS = {
   BellRing,
   CalendarDays,
   Calculator,
+  Camera,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -75,6 +78,7 @@ const ICONS = {
   Plus,
   PartyPopper,
   Ruler,
+  RefreshCw,
   Save,
   Send,
   Settings,
@@ -111,6 +115,8 @@ const validTools = new Set(toolItems.map(([tool]) => tool));
 const requestedView = params.get("view");
 const requestedTool = params.get("tool");
 const now = new Date();
+const MAX_AVATAR_FILE_BYTES = 12 * 1024 * 1024;
+const MAX_AVATAR_DATA_LENGTH = 150_000;
 
 const moods = ["Vui vẻ", "Bình yên", "Hơi mệt", "Lo lắng", "Buồn", "Cần nghỉ"];
 const needs = ["Muốn được trò chuyện", "Cần một cái ôm", "Cần không gian", "Muốn đi đâu đó"];
@@ -212,6 +218,59 @@ function safeImageUrl(value) {
     return ["http:", "https:"].includes(url.protocol) ? escapeHTML(url.href) : "";
   } catch {
     return "";
+  }
+}
+
+function safeAvatarData(value) {
+  const data = String(value || "");
+  if (data.length > 160_000) return "";
+  return /^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(data)
+    ? escapeHTML(data)
+    : "";
+}
+
+async function prepareAvatarData(file) {
+  if (!file || (file.type && !file.type.startsWith("image/"))) {
+    throw new Error("Hãy chọn một tệp ảnh.");
+  }
+  if (file.size > MAX_AVATAR_FILE_BYTES) {
+    throw new Error("Ảnh gốc quá lớn. Hãy chọn ảnh dưới 12MB.");
+  }
+
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    const image = new Image();
+    image.decoding = "async";
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = () => reject(new Error("Không thể đọc ảnh này. Hãy thử JPG, PNG hoặc WebP."));
+      image.src = objectUrl;
+    });
+    if (!image.naturalWidth || !image.naturalHeight) throw new Error("Ảnh chưa hợp lệ.");
+
+    const cropSize = Math.min(image.naturalWidth, image.naturalHeight);
+    const sourceX = (image.naturalWidth - cropSize) / 2;
+    const sourceY = (image.naturalHeight - cropSize) / 2;
+    for (const [size, quality] of [[256, 0.82], [224, 0.76], [192, 0.7], [160, 0.64]]) {
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Thiết bị chưa thể xử lý ảnh.");
+      context.fillStyle = "#f7f7f5";
+      context.fillRect(0, 0, size, size);
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = "high";
+      context.drawImage(image, sourceX, sourceY, cropSize, cropSize, 0, 0, size, size);
+      const webp = canvas.toDataURL("image/webp", quality);
+      const avatarData = webp.startsWith("data:image/webp")
+        ? webp
+        : canvas.toDataURL("image/jpeg", quality);
+      if (avatarData.length <= MAX_AVATAR_DATA_LENGTH) return avatarData;
+    }
+    throw new Error("Ảnh vẫn quá lớn sau khi nén. Hãy chọn ảnh khác.");
+  } finally {
+    URL.revokeObjectURL(objectUrl);
   }
 }
 
@@ -450,10 +509,34 @@ function initials(name = "Bạn") {
 
 function avatarMarkup(person, extraClass = "") {
   const name = person?.displayName || "Bạn";
-  const photo = safeImageUrl(person?.photoURL);
+  const photo = safeAvatarData(person?.avatarData) || safeImageUrl(person?.photoURL);
   return `<span class="avatar ${extraClass}" aria-hidden="true">${
     photo ? `<img src="${photo}" alt="" referrerpolicy="no-referrer" />` : escapeHTML(initials(name))
   }</span>`;
+}
+
+function avatarEditorMarkup(compact = false) {
+  const hasCustomAvatar = Boolean(safeAvatarData(state.profile?.avatarData));
+  return `
+    <div class="avatar-editor ${compact ? "avatar-editor--compact" : ""}">
+      ${avatarMarkup(state.profile, "avatar--profile")}
+      <div class="avatar-editor__copy">
+        <strong>${escapeHTML(state.profile.displayName || "Bạn")}</strong>
+        <span>${hasCustomAvatar ? "Ảnh riêng đang hiển thị cho hai bạn." : "Đang dùng ảnh từ tài khoản Google."}</span>
+      </div>
+      <div class="avatar-editor__actions">
+        <input class="sr-only" id="avatar-file-input" type="file" accept="image/*" />
+        <button class="btn btn--secondary" type="button" data-action="choose-avatar" ${state.busy ? "disabled" : ""}>
+          <i data-lucide="camera"></i> ${hasCustomAvatar ? "Đổi ảnh" : "Chọn ảnh"}
+        </button>
+        ${hasCustomAvatar ? `
+          <button class="icon-button icon-button--danger" type="button" data-action="remove-avatar" title="Dùng lại ảnh Google" aria-label="Dùng lại ảnh Google" ${state.busy ? "disabled" : ""}>
+            <i data-lucide="trash-2"></i>
+          </button>
+        ` : ""}
+      </div>
+    </div>
+  `;
 }
 
 function refreshIcons() {
@@ -501,6 +584,9 @@ function renderAuth() {
       </section>
 
       <section class="auth-panel" aria-labelledby="auth-title">
+        <button class="icon-button auth-refresh-button" type="button" data-action="refresh-app" title="Làm mới trang" aria-label="Làm mới trang">
+          <i data-lucide="refresh-cw"></i>
+        </button>
         <div class="auth-form-wrap">
           <h2 id="auth-title">${signup ? "Tạo tài khoản" : "Chào bạn trở lại"}</h2>
           <p>${signup ? "Bắt đầu không gian của hai người." : "Phiên của bạn sẽ được giữ trên thiết bị này."}</p>
@@ -556,7 +642,10 @@ function renderPairing() {
           <h1>Hai mã riêng, một xác nhận chung.</h1>
           <p>Mỗi Gmail giữ mã của riêng mình. Không gian chỉ mở khi hai bạn đã nhập đúng mã của nhau.</p>
         </div>
-        <button class="btn btn--quiet" type="button" data-action="logout"><i data-lucide="log-out"></i> Đăng xuất</button>
+        <div class="onboarding-copy__actions">
+          <button class="btn btn--quiet" type="button" data-action="refresh-app"><i data-lucide="refresh-cw"></i> Làm mới</button>
+          <button class="btn btn--quiet" type="button" data-action="logout"><i data-lucide="log-out"></i> Đăng xuất</button>
+        </div>
       </section>
 
       <section class="onboarding-form" aria-labelledby="pair-title">
@@ -566,6 +655,8 @@ function renderPairing() {
             <h2 id="pair-title">Trao đổi mã với người ấy</h2>
             <p>Mỗi người đăng nhập Gmail của mình, gửi mã cá nhân cho đối phương rồi nhập mã nhận được.</p>
           </div>
+
+          ${avatarEditorMarkup(true)}
 
           <div class="mutual-pairing-grid">
             <section class="personal-code-panel" aria-labelledby="personal-code-title">
@@ -628,6 +719,7 @@ function myMember() {
     uid: state.user.uid,
     displayName: state.profile.displayName || state.user.displayName || "Bạn",
     photoURL: state.profile.photoURL || state.user.photoURL || "",
+    avatarData: state.profile.avatarData || "",
   };
 }
 
@@ -660,7 +752,7 @@ function renderApp() {
         ${navigationMarkup("desktop")}
         <div class="sidebar-profile">
           <div class="profile-chip">
-            ${avatarMarkup({ displayName: state.profile.displayName, photoURL: state.profile.photoURL })}
+            ${avatarMarkup(state.profile)}
             <div class="profile-chip__meta">
               <strong>${escapeHTML(state.profile.displayName || "Bạn")}</strong>
               <span>${escapeHTML(state.user.email || "Đã đăng nhập")}</span>
@@ -678,9 +770,14 @@ function renderApp() {
               <span>${partner ? (online ? "Đang ở đây" : "Sẽ thấy lời nhắn khi quay lại") : "Liên kết cũ chưa hoàn tất"}</span>
             </div>
           </div>
-          <button class="icon-button" type="button" data-action="go-settings" title="Cài đặt thông báo" aria-label="Cài đặt thông báo">
-            <i data-lucide="${state.notification.permission === "granted" ? "bell-ring" : "bell"}"></i>
-          </button>
+          <div class="topbar__actions">
+            <button class="icon-button" type="button" data-action="refresh-app" title="Làm mới ứng dụng" aria-label="Làm mới ứng dụng">
+              <i data-lucide="refresh-cw"></i>
+            </button>
+            <button class="icon-button" type="button" data-action="go-settings" title="Cài đặt thông báo" aria-label="Cài đặt thông báo">
+              <i data-lucide="${state.notification.permission === "granted" ? "bell-ring" : "bell"}"></i>
+            </button>
+          </div>
         </header>
 
         ${renderCurrentView()}
@@ -1475,10 +1572,8 @@ function renderSettings() {
 
         <section class="section-panel">
           <div class="section-panel__head"><h2>Hồ sơ</h2><i data-lucide="user-round"></i></div>
-          <div class="profile-chip">
-            ${avatarMarkup({ displayName: state.profile.displayName, photoURL: state.profile.photoURL })}
-            <div class="profile-chip__meta"><strong>${escapeHTML(state.profile.displayName || "Bạn")}</strong><span>${escapeHTML(state.user.email || "")}</span></div>
-          </div>
+          ${avatarEditorMarkup()}
+          <p class="avatar-editor__note">Ảnh được tự cắt vuông và nén trước khi đồng bộ. Chỉ hai tài khoản đã liên kết nhìn thấy ảnh này.</p>
         </section>
 
         <section class="section-panel">
@@ -1653,7 +1748,9 @@ appRoot.addEventListener("click", (event) => {
   if (!button || button.disabled) return;
   const action = button.dataset.action;
 
-  if (action === "auth-mode") {
+  if (action === "refresh-app") {
+    window.location.reload();
+  } else if (action === "auth-mode") {
     state.authMode = button.dataset.mode;
     state.error = "";
     render();
@@ -1708,6 +1805,13 @@ appRoot.addEventListener("click", (event) => {
     state.view = "settings";
     syncRoute();
     render();
+  } else if (action === "choose-avatar") {
+    document.getElementById("avatar-file-input")?.click();
+  } else if (action === "remove-avatar") {
+    runBusy(async () => {
+      await service.updateAvatar("");
+      toast("Đã dùng lại ảnh từ tài khoản Google.");
+    });
   } else if (action === "choose-mood") {
     state.checkinDraft.mood = button.dataset.value;
     render();
@@ -1781,6 +1885,18 @@ appRoot.addEventListener("click", (event) => {
       });
     }
   }
+});
+
+appRoot.addEventListener("change", (event) => {
+  if (event.target.id !== "avatar-file-input") return;
+  const [file] = event.target.files || [];
+  event.target.value = "";
+  if (!file) return;
+  runBusy(async () => {
+    const avatarData = await prepareAvatarData(file);
+    await service.updateAvatar(avatarData);
+    toast("Ảnh đại diện đã được cập nhật.");
+  });
 });
 
 appRoot.addEventListener("input", (event) => {

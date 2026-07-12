@@ -11,6 +11,8 @@ const {
 const PAIR_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const PAIR_REQUEST_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000;
 const PAIR_CLAIM_LIFETIME_MS = 30 * 1000;
+const MAX_AVATAR_DATA_LENGTH = 160_000;
+const MAX_AVATAR_BYTES = 120_000;
 
 function createPairCode() {
   const bytes = crypto.randomBytes(8);
@@ -43,6 +45,38 @@ function apiError(message, statusCode) {
   return error;
 }
 
+function validAvatarMagic(mime, bytes) {
+  if (mime === "jpeg") return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mime === "png") {
+    return bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  }
+  return bytes.subarray(0, 4).toString("ascii") === "RIFF" &&
+    bytes.subarray(8, 12).toString("ascii") === "WEBP";
+}
+
+function normalizeAvatarData(value) {
+  if (value == null || value === "") return "";
+  const data = String(value).trim();
+  if (data.length > MAX_AVATAR_DATA_LENGTH) {
+    throw apiError("Ảnh đại diện quá lớn. Hãy chọn ảnh khác.", 400);
+  }
+  const match = /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(data);
+  if (!match) throw apiError("Ảnh đại diện chưa đúng định dạng.", 400);
+  const bytes = Buffer.from(match[2], "base64");
+  if (bytes.length < 32 || bytes.length > MAX_AVATAR_BYTES || !validAvatarMagic(match[1], bytes)) {
+    throw apiError("Ảnh đại diện chưa hợp lệ.", 400);
+  }
+  return `data:image/${match[1]};base64,${match[2]}`;
+}
+
+function storedAvatarData(profile) {
+  try {
+    return normalizeAvatarData(profile?.avatarData);
+  } catch {
+    return "";
+  }
+}
+
 function publicMember(profile, decodedToken = {}, now = Date.now()) {
   const fallbackName =
     decodedToken.name ||
@@ -52,6 +86,7 @@ function publicMember(profile, decodedToken = {}, now = Date.now()) {
   return {
     displayName: String(profile?.displayName || fallbackName).slice(0, 60),
     photoURL: String(profile?.photoURL || decodedToken.picture || "").slice(0, 500),
+    avatarData: storedAvatarData(profile),
     joinedAt: now,
   };
 }
@@ -314,13 +349,29 @@ async function leaveCouple(database, uid) {
   return { left: true };
 }
 
+async function updateAvatar(database, uid, rawAvatarData) {
+  const avatarData = normalizeAvatarData(rawAvatarData);
+  const profile = (await database.ref(`users/${uid}`).get()).val() || {};
+  await database.ref(`users/${uid}/avatarData`).set(avatarData || null);
+  if (profile.coupleId) {
+    await database.ref(`couples/${profile.coupleId}/members/${uid}`).transaction((current) => {
+      if (!current) return;
+      const member = { ...current };
+      if (avatarData) member.avatarData = avatarData;
+      else delete member.avatarData;
+      return member;
+    });
+  }
+  return { updated: true, customAvatar: Boolean(avatarData) };
+}
+
 module.exports = async function handler(request, response) {
   if (!requirePost(request, response)) return;
   try {
     const decodedToken = await authenticateRequest(request);
     const { database } = adminServices();
     const action = request.body?.action;
-    const intervals = { status: 300, "submit-code": 1000, leave: 1500 };
+    const intervals = { status: 300, "submit-code": 1000, "update-avatar": 1000, leave: 1500 };
     if (!Object.hasOwn(intervals, action)) {
       throw apiError("Thao tác ghép đôi không hợp lệ.", 400);
     }
@@ -335,6 +386,8 @@ module.exports = async function handler(request, response) {
         decodedToken,
         request.body?.code,
       );
+    } else if (action === "update-avatar") {
+      result = await updateAvatar(database, decodedToken.uid, request.body?.avatarData);
     } else result = await leaveCouple(database, decodedToken.uid);
     sendJson(response, 200, result);
   } catch (error) {
@@ -350,6 +403,8 @@ module.exports._test = {
   normalizeCode,
   pairKey,
   pairingStatus,
+  normalizeAvatarData,
   submitPairCode,
+  updateAvatar,
   validPairRequest,
 };

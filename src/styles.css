@@ -230,6 +230,13 @@ select:focus-visible {
   display: grid;
   align-content: center;
   background: var(--surface);
+  position: relative;
+}
+
+.auth-refresh-button {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top));
+  right: 24px;
 }
 
 .auth-form-wrap {
@@ -436,6 +443,12 @@ select:focus-visible {
 .onboarding-copy p {
   max-width: 480px;
   color: #6f4c50;
+}
+
+.onboarding-copy__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .onboarding-form {
@@ -826,6 +839,12 @@ select:focus-visible {
 .topbar__pair span {
   color: var(--ink-soft);
   font-size: 0.72rem;
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .status-dot {
@@ -1288,6 +1307,63 @@ select:focus-visible {
   margin-top: 4px;
   color: var(--ink-soft);
   font-size: 0.75rem;
+}
+
+.avatar-editor {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar-editor--compact {
+  margin-bottom: 22px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.avatar--profile {
+  width: 72px;
+  height: 72px;
+  font-size: 1.15rem;
+}
+
+.avatar-editor__copy {
+  min-width: 0;
+}
+
+.avatar-editor__copy strong,
+.avatar-editor__copy span {
+  display: block;
+}
+
+.avatar-editor__copy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.avatar-editor__copy span,
+.avatar-editor__note {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+}
+
+.avatar-editor__copy span {
+  margin-top: 4px;
+}
+
+.avatar-editor__actions {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar-editor__note {
+  margin: 16px 0 0;
+  line-height: 1.55;
 }
 
 .switch {
@@ -2528,6 +2604,32 @@ select:focus-visible {
 }
 
 @media (max-width: 560px) {
+  .auth-refresh-button {
+    top: max(16px, env(safe-area-inset-top));
+    right: 16px;
+  }
+
+  .topbar__actions {
+    gap: 6px;
+  }
+
+  .avatar-editor {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .avatar--profile {
+    width: 64px;
+    height: 64px;
+  }
+
+  .avatar-editor__actions {
+    grid-column: 1 / -1;
+  }
+
+  .avatar-editor__actions .btn {
+    flex: 1;
+  }
+
   .onboarding-copy {
     padding: 24px 20px 28px;
     gap: 18px;

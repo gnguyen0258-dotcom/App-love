@@ -364,6 +364,10 @@ function leaveCouple() {
   return apiRequest("/api/couple", { action: "leave" });
 }
 
+function updateAvatar(avatarData) {
+  return apiRequest("/api/couple", { action: "update-avatar", avatarData });
+}
+
 function sendMessage({ text, kind = "message" }) {
   return apiRequest("/api/message", { text, kind });
 }
@@ -454,6 +458,7 @@ export const firebaseService = {
   getPairingStatus,
   submitPairCode,
   leaveCouple,
+  updateAvatar,
   sendMessage,
   notificationCapability,
   enableNotifications,

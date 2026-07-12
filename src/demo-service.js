@@ -327,6 +327,18 @@ export function createDemoService(route = "app") {
       demoPairing = { code: demoPairing.code, linked: false, waiting: false };
       publish("profile", demoProfile);
     },
+    async updateAvatar(avatarData) {
+      demoProfile = { ...demoProfile, avatarData: avatarData || null };
+      if (demoProfile.coupleId && demoCouple.members[demoUser.uid]) {
+        demoCouple.members[demoUser.uid] = {
+          ...demoCouple.members[demoUser.uid],
+          avatarData: avatarData || null,
+        };
+        publish("couple", demoCouple);
+      }
+      publish("profile", demoProfile);
+      return { updated: true, customAvatar: Boolean(avatarData) };
+    },
     async sendMessage({ text, kind = "message" }) {
       const message = {
         id: crypto.randomUUID(),

@@ -322,6 +322,38 @@ async function main() {
   await evaluate(
     "document.querySelector('[data-action=\"navigate\"][data-view=\"settings\"]').click()",
   );
+  interactions.refreshAvailable = await evaluate(
+    "Boolean(document.querySelector('[data-action=\"refresh-app\"]')?.getAttribute('aria-label'))",
+  );
+  await evaluate(`new Promise((resolve, reject) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#287f76";
+    context.fillRect(0, 0, 64, 64);
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error("Could not create avatar fixture"));
+        return;
+      }
+      const input = document.getElementById("avatar-file-input");
+      const transfer = new DataTransfer();
+      transfer.items.add(new File([blob], "avatar.png", { type: "image/png" }));
+      input.files = transfer.files;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+      resolve();
+    }, "image/png");
+  })`);
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  interactions.avatarUpdated = await evaluate(
+    "Boolean(document.querySelector('.avatar--profile img[src^=\"data:image/\"]'))",
+  );
+  await evaluate("document.querySelector('[data-action=\"remove-avatar\"]').click()");
+  await new Promise((resolve) => setTimeout(resolve, 350));
+  interactions.avatarRemoved = await evaluate(
+    "!document.querySelector('.avatar--profile img[src^=\"data:image/\"]')",
+  );
   await evaluate("document.querySelector('[data-action=\"logout\"]').click()");
   await new Promise((resolve) => setTimeout(resolve, 20));
   interactions.logoutReleasedAuthForm = await evaluate(`(() => {
@@ -406,6 +438,9 @@ async function main() {
     await send("Page.navigate", { url: baseUrl + "/?preview=" + route }, sessionId);
     await new Promise((resolve) => setTimeout(resolve, 900));
     if (route === "auth") {
+      interactions.authRefreshAvailable = await evaluate(
+        "Boolean(document.querySelector('[data-action=\"refresh-app\"][aria-label=\"Làm mới trang\"]'))",
+      );
       await evaluate("document.querySelector('[data-action=\"auth-mode\"][data-mode=\"signup\"]').click()");
       interactions.signupMode = await evaluate("Boolean(document.getElementById('auth-name'))");
     }
@@ -414,6 +449,12 @@ async function main() {
       await screenshot("heartsync-cdp-" + route + ".png");
       interactions.personalCodeAssigned = await evaluate(
         "document.querySelector('.personal-code')?.textContent.trim() === 'GIAN-G025'",
+      );
+      interactions.pairRefreshAvailable = await evaluate(
+        "Boolean(document.querySelector('[data-action=\"refresh-app\"]'))",
+      );
+      interactions.pairAvatarEditorAvailable = await evaluate(
+        "Boolean(document.getElementById('avatar-file-input'))",
       );
       await evaluate(`(() => {
         const form = document.querySelector('[data-form="mutual-pair"]');

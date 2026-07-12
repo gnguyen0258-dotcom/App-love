@@ -77,6 +77,12 @@ npm run smoke:ui
 npm run build
 ```
 
+## Ảnh đại diện tùy chỉnh
+
+Sau khi đăng nhập, người dùng có thể đổi ảnh ở màn hình ghép đôi hoặc trong `Cài đặt > Hồ sơ`. Ảnh được cắt vuông và nén ngay trên thiết bị trước khi gửi lên API. Bản ảnh nhỏ được lưu trong Realtime Database tại hồ sơ của người dùng và bản thành viên của cặp đôi; không cần bật Firebase Storage. Chỉ tài khoản đó và người đã liên kết mới đọc được ảnh qua các luồng dữ liệu hiện có.
+
+Nút làm mới xuất hiện ở màn hình đăng nhập, ghép đôi và thanh trên cùng của ứng dụng. Nút này tải lại trang nhưng không đăng xuất tài khoản vì Firebase Auth vẫn giữ phiên trên thiết bị.
+
 ## Deploy
 
 Import repo GitHub vào Vercel với Framework Preset `Vite`. Mỗi lần push nhánh `main`, Vercel build `dist` và triển khai các API trong thư mục `api/`.
