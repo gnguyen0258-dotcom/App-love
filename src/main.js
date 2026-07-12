@@ -194,6 +194,7 @@ let activeCoupleId = null;
 let notificationRestoredFor = null;
 let pairingLoadedFor = null;
 let relationshipClockInterval = null;
+let busyOperationId = 0;
 
 function escapeHTML(value = "") {
   return String(value)
@@ -1577,6 +1578,9 @@ async function loadPairingStatus() {
 }
 
 async function handleAuthenticatedUser(user) {
+  // iOS PWA auth callbacks can arrive before the redirect/sign-out promise settles.
+  busyOperationId += 1;
+  state.busy = false;
   state.user = user;
   state.error = "";
   if (!user) {
@@ -1627,15 +1631,18 @@ function handleForegroundMessage(payload) {
 }
 
 async function runBusy(task) {
+  const operationId = ++busyOperationId;
   state.busy = true;
   state.error = "";
   render();
   try {
     await task();
   } catch (error) {
+    if (operationId !== busyOperationId) return;
     state.error = error.message || "Không thể hoàn tất thao tác.";
     toast(state.error, "error");
   } finally {
+    if (operationId !== busyOperationId) return;
     state.busy = false;
     render();
   }

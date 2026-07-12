@@ -319,6 +319,22 @@ async function main() {
     "document.querySelector('.pulse-person > span:last-child').textContent.trim() === 'Vui vẻ'",
   );
 
+  await evaluate(
+    "document.querySelector('[data-action=\"navigate\"][data-view=\"settings\"]').click()",
+  );
+  await evaluate("document.querySelector('[data-action=\"logout\"]').click()");
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  interactions.logoutReleasedAuthForm = await evaluate(`(() => {
+    const google = document.querySelector('[data-action="google-auth"]');
+    const submit = document.querySelector('[data-form="auth"] button[type="submit"]');
+    return Boolean(google && !google.disabled && submit && !submit.disabled && !submit.textContent.includes("Đang xử lý"));
+  })()`);
+  await evaluate("document.querySelector('[data-action=\"google-auth\"]').click()");
+  await new Promise((resolve) => setTimeout(resolve, 250));
+  interactions.googleReloginCompleted = await evaluate(
+    "Boolean(document.querySelector('[data-action=\"navigate\"][data-view=\"today\"]'))",
+  );
+
   for (const viewport of [
     { width: 320, height: 700, mobile: true },
     { width: 768, height: 1024, mobile: true },

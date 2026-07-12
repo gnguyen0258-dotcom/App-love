@@ -140,6 +140,7 @@ let demoMessages = [
 ];
 
 const listeners = {
+  auth: new Set(),
   profile: new Set(),
   couple: new Set(),
   messages: new Set(),
@@ -162,6 +163,7 @@ function publish(setName, value) {
 }
 
 export function createDemoService(route = "app") {
+  let demoAuthUser = route === "auth" ? null : demoUser;
   if (route === "pair") {
     demoProfile = { ...demoProfile, coupleId: null };
     demoPairing = { code: "GIAN-G025", linked: false, waiting: false };
@@ -170,12 +172,23 @@ export function createDemoService(route = "app") {
   return {
     initSession: async () => {},
     watchAuth(callback) {
-      queueMicrotask(() => callback(route === "auth" ? null : demoUser));
-      return () => {};
+      return subscribe("auth", callback, () => demoAuthUser);
     },
-    signInGoogle: async () => ({ user: demoUser }),
-    signInEmail: async () => ({ user: demoUser }),
-    createAccount: async () => ({ user: demoUser }),
+    async signInGoogle() {
+      demoAuthUser = demoUser;
+      publish("auth", demoAuthUser);
+      return { user: demoUser };
+    },
+    async signInEmail() {
+      demoAuthUser = demoUser;
+      publish("auth", demoAuthUser);
+      return { user: demoUser };
+    },
+    async createAccount() {
+      demoAuthUser = demoUser;
+      publish("auth", demoAuthUser);
+      return { user: demoUser };
+    },
     ensureProfile: async () => demoProfile,
     watchProfile(_uid, callback) {
       return subscribe("profile", callback, () => demoProfile);
@@ -330,7 +343,11 @@ export function createDemoService(route = "app") {
     notificationCapability: async () => ({ supported: true, permission: "default", registered: false }),
     enableNotifications: async () => ({ supported: true, permission: "granted", registered: true }),
     restoreNotifications: async () => ({ supported: true, permission: "default", registered: false }),
-    signOut: async () => {},
+    async signOut() {
+      demoAuthUser = null;
+      publish("auth", demoAuthUser);
+      await new Promise((resolve) => setTimeout(resolve, 80));
+    },
     todayKey: () => date,
   };
 }
