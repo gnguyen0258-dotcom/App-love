@@ -135,6 +135,7 @@ const MAX_AVATAR_FILE_BYTES = 12 * 1024 * 1024;
 const MAX_AVATAR_DATA_LENGTH = 150_000;
 const MAX_BACKGROUND_FILE_BYTES = 15 * 1024 * 1024;
 const MAX_BACKGROUND_DATA_LENGTH = 340_000;
+const COUPON_HISTORY_TTL_MS = 24 * 60 * 60 * 1000;
 
 const moods = ["Vui vẻ", "Bình yên", "Hơi mệt", "Lo lắng", "Buồn", "Cần nghỉ"];
 const needs = ["Muốn được trò chuyện", "Cần một cái ôm", "Cần không gian", "Muốn đi đâu đó"];
@@ -231,6 +232,8 @@ let pairingLoadedFor = null;
 let relationshipClockInterval = null;
 let activityExpiryTimer = null;
 let activityCleanupRetryTimer = null;
+let couponExpiryTimer = null;
+let couponCleanupRetryTimer = null;
 let dailyRolloverTimer = null;
 let observedDailyDate = service.todayKey();
 let busyOperationId = 0;
@@ -531,10 +534,25 @@ function dateIdeas() {
     .sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
 }
 
-function loveCoupons() {
+function couponEntries() {
   return Object.entries(state.couple?.shared?.coupons || {})
     .map(([id, coupon]) => ({ id, ...coupon }))
-    .filter((coupon) => coupon.title)
+    .filter((coupon) => coupon.title);
+}
+
+function couponHistoryExpiresAt(coupon) {
+  const redeemedAt = Number(coupon?.redeemedAt);
+  return coupon?.status === "redeemed" && redeemedAt > 0
+    ? redeemedAt + COUPON_HISTORY_TTL_MS
+    : 0;
+}
+
+function loveCoupons(currentTime = Date.now()) {
+  return couponEntries()
+    .filter((coupon) => {
+      const expiresAt = couponHistoryExpiresAt(coupon);
+      return !expiresAt || expiresAt > currentTime;
+    })
     .sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
 }
 
@@ -1906,13 +1924,15 @@ function renderLoveTool() {
         <div class="coupon-list">
           ${coupons.slice(0, 6).map((coupon) => {
             const canRedeem = coupon.assignedTo === state.user.uid && coupon.status === "available";
+            const redeemedAt = Number(coupon.redeemedAt) || 0;
+            const expiresAt = couponHistoryExpiresAt(coupon);
             const label = coupon.status === "redeemed"
               ? "Đã sử dụng"
               : canRedeem
                 ? "Dành cho bạn"
                 : "Bạn đã gửi";
             return `
-              <article class="coupon-row ${coupon.status === "redeemed" ? "coupon-row--redeemed" : ""}">
+              <article class="coupon-row ${coupon.status === "redeemed" ? "coupon-row--redeemed" : ""}" data-coupon-id="${escapeHTML(coupon.id)}" data-redeemed-at="${redeemedAt}" data-expires-at="${expiresAt}">
                 <span class="coupon-row__icon"><i data-lucide="ticket-check"></i></span>
                 <div><strong>${escapeHTML(coupon.title)}</strong><p>${escapeHTML(coupon.note || label)}</p><small>${label}</small></div>
                 ${canRedeem ? `<button class="btn btn--quiet" type="button" data-action="redeem-coupon" data-coupon-id="${escapeHTML(coupon.id)}">Dùng phiếu</button>` : ""}
@@ -2190,8 +2210,52 @@ function scheduleActivityExpiry() {
   }, Math.max(50, nextExpiry - currentTime + 25));
 }
 
+function clearCouponExpiryTimer() {
+  if (couponExpiryTimer) window.clearTimeout(couponExpiryTimer);
+  if (couponCleanupRetryTimer) window.clearTimeout(couponCleanupRetryTimer);
+  couponExpiryTimer = null;
+  couponCleanupRetryTimer = null;
+}
+
+function scheduleCouponExpiry() {
+  clearCouponExpiryTimer();
+  const coupleId = state.profile?.coupleId;
+  if (!coupleId || !state.couple) return;
+
+  const currentTime = Date.now();
+  const coupons = couponEntries();
+  const expiredIds = coupons
+    .filter((coupon) => {
+      const expiresAt = couponHistoryExpiresAt(coupon);
+      return expiresAt > 0 && expiresAt <= currentTime;
+    })
+    .map((coupon) => coupon.id);
+  if (expiredIds.length) {
+    service.deleteExpiredCoupons(expiredIds).catch((error) => {
+      console.warn("Expired coupons could not be removed", error);
+      if (couponCleanupRetryTimer) return;
+      couponCleanupRetryTimer = window.setTimeout(() => {
+        couponCleanupRetryTimer = null;
+        scheduleCouponExpiry();
+      }, 30_000);
+    });
+  }
+
+  const nextExpiry = coupons
+    .map(couponHistoryExpiresAt)
+    .filter((expiresAt) => expiresAt > currentTime)
+    .sort((first, second) => first - second)[0];
+  if (!nextExpiry) return;
+  couponExpiryTimer = window.setTimeout(() => {
+    couponExpiryTimer = null;
+    render();
+    scheduleCouponExpiry();
+  }, Math.max(50, nextExpiry - currentTime + 25));
+}
+
 function cleanupCoupleSubscriptions() {
   clearActivityExpiryTimer();
+  clearCouponExpiryTimer();
   coupleUnsubscribe?.();
   messagesUnsubscribe?.();
   coupleUnsubscribe = null;
@@ -2210,6 +2274,7 @@ function bindCouple(coupleId) {
   coupleUnsubscribe = service.watchCouple(coupleId, (couple) => {
     state.couple = couple;
     scheduleActivityExpiry();
+    scheduleCouponExpiry();
     render();
     maybeEnsureDailyEncouragement();
   });
@@ -2722,6 +2787,7 @@ document.addEventListener("visibilitychange", () => {
   handleDailyRollover();
   render();
   scheduleActivityExpiry();
+  scheduleCouponExpiry();
 });
 
 window.addEventListener("beforeunload", () => {

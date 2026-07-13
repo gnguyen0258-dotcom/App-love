@@ -200,6 +200,43 @@ test("activity cleanup removes only requested records that have expired", async 
   assert.ok(activities.active);
 });
 
+test("redeemed coupon history is removed 24 hours after each use", async () => {
+  const currentTime = Date.UTC(2026, 6, 14, 2, 0);
+  const ttl = coupleHandler._test.COUPON_HISTORY_TTL_MS;
+  const coupons = {
+    expired: { status: "redeemed", redeemedAt: currentTime - ttl },
+    fresh: { status: "redeemed", redeemedAt: currentTime - ttl + 1 },
+    available: { status: "available", redeemedAt: 0 },
+  };
+  const database = {
+    ref(path) {
+      const match = /^couples\/couple-a\/shared\/coupons\/(.+)$/.exec(path);
+      if (match) return { get: async () => ({ val: () => coupons[match[1]] || null }) };
+      if (path === "couples/couple-a") {
+        return {
+          update: async (updates) => {
+            Object.keys(updates).forEach((key) => delete coupons[key.split("/").at(-1)]);
+          },
+        };
+      }
+      throw new Error(`Unexpected path: ${path}`);
+    },
+  };
+
+  const deleted = await coupleHandler._test.cleanupExpiredCoupons(
+    database,
+    "couple-a",
+    ["expired", "fresh", "available", "invalid.id"],
+    currentTime,
+  );
+
+  assert.equal(ttl, 24 * 60 * 60 * 1000);
+  assert.equal(deleted, 1);
+  assert.equal(coupons.expired, undefined);
+  assert.ok(coupons.fresh);
+  assert.ok(coupons.available);
+});
+
 test("API endpoints reject unsupported methods", async () => {
   const response = responseDouble();
   await coupleHandler({ method: "GET", headers: {} }, response);

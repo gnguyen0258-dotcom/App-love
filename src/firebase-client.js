@@ -369,6 +369,13 @@ function ensureDailyEncouragement() {
   return apiRequest("/api/couple", { action: "daily-encouragement" });
 }
 
+function deleteExpiredCoupons(couponIds) {
+  return apiRequest("/api/couple", {
+    action: "cleanup-coupons",
+    couponIds,
+  });
+}
+
 function sendMessage({ text, kind = "message", stickerId = "" }) {
   return apiRequest("/api/message", { text, kind, stickerId });
 }
@@ -478,6 +485,7 @@ export const firebaseService = {
   updateAvatar,
   updatePulseBackground,
   ensureDailyEncouragement,
+  deleteExpiredCoupons,
   sendMessage,
   sendActivity,
   deleteExpiredActivities,

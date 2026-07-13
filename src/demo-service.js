@@ -2,6 +2,7 @@ const now = Date.now();
 const localNow = new Date(now);
 const date = new Date(now - localNow.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 const ACTIVITY_TTL_MS = 24 * 60 * 60 * 1000;
+const COUPON_HISTORY_TTL_MS = 24 * 60 * 60 * 1000;
 
 function relativeDate(days) {
   const value = new Date();
@@ -153,6 +154,16 @@ let demoCouple = {
         assignedTo: "demo-partner",
         redeemedAt: 0,
         redeemedBy: "",
+      },
+      "coupon-expired": {
+        title: "Phiếu lịch sử đã hết hạn",
+        note: "Dữ liệu demo dùng để kiểm tra tự động dọn phiếu",
+        status: "redeemed",
+        createdAt: now - 3 * COUPON_HISTORY_TTL_MS,
+        createdBy: "demo-partner",
+        assignedTo: "demo-giang",
+        redeemedAt: now - COUPON_HISTORY_TTL_MS - 60_000,
+        redeemedBy: "demo-giang",
       },
     },
   },
@@ -321,6 +332,24 @@ export function createDemoService(route = "app") {
         redeemedBy: uid,
       });
       publish("couple", demoCouple);
+    },
+    async deleteExpiredCoupons(couponIds) {
+      const currentTime = Date.now();
+      let deleted = 0;
+      for (const id of couponIds || []) {
+        const coupon = demoCouple.shared.coupons?.[id];
+        const redeemedAt = Number(coupon?.redeemedAt);
+        if (
+          coupon?.status === "redeemed" &&
+          redeemedAt > 0 &&
+          redeemedAt + COUPON_HISTORY_TTL_MS <= currentTime
+        ) {
+          delete demoCouple.shared.coupons[id];
+          deleted += 1;
+        }
+      }
+      if (deleted) publish("couple", demoCouple);
+      return { deleted };
     },
     async getPairingStatus() {
       return { ...demoPairing };

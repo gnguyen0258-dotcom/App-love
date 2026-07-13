@@ -110,6 +110,8 @@ Tab `Tin nhắn` có hơn 1.100 emoji Unicode được chia thành 7 nhóm và 2
 
 Tab `Tin nhắn` chỉ hiển thị hội thoại trực tiếp và sticker. Các thao tác từ tiện ích như gửi nhịp tim, trả lời câu hỏi, thêm ý tưởng hoặc dùng phiếu được API ghi riêng tại `couples/{coupleId}/activities/{activityId}` và hiển thị trong `Gần đây`. Mỗi bản ghi có `expiresAt = createdAt + 24 giờ`; app đặt timer theo thời điểm hết hạn gần nhất, ẩn đúng từng bản ghi khi đến hạn rồi yêu cầu API xóa riêng các ID đã hết hạn. Nếu cả hai thiết bị cùng ngoại tuyến, dữ liệu hết hạn được ẩn và dọn ngay khi một thiết bị kết nối lại.
 
+Trong `Góc yêu`, phiếu chưa sử dụng được giữ nguyên cho đến khi người nhận dùng. Sau khi dùng, phiếu còn xuất hiện trong lịch sử đúng 24 giờ tính từ `redeemedAt`, rồi tự ẩn riêng và được API dọn khỏi `couples/{coupleId}/shared/coupons/{couponId}`. App cũng kiểm tra lại khi được mở từ nền nên không cần duy trì chạy ngầm để xóa đúng hạn.
+
 ## Deploy
 
 Import repo GitHub vào Vercel với Framework Preset `Vite`. Mỗi lần push nhánh `main`, Vercel build `dist` và triển khai các API trong thư mục `api/`.

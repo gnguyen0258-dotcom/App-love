@@ -365,6 +365,16 @@ async function main() {
   interactions.couponRedeemed = await evaluate(
     "Array.from(document.querySelectorAll('.coupon-row--redeemed strong')).some((node) => node.textContent === window.__couponTitle)",
   );
+  interactions.couponHistoryExpiresIndividually = await evaluate(`(() => {
+    const row = Array.from(document.querySelectorAll('.coupon-row--redeemed'))
+      .find((item) => item.querySelector('strong')?.textContent === window.__couponTitle);
+    return Boolean(row) &&
+      Number(row.dataset.redeemedAt) > 0 &&
+      Number(row.dataset.expiresAt) - Number(row.dataset.redeemedAt) === 24 * 60 * 60 * 1000;
+  })()`);
+  interactions.expiredCouponHidden = await evaluate(
+    "!document.querySelector('.coupon-list').textContent.includes('Phiếu lịch sử đã hết hạn')",
+  );
   await evaluate(`(() => {
     const form = document.querySelector('[data-form="love-coupon"]');
     form.querySelector('[name="title"]').value = "Một buổi hẹn bí mật";

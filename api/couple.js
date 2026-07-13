@@ -16,6 +16,7 @@ const MAX_AVATAR_DATA_LENGTH = 160_000;
 const MAX_AVATAR_BYTES = 120_000;
 const MAX_BACKGROUND_DATA_LENGTH = 360_000;
 const MAX_BACKGROUND_BYTES = 270_000;
+const COUPON_HISTORY_TTL_MS = 24 * 60 * 60 * 1000;
 const DAILY_ENCOURAGEMENTS = dailyEncouragementCatalog.items;
 const DAILY_ENCOURAGEMENT_IDS = new Set(DAILY_ENCOURAGEMENTS.map((item) => item.id));
 
@@ -487,6 +488,45 @@ async function ensureDailyEncouragement(database, uid, options = {}) {
   return { encouragement };
 }
 
+async function cleanupExpiredCoupons(database, coupleId, rawIds, now = Date.now()) {
+  const couponIds = [...new Set(Array.isArray(rawIds) ? rawIds : [])]
+    .map((value) => String(value || "").trim())
+    .filter((value) => /^[A-Za-z0-9_-]{1,120}$/.test(value))
+    .slice(0, 50);
+  if (!couponIds.length) return 0;
+
+  const snapshots = await Promise.all(
+    couponIds.map((id) =>
+      database.ref(`couples/${coupleId}/shared/coupons/${id}`).get(),
+    ),
+  );
+  const updates = {};
+  snapshots.forEach((snapshot, index) => {
+    const coupon = snapshot.val();
+    const redeemedAt = Number(coupon?.redeemedAt);
+    if (
+      coupon?.status === "redeemed" &&
+      redeemedAt > 0 &&
+      redeemedAt + COUPON_HISTORY_TTL_MS <= now
+    ) {
+      updates[`shared/coupons/${couponIds[index]}`] = null;
+    }
+  });
+  if (Object.keys(updates).length) {
+    await database.ref(`couples/${coupleId}`).update(updates);
+  }
+  return Object.keys(updates).length;
+}
+
+async function cleanupUserExpiredCoupons(database, uid, rawIds) {
+  const profile = (await database.ref(`users/${uid}`).get()).val() || {};
+  if (!profile.coupleId) throw apiError("Tài khoản chưa liên kết với người ấy.", 409);
+  const memberSnapshot = await database.ref(`couples/${profile.coupleId}/members/${uid}`).get();
+  if (!memberSnapshot.exists()) throw apiError("Bạn không còn quyền xem không gian này.", 403);
+  const deleted = await cleanupExpiredCoupons(database, profile.coupleId, rawIds);
+  return { deleted };
+}
+
 module.exports = async function handler(request, response) {
   if (!requirePost(request, response)) return;
   try {
@@ -499,6 +539,7 @@ module.exports = async function handler(request, response) {
       "update-avatar": 1000,
       "update-pulse-background": 1500,
       "daily-encouragement": 500,
+      "cleanup-coupons": 300,
       leave: 1500,
     };
     if (!Object.hasOwn(intervals, action)) {
@@ -525,6 +566,12 @@ module.exports = async function handler(request, response) {
       );
     } else if (action === "daily-encouragement") {
       result = await ensureDailyEncouragement(database, decodedToken.uid);
+    } else if (action === "cleanup-coupons") {
+      result = await cleanupUserExpiredCoupons(
+        database,
+        decodedToken.uid,
+        request.body?.couponIds,
+      );
     } else result = await leaveCouple(database, decodedToken.uid);
     sendJson(response, 200, result);
   } catch (error) {
@@ -533,6 +580,9 @@ module.exports = async function handler(request, response) {
 };
 
 module.exports._test = {
+  COUPON_HISTORY_TTL_MS,
+  cleanupExpiredCoupons,
+  cleanupUserExpiredCoupons,
   createPairCode,
   buildDailyEncouragementState,
   dateKeyInTimeZone,
