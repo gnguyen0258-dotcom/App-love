@@ -6,6 +6,7 @@ const {
   requirePost,
   sendJson,
 } = require("./_firebase-admin");
+const { sendUserPush } = require("./_push");
 const chatMedia = require("../shared/chat-media.json");
 
 const stickersById = new Map(
@@ -23,11 +24,6 @@ const activityTypes = new Set([
   "nudge-hug",
   "nudge-kiss",
   "nudge-miss",
-]);
-
-const invalidTokenCodes = new Set([
-  "messaging/invalid-registration-token",
-  "messaging/registration-token-not-registered",
 ]);
 
 function cleanText(value) {
@@ -76,20 +72,9 @@ function senderDisplayName(couple, uid, fallbackName) {
   return String(couple?.members?.[uid]?.displayName || fallbackName || "Người ấy").slice(0, 60);
 }
 
-function appLink(kind) {
-  const view = kind === "activity" ? "today" : "chat";
-  if (process.env.APP_BASE_URL) return `${process.env.APP_BASE_URL.replace(/\/$/, "")}/?view=${view}`;
-  return `/?view=${view}`;
-}
-
 async function sendPush({ database, messaging, partnerUid, entry }) {
   const userSnapshot = await database.ref(`users/${partnerUid}`).get();
   const recipient = userSnapshot.val() || {};
-  const devices = Object.entries(recipient.devices || {})
-    .filter(([, device]) => typeof device?.token === "string" && device.token.length > 20)
-    .map(([deviceId, device]) => ({ deviceId, token: device.token }));
-  if (!devices.length) return { sent: 0 };
-
   const showPreview = Boolean(recipient.preferences?.showMessagePreview);
   const senderName = entry.senderName || entry.actorName || "Người ấy";
   const previewText = entry.kind === "sticker"
@@ -101,31 +86,17 @@ async function sendPush({ database, messaging, partnerUid, entry }) {
       ? `${senderName} vừa có một hoạt động mới.`
       : `${senderName} vừa gửi cho bạn một lời nhắn.`;
 
-  const result = await messaging.sendEachForMulticast({
-    tokens: devices.map((device) => device.token),
-    data: {
-      title: "HeartSync",
-      body,
-      link: appLink(entry.kind),
-      messageId: entry.id,
-      kind: entry.kind,
-    },
-    webpush: {
-      headers: {
-        TTL: "86400",
-        Urgency: "high",
-      },
-    },
+  return sendUserPush({
+    database,
+    messaging,
+    uid: partnerUid,
+    recipient,
+    title: "HeartSync",
+    body,
+    link: entry.kind === "activity" ? "/?view=today" : "/?view=chat",
+    messageId: entry.id,
+    kind: entry.kind,
   });
-
-  const removals = {};
-  result.responses.forEach((item, index) => {
-    if (!item.success && invalidTokenCodes.has(item.error?.code)) {
-      removals[`users/${partnerUid}/devices/${devices[index].deviceId}`] = null;
-    }
-  });
-  if (Object.keys(removals).length) await database.ref().update(removals);
-  return { sent: result.successCount };
 }
 
 async function cleanupExpiredActivities(database, coupleId, rawIds, now = Date.now()) {

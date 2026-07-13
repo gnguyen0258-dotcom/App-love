@@ -55,11 +55,21 @@ FIREBASE_CLIENT_EMAIL
 FIREBASE_PRIVATE_KEY
 FIREBASE_DATABASE_URL
 APP_BASE_URL
+CRON_SECRET
 ```
 
 `APP_BASE_URL` là URL production, ví dụ `https://app-love.vercel.app`.
 
 Không commit private key hoặc service-account JSON lên GitHub. Có thể dùng một biến `FIREBASE_SERVICE_ACCOUNT_JSON` thay cho ba biến Admin riêng lẻ.
+
+## Nhắc lịch tự động
+
+Vercel Cron gọi `GET /api/reminders` mỗi ngày lúc `00:00 UTC`, tương đương khoảng 07:00 tại Việt Nam. Endpoint chỉ chấp nhận `Authorization: Bearer <CRON_SECRET>`, chống gửi trùng theo từng tài khoản và từng mốc, đồng thời tự xóa token FCM đã hết hiệu lực.
+
+- Sự kiện trong Lịch chung được gửi đến cả hai thành viên vào đầu ngày diễn ra.
+- Chu kỳ được tính cùng quy tắc với vùng xanh trên giao diện; cả hai thành viên nhận lời nhắc trước ngày xanh đầu tiên 3 ngày.
+- Chỉ thiết bị đã cài PWA và bật thông báo trong `Cài đặt` mới nhận được trên màn hình khóa.
+- Gói Vercel Hobby chạy lịch với độ chính xác theo giờ, vì vậy thông báo có thể đến trong khoảng 07:00–07:59 thay vì đúng tuyệt đối 07:00.
 
 ## Tương thích Vercel Functions
 
