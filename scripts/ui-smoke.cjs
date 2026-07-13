@@ -558,11 +558,22 @@ async function main() {
     "Boolean(document.querySelector('[data-action=\"navigate\"][data-view=\"today\"]'))",
   );
 
-  for (const viewport of [
+  const responsiveViewports = [
     { width: 320, height: 700, mobile: true },
     { width: 768, height: 1024, mobile: true },
+    { width: 834, height: 1194, mobile: true },
+    { width: 1024, height: 768, mobile: true },
+    { width: 1366, height: 768, mobile: false },
     { width: 1440, height: 900, mobile: false },
-  ]) {
+  ];
+
+  function screenshotSuffix(viewport) {
+    if (viewport.width === 1024) return "-ipad-landscape";
+    if (viewport.width === 1440) return "-desktop";
+    return "";
+  }
+
+  for (const viewport of responsiveViewports) {
     await send(
       "Emulation.setDeviceMetricsOverride",
       {
@@ -583,8 +594,9 @@ async function main() {
       );
       await new Promise((resolve) => setTimeout(resolve, 350));
       audits.push(await audit(route + "-" + viewport.width));
-      if (viewport.width === 1440) {
-        await screenshot("heartsync-cdp-" + route + "-desktop.png");
+      const suffix = screenshotSuffix(viewport);
+      if (suffix) {
+        await screenshot("heartsync-cdp-" + route + suffix + ".png");
       }
     }
     for (const tool of ["days", "vault", "cycle", "calendar", "love"]) {
@@ -595,8 +607,9 @@ async function main() {
       );
       await new Promise((resolve) => setTimeout(resolve, 350));
       audits.push(await audit(tool + "-" + viewport.width));
-      if (viewport.width === 1440) {
-        await screenshot("heartsync-cdp-" + tool + "-desktop.png");
+      const suffix = screenshotSuffix(viewport);
+      if (suffix) {
+        await screenshot("heartsync-cdp-" + tool + suffix + ".png");
       }
     }
     await send(
@@ -615,16 +628,13 @@ async function main() {
     );
     await new Promise((resolve) => setTimeout(resolve, 150));
     audits.push(await audit("emoji-picker-" + viewport.width));
-    if (viewport.width === 1440) {
-      await screenshot("heartsync-cdp-emoji-picker-desktop.png");
+    const suffix = screenshotSuffix(viewport);
+    if (suffix) {
+      await screenshot("heartsync-cdp-emoji-picker" + suffix + ".png");
     }
   }
 
-  for (const viewport of [
-    { width: 320, height: 700, mobile: true },
-    { width: 768, height: 1024, mobile: true },
-    { width: 1440, height: 900, mobile: false },
-  ]) {
+  for (const viewport of responsiveViewports) {
     await send(
       "Emulation.setDeviceMetricsOverride",
       {
@@ -637,10 +647,15 @@ async function main() {
       },
       sessionId,
     );
-    await send("Page.navigate", { url: baseUrl + "/?preview=pair" }, sessionId);
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    audits.push(await audit("pair-" + viewport.width));
-    if (viewport.width === 1440) await screenshot("heartsync-cdp-pair-desktop.png");
+    for (const route of ["auth", "pair"]) {
+      await send("Page.navigate", { url: baseUrl + "/?preview=" + route }, sessionId);
+      await new Promise((resolve) => setTimeout(resolve, 700));
+      audits.push(await audit(route + "-" + viewport.width));
+      const suffix = screenshotSuffix(viewport);
+      if (suffix) {
+        await screenshot("heartsync-cdp-" + route + suffix + ".png");
+      }
+    }
   }
 
   await send(

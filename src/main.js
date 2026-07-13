@@ -984,7 +984,7 @@ function navigationMarkup(mode) {
     ];
     return `<nav class="mobile-nav" aria-label="Điều hướng chính">
       ${items.map(([view, icon, label]) => `
-        <button class="nav-item" type="button" data-action="navigate" data-view="${view}" ${state.view === view ? 'aria-current="page"' : ""}>
+        <button class="nav-item" type="button" data-action="navigate" data-view="${view}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}" ${state.view === view ? 'aria-current="page"' : ""}>
           <i data-lucide="${icon}"></i><span>${label}</span>
         </button>
       `).join("")}
@@ -1000,7 +1000,7 @@ function navigationMarkup(mode) {
     ["settings", "settings", "Cài đặt"],
   ];
   const itemMarkup = ([view, icon, label]) => `
-    <button class="nav-item" type="button" data-action="navigate" data-view="${view}" ${state.view === view ? 'aria-current="page"' : ""}>
+    <button class="nav-item" type="button" data-action="navigate" data-view="${view}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}" ${state.view === view ? 'aria-current="page"' : ""}>
       <i data-lucide="${icon}"></i><span>${label}</span>
     </button>`;
 
@@ -1008,7 +1008,7 @@ function navigationMarkup(mode) {
     ${mainItems.map(itemMarkup).join("")}
     <span class="nav-section-label">Tiện ích chung</span>
     ${toolItems.map(([tool, icon, label]) => `
-      <button class="nav-item" type="button" data-action="navigate" data-view="tools" data-tool="${tool}" ${state.view === "tools" && state.toolView === tool ? 'aria-current="page"' : ""}>
+      <button class="nav-item" type="button" data-action="navigate" data-view="tools" data-tool="${tool}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}" ${state.view === "tools" && state.toolView === tool ? 'aria-current="page"' : ""}>
         <i data-lucide="${icon}"></i><span>${label}</span>
       </button>
     `).join("")}
