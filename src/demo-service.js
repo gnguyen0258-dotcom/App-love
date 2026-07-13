@@ -22,7 +22,17 @@ let demoProfile = {
   email: demoUser.email,
   photoURL: "",
   coupleId: "demo-couple",
-  preferences: { showMessagePreview: false, quietHoursEnabled: false },
+  preferences: {
+    showMessagePreview: false,
+    notificationMessages: true,
+    notificationCalendar: true,
+    notificationCycle: true,
+    notificationCheckin: true,
+    quietHoursEnabled: false,
+    quietHoursStart: "22:00",
+    quietHoursEnd: "07:00",
+    notificationTimeZone: "Asia/Ho_Chi_Minh",
+  },
   devices: {},
 };
 
@@ -58,6 +68,10 @@ let demoCouple = {
     },
   },
   shared: {
+    stats: {
+      messageCount: 742,
+      interactionDays: 46,
+    },
     nicknames: {},
     relationship: {
       startDate: relativeDate(-460),
@@ -124,6 +138,35 @@ let demoCouple = {
       },
       used: { "o01-a01": date },
     },
+    futureLetters: {
+      "letter-ready": {
+        title: "Mở vào một ngày cần được ôm",
+        openDate: relativeDate(-1),
+        opensAt: Date.parse(`${relativeDate(-1)}T00:00:00`),
+        createdAt: now - 12 * 24 * 60 * 60 * 1000,
+        createdBy: "demo-partner",
+        recipientUid: "demo-giang",
+        openedAt: 0,
+        openedBy: "",
+      },
+      "letter-locked": {
+        title: "Gửi đến sinh nhật tiếp theo",
+        openDate: relativeDate(18),
+        opensAt: Date.parse(`${relativeDate(18)}T00:00:00`),
+        createdAt: now - 2 * 24 * 60 * 60 * 1000,
+        createdBy: "demo-giang",
+        recipientUid: "demo-partner",
+        openedAt: 0,
+        openedBy: "",
+      },
+    },
+    achievements: {
+      firstTrip: {
+        date: relativeDate(-280),
+        unlockedAt: now - 280 * 24 * 60 * 60 * 1000,
+        unlockedBy: "demo-partner",
+      },
+    },
     dateIdeas: {
       "idea-1": { text: "Đi ăn món chưa ai trong hai đứa từng thử", createdBy: "demo-giang", createdAt: now - 3_600_000 },
       "idea-2": { text: "Tắt điện thoại và đi dạo 30 phút", createdBy: "demo-partner", createdAt: now - 2_800_000 },
@@ -167,6 +210,11 @@ let demoCouple = {
       },
     },
   },
+};
+
+let demoFutureLetterBodies = {
+  "letter-ready": "Dù hôm nay có mệt thế nào, bạn vẫn luôn có một nơi để trở về và một người muốn lắng nghe.",
+  "letter-locked": "Chúc mừng sinh nhật người mình thương. Cảm ơn vì thêm một năm vẫn chọn ở đây cùng nhau.",
 };
 
 let demoMessages = [
@@ -243,6 +291,10 @@ export function createDemoService(route = "app") {
     },
     async savePreference(_uid, key, value) {
       demoProfile.preferences[key] = value;
+      publish("profile", demoProfile);
+    },
+    async savePreferences(_uid, values) {
+      Object.assign(demoProfile.preferences, values);
       publish("profile", demoProfile);
     },
     async saveNicknames(_coupleId, nicknames) {
@@ -331,6 +383,15 @@ export function createDemoService(route = "app") {
         redeemedAt: Date.now(),
         redeemedBy: uid,
       });
+      publish("couple", demoCouple);
+    },
+    async saveFirstTripAchievement(_coupleId, uid, tripDate) {
+      demoCouple.shared.achievements ||= {};
+      demoCouple.shared.achievements.firstTrip = {
+        date: tripDate,
+        unlockedAt: Date.now(),
+        unlockedBy: uid,
+      };
       publish("couple", demoCouple);
     },
     async deleteExpiredCoupons(couponIds) {
@@ -430,6 +491,49 @@ export function createDemoService(route = "app") {
       }
       return { encouragement: demoCouple.shared.dailyEncouragement.current };
     },
+    async createFutureLetter(letter) {
+      const id = crypto.randomUUID();
+      demoCouple.shared.futureLetters ||= {};
+      demoCouple.shared.futureLetters[id] = {
+        title: String(letter.title).trim(),
+        openDate: letter.openDate,
+        opensAt: Date.parse(`${letter.openDate}T00:00:00`),
+        createdAt: Date.now(),
+        createdBy: demoUser.uid,
+        recipientUid: "demo-partner",
+        openedAt: 0,
+        openedBy: "",
+      };
+      demoFutureLetterBodies[id] = String(letter.body).trim();
+      publish("couple", demoCouple);
+      return { letter: { id, ...demoCouple.shared.futureLetters[id] } };
+    },
+    async openFutureLetter(letterId) {
+      const letter = demoCouple.shared.futureLetters?.[letterId];
+      if (!letter || !demoFutureLetterBodies[letterId]) throw new Error("Lá thư không còn tồn tại.");
+      const isCreator = letter.createdBy === demoUser.uid;
+      if (!isCreator && Date.now() < Number(letter.opensAt)) {
+        throw new Error("Lá thư vẫn đang được niêm phong đến ngày đã hẹn.");
+      }
+      const unlocked = Date.now() >= Number(letter.opensAt);
+      if (unlocked && !letter.openedAt) {
+        letter.openedAt = Date.now();
+        letter.openedBy = demoUser.uid;
+        publish("couple", demoCouple);
+      }
+      return {
+        letterId,
+        body: demoFutureLetterBodies[letterId],
+        preview: isCreator && !unlocked,
+        unlocked,
+      };
+    },
+    async deleteFutureLetter(letterId) {
+      delete demoCouple.shared.futureLetters?.[letterId];
+      delete demoFutureLetterBodies[letterId];
+      publish("couple", demoCouple);
+      return { deleted: true };
+    },
     async sendMessage({ text, kind = "message", stickerId = "" }) {
       const senderName = demoCouple.shared.nicknames?.[demoUser.uid] || demoUser.displayName;
       const message = {
@@ -442,6 +546,8 @@ export function createDemoService(route = "app") {
         createdAt: Date.now(),
       };
       demoMessages = [...demoMessages, message];
+      demoCouple.shared.stats.messageCount += 1;
+      publish("couple", demoCouple);
       publish("messages", demoMessages);
       return { message };
     },

@@ -2,6 +2,7 @@ const INVALID_TOKEN_CODES = new Set([
   "messaging/invalid-registration-token",
   "messaging/registration-token-not-registered",
 ]);
+const { notificationDecision } = require("../shared/notification-preferences.cjs");
 
 function resolveAppLink(pathname = "/") {
   if (/^https:\/\//i.test(pathname)) return pathname;
@@ -26,14 +27,26 @@ async function sendUserPush(options) {
     link = "/",
     messageId,
     kind = "notification",
+    category,
     ttlSeconds = 86400,
     urgency = "high",
+    now = Date.now(),
   } = options;
   const recipient = Object.hasOwn(options, "recipient")
     ? options.recipient || {}
     : (await database.ref(`users/${uid}`).get()).val() || {};
   const devices = registeredDevices(recipient);
   if (!devices.length) return { sent: 0, failed: 0, total: 0 };
+  const decision = notificationDecision(recipient, { category, kind, now });
+  if (!decision.deliver) {
+    return {
+      sent: 0,
+      failed: 0,
+      total: devices.length,
+      skipped: decision.reason,
+      category: decision.category,
+    };
+  }
 
   const result = await messaging.sendEachForMulticast({
     tokens: devices.map((device) => device.token),

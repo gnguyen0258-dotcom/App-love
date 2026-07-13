@@ -2,8 +2,10 @@ import "./styles.css";
 import {
   Archive,
   ArrowRight,
+  Award,
   Bell,
   BellRing,
+  BookHeart,
   CalendarDays,
   Calculator,
   Camera,
@@ -25,6 +27,7 @@ import {
   LogOut,
   Mail,
   MessageCircle,
+  Moon,
   Plus,
   Quote,
   PartyPopper,
@@ -37,11 +40,13 @@ import {
   SmilePlus,
   Smartphone,
   Sparkles,
+  Sprout,
   Sticker,
   StickyNote,
   Sunrise,
   Timer,
   TicketCheck,
+  Trophy,
   Trash2,
   UserPlus,
   UserRound,
@@ -63,8 +68,10 @@ import chatMedia from "../shared/chat-media.json";
 const ICONS = {
   Archive,
   ArrowRight,
+  Award,
   Bell,
   BellRing,
+  BookHeart,
   CalendarDays,
   Calculator,
   Camera,
@@ -86,6 +93,7 @@ const ICONS = {
   LogOut,
   Mail,
   MessageCircle,
+  Moon,
   Plus,
   Quote,
   PartyPopper,
@@ -98,11 +106,13 @@ const ICONS = {
   SmilePlus,
   Smartphone,
   Sparkles,
+  Sprout,
   Sticker,
   StickyNote,
   Sunrise,
   Timer,
   TicketCheck,
+  Trophy,
   Trash2,
   UserPlus,
   UserRound,
@@ -136,6 +146,13 @@ const MAX_AVATAR_DATA_LENGTH = 150_000;
 const MAX_BACKGROUND_FILE_BYTES = 15 * 1024 * 1024;
 const MAX_BACKGROUND_DATA_LENGTH = 340_000;
 const COUPON_HISTORY_TTL_MS = 24 * 60 * 60 * 1000;
+
+const notificationPreferences = [
+  ["notificationMessages", "message-circle", "Tin nhắn", "Lời nhắn và sticker mới"],
+  ["notificationCalendar", "calendar-days", "Lịch", "Sự kiện chung vào đầu ngày"],
+  ["notificationCycle", "heart-pulse", "Chu kỳ", "Nhắc trước ngày xanh 3 ngày"],
+  ["notificationCheckin", "heart-handshake", "Check-in", "Check-in và những tương tác nhỏ"],
+];
 
 const moods = ["Vui vẻ", "Bình yên", "Hơi mệt", "Lo lắng", "Buồn", "Cần nghỉ"];
 const needs = ["Muốn được trò chuyện", "Cần một cái ôm", "Cần không gian", "Muốn đi đâu đó"];
@@ -219,6 +236,7 @@ const state = {
   dailyAnswerDraft: "",
   encouragementRequest: emptyEncouragementRequest(),
   checkinDraft: { mood: "", need: "", note: "" },
+  openedLetters: {},
   notification: { supported: false, permission: "default", registered: false },
 };
 
@@ -554,6 +572,68 @@ function loveCoupons(currentTime = Date.now()) {
       return !expiresAt || expiresAt > currentTime;
     })
     .sort((a, b) => Number(b.createdAt) - Number(a.createdAt));
+}
+
+function preferenceEnabled(key) {
+  return state.profile?.preferences?.[key] !== false;
+}
+
+function tomorrowDateKey() {
+  return addDaysToKey(service.todayKey(), 1);
+}
+
+function futureLetters() {
+  return Object.entries(state.couple?.shared?.futureLetters || {})
+    .map(([id, letter]) => ({ id, ...letter }))
+    .filter((letter) => letter.title && Number(letter.opensAt))
+    .sort((left, right) => Number(left.opensAt) - Number(right.opensAt));
+}
+
+function interactionDayCount() {
+  const days = new Set();
+  const addTimestamp = (timestamp) => {
+    const value = Number(timestamp);
+    if (Number.isFinite(value) && value > 0) days.add(localDateKey(new Date(value)));
+  };
+  Object.keys(state.couple?.checkins || {}).forEach((dateKey) => days.add(dateKey));
+  Object.keys(state.couple?.shared?.dailyQuestions || {}).forEach((dateKey) => days.add(dateKey));
+  Object.values(state.couple?.messages || {}).forEach((message) => addTimestamp(message.createdAt));
+  state.messages.forEach((message) => addTimestamp(message.createdAt));
+  Object.values(state.couple?.activities || {}).forEach((activity) => addTimestamp(activity.createdAt));
+  dateIdeas().forEach((idea) => addTimestamp(idea.createdAt));
+  couponEntries().forEach((coupon) => addTimestamp(coupon.createdAt));
+  futureLetters().forEach((letter) => addTimestamp(letter.createdAt));
+  return Math.max(days.size, Number(state.couple?.shared?.stats?.interactionDays) || 0);
+}
+
+function totalMessageCount() {
+  return Math.max(
+    Object.keys(state.couple?.messages || {}).length,
+    state.messages.length,
+    Number(state.couple?.shared?.stats?.messageCount) || 0,
+  );
+}
+
+function growthStage() {
+  const days = interactionDayCount();
+  const stages = [
+    { min: 0, next: 3, name: "Hạt mầm", note: "Một điều nhỏ đang chờ được hai bạn chăm.", level: 0 },
+    { min: 3, next: 7, name: "Mầm non", note: "Mầm yêu đã nhú lên từ những lần hai bạn ghé vào.", level: 1 },
+    { min: 7, next: 14, name: "Chồi xanh", note: "Mỗi ngày trò chuyện đang giúp chồi xanh hơn.", level: 2 },
+    { min: 14, next: 30, name: "Nụ yêu", note: "Một nụ hoa nhỏ đã xuất hiện trong khu vườn chung.", level: 3 },
+    { min: 30, next: 60, name: "Hoa đầu mùa", note: "Sự hiện diện đều đặn của hai bạn đã nở thành hoa.", level: 4 },
+    { min: 60, next: 100, name: "Vườn nhỏ", note: "Khu vườn đã đủ đầy bởi những ngày cùng chăm sóc.", level: 5 },
+    { min: 100, next: null, name: "Cây kỷ niệm", note: "Một biểu tượng bền bỉ cho hành trình hai đứa.", level: 6 },
+  ];
+  const stage = [...stages].reverse().find((item) => days >= item.min) || stages[0];
+  const progress = stage.next
+    ? Math.min(100, Math.round(((days - stage.min) / (stage.next - stage.min)) * 100))
+    : 100;
+  return { ...stage, days, progress, remaining: stage.next ? stage.next - days : 0 };
+}
+
+function firstTripAchievement() {
+  return state.couple?.shared?.achievements?.firstTrip || null;
 }
 
 function periodBlocks(periodDays) {
@@ -1798,6 +1878,140 @@ function renderCalendarTool() {
   `;
 }
 
+function futureMailboxMarkup(partner, memberNames) {
+  const letters = futureLetters();
+  const currentTime = Date.now();
+  return `
+    <section class="section-panel future-mailbox-panel">
+      <div class="section-panel__head">
+        <div><p class="eyebrow">Gửi đến một ngày khác</p><h2>Hộp thư tương lai</h2></div>
+        <span>${letters.length} lá thư</span>
+      </div>
+      <div class="future-mailbox-layout">
+        <form class="future-letter-form" data-form="future-letter">
+          <div class="field">
+            <label for="future-letter-title">Tên lá thư</label>
+            <input id="future-letter-title" name="title" maxlength="80" placeholder="Ví dụ: Mở khi mình tròn 500 ngày" required />
+          </div>
+          <div class="field">
+            <label for="future-letter-date">Ngày được mở</label>
+            <input id="future-letter-date" name="openDate" type="date" min="${escapeHTML(tomorrowDateKey())}" required />
+          </div>
+          <div class="field future-letter-form__body">
+            <label for="future-letter-body">Điều bạn muốn gửi lại</label>
+            <textarea id="future-letter-body" name="body" maxlength="4000" placeholder="Viết cho người ấy của một ngày trong tương lai..." required></textarea>
+          </div>
+          <button class="btn btn--primary" type="submit" ${partner && !state.busy ? "" : "disabled"}><i data-lucide="book-heart"></i> Niêm phong lá thư</button>
+          <small>Nội dung được cất riêng trên máy chủ; người nhận chỉ mở được đúng ngày.</small>
+        </form>
+
+        <div class="future-letter-list" aria-live="polite">
+          ${letters.map((letter) => {
+            const isCreator = letter.createdBy === state.user.uid;
+            const unlocked = currentTime >= Number(letter.opensAt);
+            const body = state.openedLetters[letter.id];
+            const daysLeft = Math.max(0, daysBetween(service.todayKey(), letter.openDate));
+            const status = Number(letter.openedAt)
+              ? `Đã mở bởi ${escapeHTML(memberNames[letter.openedBy] || "một người")}`
+              : unlocked
+                ? "Đã đến ngày mở"
+                : isCreator
+                  ? `Đã hẹn cho ${escapeHTML(formatDate(letter.openDate))}`
+                  : `Còn ${daysLeft} ngày nữa`;
+            return `
+              <article class="future-letter ${unlocked ? "is-unlocked" : "is-locked"}" data-letter-id="${escapeHTML(letter.id)}">
+                <span class="future-letter__seal"><i data-lucide="${unlocked ? "mail" : "lock-keyhole"}"></i></span>
+                <div class="future-letter__copy">
+                  <strong>${escapeHTML(letter.title)}</strong>
+                  <span>${isCreator ? `Gửi đến ${escapeHTML(memberNames[letter.recipientUid] || "người ấy")}` : `Từ ${escapeHTML(memberNames[letter.createdBy] || "người ấy")}`} · ${status}</span>
+                  ${body ? `<div class="future-letter__body"><p>${escapeHTML(body)}</p><small>${isCreator && !unlocked ? "Bản xem lại của người viết" : "Lá thư đã được mở"}</small></div>` : ""}
+                </div>
+                <div class="future-letter__actions">
+                  ${(isCreator || unlocked) ? `<button class="btn btn--quiet" type="button" data-action="open-future-letter" data-letter-id="${escapeHTML(letter.id)}">${body ? "Thu lại" : isCreator && !unlocked ? "Xem lại" : "Mở thư"}</button>` : `<span class="future-letter__countdown">${daysLeft} ngày</span>`}
+                  ${isCreator && !Number(letter.openedAt) ? `<button class="icon-button icon-button--danger" type="button" data-action="delete-future-letter" data-letter-id="${escapeHTML(letter.id)}" title="Xóa thư đã hẹn" aria-label="Xóa ${escapeHTML(letter.title)}"><i data-lucide="trash-2"></i></button>` : ""}
+                </div>
+              </article>
+            `;
+          }).join("") || `<div class="empty-state future-letter-empty"><i data-lucide="mail"></i><p>Chưa có lá thư nào được hẹn. Hãy gửi điều đầu tiên đến tương lai của hai đứa.</p></div>`}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function bondGardenMarkup() {
+  const growth = growthStage();
+  return `
+    <section class="section-panel bond-garden-panel">
+      <div class="section-panel__head"><div><p class="eyebrow">Cùng chăm mỗi ngày</p><h2>Mầm yêu chung</h2></div><span>${growth.days} ngày tương tác</span></div>
+      <div class="bond-garden__visual" data-growth-level="${growth.level}">
+        <div class="bond-garden__plant" aria-hidden="true">
+          <i class="bond-garden__sprout" data-lucide="sprout"></i>
+          <i class="bond-garden__flower" data-lucide="flower-2"></i>
+        </div>
+        <div class="bond-garden__copy">
+          <span>Giai đoạn ${growth.level + 1}</span>
+          <strong>${escapeHTML(growth.name)}</strong>
+          <p>${escapeHTML(growth.note)}</p>
+        </div>
+      </div>
+      <div class="bond-progress" role="progressbar" aria-label="Tiến độ mầm yêu" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${growth.progress}"><span style="width: ${growth.progress}%"></span></div>
+      <p class="bond-garden__next">${growth.next ? `Thêm ${growth.remaining} ngày có tin nhắn, check-in hoặc tương tác để sang giai đoạn mới.` : "Mầm yêu đã đạt giai đoạn cao nhất và sẽ tiếp tục ghi lại từng ngày hai bạn ở đây."}</p>
+    </section>
+  `;
+}
+
+function achievementsMarkup() {
+  const days = relationshipElapsed(relationshipStartDate()).dayNumber;
+  const messages = totalMessageCount();
+  const firstTrip = firstTripAchievement();
+  const achievements = [
+    {
+      icon: "heart",
+      title: "100 ngày bên nhau",
+      unlocked: days >= 100,
+      progress: Math.min(100, days),
+      detail: days >= 100 ? `Đã đi cùng nhau ${days} ngày` : `${days}/100 ngày`,
+    },
+    {
+      icon: "award",
+      title: "Chuyến đi đầu tiên",
+      unlocked: Boolean(firstTrip?.date),
+      progress: firstTrip?.date ? 100 : 0,
+      detail: firstTrip?.date ? formatDate(firstTrip.date) : "Chờ hai bạn ghi nhận",
+      manual: true,
+    },
+    {
+      icon: "message-circle",
+      title: "1.000 tin nhắn",
+      unlocked: messages >= 1000,
+      progress: Math.min(100, Math.round((messages / 1000) * 100)),
+      detail: messages >= 1000 ? `${messages.toLocaleString("vi-VN")} lời nhắn đã gửi` : `${messages.toLocaleString("vi-VN")}/1.000 tin nhắn`,
+    },
+  ];
+  return `
+    <section class="section-panel achievements-panel">
+      <div class="section-panel__head"><div><p class="eyebrow">Chỉ hai đứa nhìn thấy</p><h2>Bảng thành tựu</h2></div><i data-lucide="trophy"></i></div>
+      <div class="achievement-list">
+        ${achievements.map((item) => `
+          <article class="achievement-item ${item.unlocked ? "is-unlocked" : ""}">
+            <span class="achievement-item__icon"><i data-lucide="${item.icon}"></i></span>
+            <div class="achievement-item__copy"><strong>${escapeHTML(item.title)}</strong><span>${escapeHTML(item.detail)}</span><div class="achievement-progress"><i style="width: ${item.progress}%"></i></div></div>
+            <span class="achievement-item__state"><i data-lucide="${item.unlocked ? "check" : "lock-keyhole"}"></i></span>
+            ${item.manual && !item.unlocked ? `
+              <form class="first-trip-form" data-form="first-trip">
+                <label class="sr-only" for="first-trip-date">Ngày chuyến đi đầu tiên</label>
+                <input id="first-trip-date" name="date" type="date" max="${escapeHTML(service.todayKey())}" required />
+                <button class="btn btn--quiet" type="submit" ${state.busy ? "disabled" : ""}>Ghi nhận</button>
+              </form>
+            ` : ""}
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
 function renderLoveTool() {
   const partner = partnerMember();
   const today = service.todayKey();
@@ -1850,6 +2064,9 @@ function renderLoveTool() {
         `}
       </section>
 
+      ${bondGardenMarkup()}
+      ${achievementsMarkup()}
+
       <section class="love-signal">
         <div>
           <p class="eyebrow">Một chạm nhỏ</p>
@@ -1860,6 +2077,8 @@ function renderLoveTool() {
           <i data-lucide="party-popper"></i> Gửi bất ngờ
         </button>
       </section>
+
+      ${futureMailboxMarkup(partner, memberNames)}
 
       <section class="section-panel daily-question-panel">
         <div class="section-panel__head">
@@ -2025,7 +2244,17 @@ function renderCouple() {
 }
 
 function renderSettings() {
-  const previewEnabled = Boolean(state.profile.preferences?.showMessagePreview);
+  const preferences = state.profile.preferences || {};
+  const previewEnabled = Boolean(preferences.showMessagePreview);
+  const quietHoursEnabled = Boolean(preferences.quietHoursEnabled);
+  const quietHoursStart = /^\d{2}:\d{2}$/.test(preferences.quietHoursStart)
+    ? preferences.quietHoursStart
+    : "22:00";
+  const quietHoursEnd = /^\d{2}:\d{2}$/.test(preferences.quietHoursEnd)
+    ? preferences.quietHoursEnd
+    : "07:00";
+  const notificationTimeZone = preferences.notificationTimeZone ||
+    Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Ho_Chi_Minh";
   const granted = state.notification.permission === "granted" && state.notification.registered;
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone;
@@ -2060,6 +2289,30 @@ function renderSettings() {
           <div class="setting-row">
             <div><strong>Hiện nội dung lời nhắn</strong><span>Tắt để màn hình khóa chỉ báo có tin mới.</span></div>
             <button class="switch" type="button" role="switch" aria-checked="${previewEnabled}" data-action="toggle-preview" aria-label="Hiện nội dung lời nhắn trên màn hình khóa"></button>
+          </div>
+          <fieldset class="notification-preferences">
+            <legend>Chọn loại muốn nhận</legend>
+            ${notificationPreferences.map(([key, icon, title, description]) => `
+              <div class="notification-preference-row">
+                <span class="notification-preference-row__icon"><i data-lucide="${icon}"></i></span>
+                <div><strong>${escapeHTML(title)}</strong><span>${escapeHTML(description)}</span></div>
+                <button class="switch" type="button" role="switch" aria-checked="${preferenceEnabled(key)}" data-action="toggle-notification-category" data-preference="${key}" aria-label="Nhận thông báo ${escapeHTML(title.toLowerCase())}"></button>
+              </div>
+            `).join("")}
+          </fieldset>
+          <div class="quiet-hours-setting">
+            <div class="setting-row">
+              <div><strong>Giờ yên lặng</strong><span>App vẫn lưu mọi thứ nhưng sẽ không hiện push trong khoảng này.</span></div>
+              <button class="switch" type="button" role="switch" aria-checked="${quietHoursEnabled}" data-action="toggle-quiet-hours" aria-label="Bật giờ yên lặng"></button>
+            </div>
+            ${quietHoursEnabled ? `
+              <form class="quiet-hours-form" data-form="quiet-hours">
+                <div class="field"><label for="quiet-start">Từ</label><input id="quiet-start" name="start" type="time" value="${escapeHTML(quietHoursStart)}" required /></div>
+                <div class="field"><label for="quiet-end">Đến</label><input id="quiet-end" name="end" type="time" value="${escapeHTML(quietHoursEnd)}" required /></div>
+                <button class="btn btn--quiet" type="submit" ${state.busy ? "disabled" : ""}><i data-lucide="moon"></i> Lưu giờ</button>
+                <small>Múi giờ: ${escapeHTML(notificationTimeZone)}</small>
+              </form>
+            ` : ""}
           </div>
           ${isIOS && !standalone ? `<div class="waiting-band waiting-band--spaced"><strong>Trên iPhone</strong><span>Thêm HeartSync vào Màn hình chính trước khi bật thông báo.</span></div>` : ""}
         </section>
@@ -2121,6 +2374,10 @@ function syncRoute() {
 }
 
 function toast(message, type = "success") {
+  const maxVisible = window.matchMedia("(max-width: 900px)").matches ? 2 : 3;
+  while (toastHost.children.length >= maxVisible) {
+    toastHost.firstElementChild?.remove();
+  }
   const element = document.createElement("div");
   element.className = `toast ${type === "error" ? "toast--error" : ""}`;
   element.textContent = message;
@@ -2553,6 +2810,27 @@ appRoot.addEventListener("click", (event) => {
       });
       toast("Đã sử dụng phiếu yêu thương.");
     });
+  } else if (action === "open-future-letter") {
+    const letterId = button.dataset.letterId;
+    if (state.openedLetters[letterId]) {
+      delete state.openedLetters[letterId];
+      render();
+      return;
+    }
+    runBusy(async () => {
+      const result = await service.openFutureLetter(letterId);
+      state.openedLetters[letterId] = result.body;
+      toast(result.preview ? "Đây là bản xem lại của người viết." : "Lá thư đã được mở.");
+    });
+  } else if (action === "delete-future-letter") {
+    const approved = window.confirm("Xóa lá thư đã hẹn này? Nội dung đã niêm phong cũng sẽ bị xóa.");
+    if (approved) {
+      runBusy(async () => {
+        await service.deleteFutureLetter(button.dataset.letterId);
+        delete state.openedLetters[button.dataset.letterId];
+        toast("Đã xóa lá thư đã hẹn.");
+      });
+    }
   } else if (action === "send-nudge") {
     const kind = button.dataset.kind;
     runBusy(async () => {
@@ -2573,6 +2851,20 @@ appRoot.addEventListener("click", (event) => {
     runBusy(async () => {
       await service.savePreference(state.user.uid, "showMessagePreview", value);
       toast(value ? "Sẽ hiện nội dung trên màn hình khóa." : "Đã ẩn nội dung trên màn hình khóa.");
+    });
+  } else if (action === "toggle-notification-category") {
+    const key = button.dataset.preference;
+    if (!notificationPreferences.some(([preferenceKey]) => preferenceKey === key)) return;
+    const value = !preferenceEnabled(key);
+    runBusy(async () => {
+      await service.savePreference(state.user.uid, key, value);
+      toast(value ? "Đã bật loại thông báo này." : "Đã tạm dừng loại thông báo này.");
+    });
+  } else if (action === "toggle-quiet-hours") {
+    const value = !state.profile.preferences?.quietHoursEnabled;
+    runBusy(async () => {
+      await service.savePreference(state.user.uid, "quietHoursEnabled", value);
+      toast(value ? "Đã bật giờ yên lặng." : "Đã tắt giờ yên lặng.");
     });
   } else if (action === "logout") {
     runBusy(() => service.signOut());
@@ -2668,6 +2960,31 @@ appRoot.addEventListener("submit", (event) => {
       await service.saveNicknames(state.profile.coupleId, nicknames);
       toast("Biệt danh đã đồng bộ cho cả hai.");
     });
+  } else if (form.dataset.form === "future-letter") {
+    const title = String(data.get("title") || "").trim();
+    const body = String(data.get("body") || "").trim();
+    const openDate = String(data.get("openDate") || "");
+    if (!form.reportValidity() || !title || !body || !dateFromKey(openDate)) return;
+    if (openDate < tomorrowDateKey()) {
+      toast("Ngày mở thư cần bắt đầu từ ngày mai.", "error");
+      return;
+    }
+    runBusy(async () => {
+      await service.createFutureLetter({ title, body, openDate });
+      form.reset();
+      toast("Lá thư đã được niêm phong đến ngày hẹn.");
+    });
+  } else if (form.dataset.form === "first-trip") {
+    const date = String(data.get("date") || "");
+    if (!form.reportValidity() || !dateFromKey(date)) return;
+    if (date > service.todayKey()) {
+      toast("Ngày chuyến đi không thể ở trong tương lai.", "error");
+      return;
+    }
+    runBusy(async () => {
+      await service.saveFirstTripAchievement(state.profile.coupleId, state.user.uid, date);
+      toast("Đã ghi nhận chuyến đi đầu tiên của hai đứa.");
+    });
   } else if (form.dataset.form === "daily-question") {
     const answer = String(data.get("answer") || "").trim();
     if (!form.reportValidity() || !answer) return;
@@ -2759,6 +3076,23 @@ appRoot.addEventListener("submit", (event) => {
         note,
       });
       toast("Đã thêm vào lịch chung.");
+    });
+  } else if (form.dataset.form === "quiet-hours") {
+    const start = String(data.get("start") || "");
+    const end = String(data.get("end") || "");
+    if (!form.reportValidity() || !/^([01]\d|2[0-3]):[0-5]\d$/.test(start) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(end)) return;
+    if (start === end) {
+      toast("Giờ bắt đầu và kết thúc cần khác nhau.", "error");
+      return;
+    }
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Ho_Chi_Minh";
+    runBusy(async () => {
+      await service.savePreferences(state.user.uid, {
+        quietHoursStart: start,
+        quietHoursEnd: end,
+        notificationTimeZone: timeZone,
+      });
+      toast(`Đã giữ yên lặng từ ${start} đến ${end}.`);
     });
   } else if (form.dataset.form === "checkin") {
     if (!state.checkinDraft.mood || !state.checkinDraft.need) {

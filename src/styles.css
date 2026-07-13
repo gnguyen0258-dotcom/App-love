@@ -1968,6 +1968,82 @@ select:focus-visible {
   transform: translateX(20px);
 }
 
+.notification-preferences {
+  min-width: 0;
+  margin: 18px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.notification-preferences legend {
+  margin-bottom: 8px;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.notification-preference-row {
+  min-height: 62px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px solid var(--line);
+}
+
+.notification-preference-row__icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--teal-soft);
+  color: var(--teal-dark);
+}
+
+.notification-preference-row__icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.notification-preference-row strong,
+.notification-preference-row span {
+  display: block;
+}
+
+.notification-preference-row strong {
+  font-size: 0.78rem;
+}
+
+.notification-preference-row div > span {
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+}
+
+.quiet-hours-setting {
+  margin-top: 4px;
+}
+
+.quiet-hours-form {
+  padding: 16px 0 2px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.quiet-hours-form .btn {
+  min-height: 46px;
+}
+
+.quiet-hours-form > small {
+  grid-column: 1 / -1;
+  color: var(--ink-soft);
+  font-size: 0.66rem;
+}
+
 .nav-section-label {
   padding: 17px 12px 5px;
   color: var(--ink-soft);
@@ -3326,6 +3402,378 @@ select:focus-visible {
   font-size: 0.68rem;
 }
 
+/* Shared rituals: sealed letters, a growing keepsake and private milestones. */
+.future-mailbox-panel {
+  grid-column: 1 / -1;
+}
+
+.future-mailbox-layout {
+  margin-top: 4px;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(20px, 3vw, 34px);
+}
+
+.future-letter-form {
+  padding-right: clamp(20px, 3vw, 34px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 12px;
+  border-right: 1px solid var(--line);
+}
+
+.future-letter-form__body,
+.future-letter-form .btn,
+.future-letter-form > small {
+  grid-column: 1 / -1;
+}
+
+.future-letter-form textarea {
+  min-height: 126px;
+}
+
+.future-letter-form > small {
+  color: var(--ink-soft);
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+.future-letter-list {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+}
+
+.future-letter {
+  min-width: 0;
+  padding: 15px 0;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.future-letter:first-child {
+  padding-top: 0;
+}
+
+.future-letter:last-child {
+  border-bottom: 0;
+}
+
+.future-letter__seal {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-quiet);
+  color: var(--ink-soft);
+}
+
+.future-letter.is-unlocked .future-letter__seal {
+  background: var(--coral-soft);
+  color: var(--coral-dark);
+}
+
+.future-letter__seal svg {
+  width: 18px;
+  height: 18px;
+}
+
+.future-letter__copy {
+  min-width: 0;
+}
+
+.future-letter__copy > strong,
+.future-letter__copy > span {
+  display: block;
+}
+
+.future-letter__copy > strong {
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+}
+
+.future-letter__copy > span {
+  margin-top: 3px;
+  color: var(--ink-soft);
+  font-size: 0.66rem;
+}
+
+.future-letter__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.future-letter__actions .btn {
+  min-height: 36px;
+  padding: 0 11px;
+  font-size: 0.68rem;
+}
+
+.future-letter__actions .icon-button {
+  width: 36px;
+  height: 36px;
+}
+
+.future-letter__countdown {
+  min-width: 58px;
+  color: var(--teal-dark);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.future-letter__body {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--coral);
+  background: var(--coral-wash);
+}
+
+.future-letter__body p {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.future-letter__body small {
+  display: block;
+  margin-top: 8px;
+  color: var(--coral-dark);
+  font-size: 0.62rem;
+  font-weight: 750;
+}
+
+.future-letter-empty {
+  min-height: 190px;
+}
+
+.bond-garden-panel,
+.achievements-panel {
+  min-width: 0;
+}
+
+.bond-garden__visual {
+  min-height: 174px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  background: var(--teal-soft);
+  box-shadow: inset 4px 0 0 var(--teal);
+}
+
+.bond-garden__plant {
+  width: 110px;
+  height: 122px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-bottom: 5px solid var(--teal-dark);
+  color: var(--teal-dark);
+}
+
+.bond-garden__plant svg {
+  position: absolute;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.bond-garden__sprout {
+  width: 58px;
+  height: 58px;
+  bottom: 8px;
+}
+
+.bond-garden__flower {
+  width: 82px;
+  height: 82px;
+  bottom: 9px;
+  opacity: 0;
+  color: var(--coral-dark);
+  transform: scale(0.72);
+}
+
+.bond-garden__visual[data-growth-level="0"] .bond-garden__sprout {
+  transform: scale(0.62);
+}
+
+.bond-garden__visual[data-growth-level="1"] .bond-garden__sprout {
+  transform: scale(0.78);
+}
+
+.bond-garden__visual[data-growth-level="2"] .bond-garden__sprout {
+  transform: scale(0.94);
+}
+
+.bond-garden__visual[data-growth-level="3"] .bond-garden__sprout,
+.bond-garden__visual[data-growth-level="4"] .bond-garden__sprout,
+.bond-garden__visual[data-growth-level="5"] .bond-garden__sprout,
+.bond-garden__visual[data-growth-level="6"] .bond-garden__sprout {
+  opacity: 0.22;
+  transform: scale(1.12);
+}
+
+.bond-garden__visual[data-growth-level="3"] .bond-garden__flower,
+.bond-garden__visual[data-growth-level="4"] .bond-garden__flower,
+.bond-garden__visual[data-growth-level="5"] .bond-garden__flower,
+.bond-garden__visual[data-growth-level="6"] .bond-garden__flower {
+  opacity: 1;
+  transform: scale(0.76);
+}
+
+.bond-garden__visual[data-growth-level="4"] .bond-garden__flower { transform: scale(0.88); }
+.bond-garden__visual[data-growth-level="5"] .bond-garden__flower { transform: scale(1); }
+.bond-garden__visual[data-growth-level="6"] .bond-garden__flower { transform: scale(1.12); }
+
+.bond-garden__copy span,
+.bond-garden__copy strong {
+  display: block;
+}
+
+.bond-garden__copy span {
+  color: var(--teal-dark);
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.bond-garden__copy strong {
+  margin-top: 3px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: clamp(1.65rem, 3vw, 2.45rem);
+  line-height: 1;
+}
+
+.bond-garden__copy p,
+.bond-garden__next {
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
+.bond-garden__copy p {
+  margin: 8px 0 0;
+}
+
+.bond-progress,
+.achievement-progress {
+  overflow: hidden;
+  background: var(--paper-deep);
+}
+
+.bond-progress {
+  height: 7px;
+  margin-top: 16px;
+}
+
+.bond-progress span,
+.achievement-progress i {
+  height: 100%;
+  display: block;
+  background: var(--teal);
+}
+
+.bond-garden__next {
+  margin: 8px 0 0;
+}
+
+.achievement-list {
+  display: grid;
+}
+
+.achievement-item {
+  min-width: 0;
+  padding: 14px 0;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 26px;
+  align-items: center;
+  gap: 11px;
+  border-bottom: 1px solid var(--line);
+}
+
+.achievement-item:last-child {
+  border-bottom: 0;
+}
+
+.achievement-item__icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-quiet);
+  color: var(--ink-soft);
+}
+
+.achievement-item.is-unlocked .achievement-item__icon {
+  background: var(--gold-soft);
+  color: var(--gold-ink);
+}
+
+.achievement-item__icon svg,
+.achievement-item__state svg {
+  width: 18px;
+  height: 18px;
+}
+
+.achievement-item__copy strong,
+.achievement-item__copy span {
+  display: block;
+}
+
+.achievement-item__copy strong {
+  font-size: 0.78rem;
+}
+
+.achievement-item__copy span {
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 0.64rem;
+}
+
+.achievement-progress {
+  height: 4px;
+  margin-top: 8px;
+}
+
+.achievement-item.is-unlocked .achievement-progress i {
+  background: var(--gold);
+}
+
+.achievement-item__state {
+  color: var(--ink-soft);
+}
+
+.achievement-item.is-unlocked .achievement-item__state {
+  color: var(--teal);
+}
+
+.first-trip-form {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.first-trip-form input,
+.first-trip-form .btn {
+  min-height: 40px;
+}
+
+.first-trip-form .btn {
+  padding: 0 12px;
+  font-size: 0.68rem;
+}
+
 .compact-empty {
   margin: 12px 0 0;
   color: var(--ink-soft);
@@ -3469,6 +3917,16 @@ select:focus-visible {
   .events-layout,
   .love-layout {
     grid-template-columns: 1fr;
+  }
+
+  .future-mailbox-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .future-letter-form {
+    padding: 0 0 24px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
 
   .relationship-milestones,
@@ -3740,6 +4198,67 @@ select:focus-visible {
   .daily-answer-grid,
   .coupon-form {
     grid-template-columns: 1fr;
+  }
+
+  .quiet-hours-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quiet-hours-form .btn,
+  .quiet-hours-form > small {
+    grid-column: 1 / -1;
+  }
+
+  .future-letter-form {
+    grid-template-columns: 1fr;
+  }
+
+  .future-letter-form .field,
+  .future-letter-form__body,
+  .future-letter-form .btn,
+  .future-letter-form > small {
+    grid-column: 1;
+  }
+
+  .future-letter {
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .future-letter__seal {
+    width: 38px;
+    height: 38px;
+  }
+
+  .future-letter__actions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .future-letter__countdown {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .bond-garden__visual {
+    grid-template-columns: 82px minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .bond-garden__plant {
+    width: 78px;
+    height: 104px;
+  }
+
+  .bond-garden__sprout {
+    width: 48px;
+    height: 48px;
+  }
+
+  .bond-garden__flower {
+    width: 66px;
+    height: 66px;
   }
 
   .daily-answer-form .btn {

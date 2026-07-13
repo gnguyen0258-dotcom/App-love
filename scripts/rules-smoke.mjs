@@ -468,6 +468,55 @@ try {
   );
 
   assertAllowed(
+    await databaseRequest("PUT", `users/${first.uid}/preferences/notificationMessages`, {
+      token: first.token,
+      body: false,
+    }),
+    "A user can disable their own message notifications",
+  );
+  assertAllowed(
+    await databaseRequest("PUT", `users/${first.uid}/preferences/quietHoursStart`, {
+      token: first.token,
+      body: "22:30",
+    }),
+    "A user can save a valid quiet-hours time",
+  );
+  assertDenied(
+    await databaseRequest("PUT", `users/${first.uid}/preferences/notificationCalendar`, {
+      token: second.token,
+      body: false,
+    }),
+    "A partner cannot change another user's notification preferences",
+  );
+  assertDenied(
+    await databaseRequest("PUT", `users/${first.uid}/preferences/quietHoursEnd`, {
+      token: first.token,
+      body: "25:90",
+    }),
+    "Quiet-hours values must use a valid 24-hour time",
+  );
+  assertAllowed(
+    await databaseRequest("PUT", `couples/${coupleId}/shared/achievements/firstTrip`, {
+      token: first.token,
+      body: { date: "2026-06-01", unlockedAt: Date.now(), unlockedBy: first.uid },
+    }),
+    "Either member can record the first shared trip",
+  );
+  assertDenied(
+    await databaseRequest("PUT", `couples/${coupleId}/shared/futureLetters/forged`, {
+      token: first.token,
+      body: { title: "Bypass sealed API", createdBy: first.uid },
+    }),
+    "Future-letter metadata must be written by the verified API",
+  );
+  assertDenied(
+    await databaseRequest("GET", `futureLetterBodies/${coupleId}/sealed`, {
+      token: first.token,
+    }),
+    "Sealed letter bodies cannot be read directly by a client",
+  );
+
+  assertAllowed(
     await databaseRequest("PUT", `couples/${coupleId}/checkins/2026-07-11/${first.uid}`, {
       token: first.token,
       body: {

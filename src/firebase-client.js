@@ -142,12 +142,20 @@ async function ensureProfile(user) {
     lastSeen: serverTimestamp(),
   };
   if (!existing.createdAt) values.createdAt = serverTimestamp();
-  if (!existing.preferences) {
-    values.preferences = {
-      showMessagePreview: false,
-      quietHoursEnabled: false,
-    };
-  }
+  const preferenceDefaults = {
+    showMessagePreview: false,
+    notificationMessages: true,
+    notificationCalendar: true,
+    notificationCycle: true,
+    notificationCheckin: true,
+    quietHoursEnabled: false,
+    quietHoursStart: "22:00",
+    quietHoursEnd: "07:00",
+    notificationTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Ho_Chi_Minh",
+  };
+  Object.entries(preferenceDefaults).forEach(([key, value]) => {
+    if (existing.preferences?.[key] === undefined) values[`preferences/${key}`] = value;
+  });
   await update(profileRef, values);
   return { ...existing, ...values };
 }
@@ -194,16 +202,21 @@ function stopPresence() {
 }
 
 async function saveCheckin(coupleId, uid, checkin) {
-  await set(ref(database, `couples/${coupleId}/checkins/${todayKey()}/${uid}`), {
+  void coupleId;
+  void uid;
+  return apiRequest("/api/checkin", {
     mood: checkin.mood,
     need: checkin.need,
     note: checkin.note.slice(0, 240),
-    updatedAt: serverTimestamp(),
   });
 }
 
 async function savePreference(uid, key, value) {
   await set(ref(database, `users/${uid}/preferences/${key}`), value);
+}
+
+async function savePreferences(uid, values) {
+  await update(ref(database, `users/${uid}/preferences`), values);
 }
 
 async function saveNicknames(coupleId, nicknames) {
@@ -325,6 +338,14 @@ async function redeemLoveCoupon(coupleId, uid, couponId) {
   });
 }
 
+async function saveFirstTripAchievement(coupleId, uid, date) {
+  await set(ref(database, `couples/${coupleId}/shared/achievements/firstTrip`), {
+    date,
+    unlockedAt: serverTimestamp(),
+    unlockedBy: uid,
+  });
+}
+
 async function apiRequest(path, body) {
   const user = auth.currentUser;
   if (!user) throw new Error("Phiên đăng nhập đã hết. Hãy đăng nhập lại.");
@@ -374,6 +395,18 @@ function deleteExpiredCoupons(couponIds) {
     action: "cleanup-coupons",
     couponIds,
   });
+}
+
+function createFutureLetter(letter) {
+  return apiRequest("/api/letters", { action: "create", ...letter });
+}
+
+function openFutureLetter(letterId) {
+  return apiRequest("/api/letters", { action: "open", letterId });
+}
+
+function deleteFutureLetter(letterId) {
+  return apiRequest("/api/letters", { action: "delete", letterId });
 }
 
 function sendMessage({ text, kind = "message", stickerId = "" }) {
@@ -467,6 +500,7 @@ export const firebaseService = {
   stopPresence,
   saveCheckin,
   savePreference,
+  savePreferences,
   saveNicknames,
   saveRelationshipDate,
   saveVault,
@@ -479,6 +513,7 @@ export const firebaseService = {
   drawDateIdea,
   createLoveCoupon,
   redeemLoveCoupon,
+  saveFirstTripAchievement,
   getPairingStatus,
   submitPairCode,
   leaveCouple,
@@ -486,6 +521,9 @@ export const firebaseService = {
   updatePulseBackground,
   ensureDailyEncouragement,
   deleteExpiredCoupons,
+  createFutureLetter,
+  openFutureLetter,
+  deleteFutureLetter,
   sendMessage,
   sendActivity,
   deleteExpiredActivities,

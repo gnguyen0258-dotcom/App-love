@@ -1,6 +1,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const coupleHandler = require("../api/couple");
+const checkinHandler = require("../api/checkin");
+const lettersHandler = require("../api/letters");
 const messageHandler = require("../api/message");
 
 function responseDouble() {
@@ -134,6 +136,77 @@ test("custom avatars sync to an existing couple member without recreating a remo
 
 test("message input is trimmed while preserving line breaks", () => {
   assert.equal(messageHandler._test.cleanText("  Xin chào\r\nngười ấy  "), "Xin chào\nngười ấy");
+});
+
+test("check-in payloads require a mood and need while limiting private notes", () => {
+  assert.deepEqual(
+    checkinHandler._test.cleanCheckin({ mood: "  Bình yên ", need: " Cần một cái ôm ", note: " Xin chào " }),
+    { mood: "Bình yên", need: "Cần một cái ôm", note: "Xin chào" },
+  );
+  assert.throws(() => checkinHandler._test.cleanCheckin({ mood: "", need: "" }), /chọn tâm trạng/i);
+  assert.equal(checkinHandler._test.cleanCheckin({ mood: "Vui", need: "Ôm", note: "a".repeat(300) }).note.length, 240);
+});
+
+test("future letters only accept tomorrow through ten years and use Vietnam midnight", () => {
+  const now = Date.UTC(2026, 6, 13, 5);
+  assert.throws(() => lettersHandler._test.validateFutureDate("2026-07-13", now), /từ ngày mai/i);
+  assert.equal(
+    lettersHandler._test.validateFutureDate("2026-07-14", now),
+    Date.parse("2026-07-14T00:00:00+07:00"),
+  );
+  assert.equal(lettersHandler._test.cleanTitle("  Gửi đến ngày mai  "), "Gửi đến ngày mai");
+  assert.equal(lettersHandler._test.cleanBody("  Dòng 1\r\nDòng 2  "), "Dòng 1\nDòng 2");
+  assert.equal(lettersHandler._test.cleanLetterId("../../secret"), "");
+});
+
+test("a sealed future letter stays hidden from its recipient until the opening time", async () => {
+  const opensAt = Date.parse("2026-07-20T00:00:00+07:00");
+  let metadata = {
+    title: "Ngày hẹn",
+    createdBy: "user-a",
+    recipientUid: "user-b",
+    opensAt,
+    openedAt: 0,
+    openedBy: "",
+  };
+  const database = {
+    ref(path) {
+      if (path === "users/user-a" || path === "users/user-b") {
+        return { get: async () => ({ val: () => ({ coupleId: "couple-a" }) }) };
+      }
+      if (path === "couples/couple-a") {
+        return { get: async () => ({ val: () => ({ members: { "user-a": {}, "user-b": {} } }) }) };
+      }
+      if (path === "couples/couple-a/shared/futureLetters/letter-a") {
+        return {
+          get: async () => ({ val: () => metadata }),
+          update: async (values) => { metadata = { ...metadata, ...values }; },
+        };
+      }
+      if (path === "futureLetterBodies/couple-a/letter-a") {
+        return { get: async () => ({ val: () => ({ body: "Điều chỉ được đọc đúng hẹn." }) }) };
+      }
+      throw new Error(`Unexpected path: ${path}`);
+    },
+  };
+
+  await assert.rejects(
+    lettersHandler._test.openLetter(database, "user-b", "letter-a", opensAt - 1),
+    (error) => error.statusCode === 423,
+  );
+  const creatorPreview = await lettersHandler._test.openLetter(
+    database,
+    "user-a",
+    "letter-a",
+    opensAt - 1,
+  );
+  assert.equal(creatorPreview.preview, true);
+  assert.equal(metadata.openedAt, 0);
+
+  const opened = await lettersHandler._test.openLetter(database, "user-b", "letter-a", opensAt);
+  assert.equal(opened.body, "Điều chỉ được đọc đúng hẹn.");
+  assert.equal(opened.unlocked, true);
+  assert.equal(metadata.openedBy, "user-b");
 });
 
 test("message sender names prefer the synchronized nickname", () => {

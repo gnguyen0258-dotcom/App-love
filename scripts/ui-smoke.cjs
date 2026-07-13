@@ -339,6 +339,40 @@ async function main() {
       quote.includes('xứng đáng với một ngày dịu dàng') &&
       panel.textContent.includes('Lời nhắc chung của hai đứa');
   })()`);
+  interactions.bondGardenVisible = await evaluate(
+    "document.querySelector('.bond-garden-panel')?.textContent.includes('46 ngày tương tác') === true && Boolean(document.querySelector('.bond-progress[aria-valuenow]'))",
+  );
+  interactions.achievementsVisible = await evaluate(`(() => {
+    const panel = document.querySelector('.achievements-panel');
+    return panel?.textContent.includes('100 ngày bên nhau') &&
+      panel.textContent.includes('Chuyến đi đầu tiên') &&
+      panel.textContent.includes('1.000 tin nhắn') &&
+      panel.querySelectorAll('.achievement-item.is-unlocked').length === 2;
+  })()`);
+  interactions.futureMailboxVisible = await evaluate(
+    "document.querySelectorAll('.future-mailbox-panel .future-letter').length === 2",
+  );
+  await evaluate(
+    "document.querySelector('.future-letter.is-unlocked [data-action=\"open-future-letter\"]').click()",
+  );
+  await new Promise((resolve) => setTimeout(resolve, 350));
+  interactions.futureLetterOpened = await evaluate(
+    "document.querySelector('.future-letter.is-unlocked .future-letter__body')?.textContent.includes('một nơi để trở về') === true",
+  );
+  await evaluate(`(() => {
+    const form = document.querySelector('[data-form="future-letter"]');
+    form.querySelector('[name="title"]').value = 'Lá thư kiểm thử';
+    form.querySelector('[name="openDate"]').value = form.querySelector('[name="openDate"]').min;
+    form.querySelector('[name="body"]').value = 'Nội dung được niêm phong từ smoke test.';
+    form.requestSubmit();
+  })()`);
+  await new Promise((resolve) => setTimeout(resolve, 350));
+  interactions.futureLetterCreated = await evaluate(
+    "Array.from(document.querySelectorAll('.future-letter__copy > strong')).some((node) => node.textContent === 'Lá thư kiểm thử')",
+  );
+  await evaluate("document.querySelector('.future-mailbox-panel').scrollIntoView({ block: 'start' })");
+  await new Promise((resolve) => setTimeout(resolve, 120));
+  await screenshot("heartsync-cdp-future-mailbox-mobile.png");
   await evaluate(`(() => {
     const form = document.querySelector('[data-form="daily-question"]');
     form.querySelector('[name="answer"]').value = "Mình thấy được yêu khi bạn nhớ những điều rất nhỏ.";
@@ -516,6 +550,31 @@ async function main() {
   interactions.refreshAvailable = await evaluate(
     "Boolean(document.querySelector('[data-action=\"refresh-app\"]')?.getAttribute('aria-label'))",
   );
+  interactions.notificationCategoriesVisible = await evaluate(
+    "document.querySelectorAll('[data-action=\"toggle-notification-category\"]').length === 4",
+  );
+  await evaluate(
+    "document.querySelector('[data-action=\"toggle-notification-category\"][data-preference=\"notificationMessages\"]').click()",
+  );
+  await new Promise((resolve) => setTimeout(resolve, 250));
+  interactions.notificationCategoryToggled = await evaluate(
+    "document.querySelector('[data-action=\"toggle-notification-category\"][data-preference=\"notificationMessages\"]').getAttribute('aria-checked') === 'false'",
+  );
+  await evaluate("document.querySelector('[data-action=\"toggle-quiet-hours\"]').click()");
+  await new Promise((resolve) => setTimeout(resolve, 250));
+  await evaluate(`(() => {
+    const form = document.querySelector('[data-form="quiet-hours"]');
+    form.querySelector('[name="start"]').value = '21:30';
+    form.querySelector('[name="end"]').value = '06:30';
+    form.requestSubmit();
+  })()`);
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  interactions.quietHoursSaved = await evaluate(
+    "document.querySelector('[data-form=\"quiet-hours\"] [name=\"start\"]')?.value === '21:30' && document.querySelector('[data-form=\"quiet-hours\"] [name=\"end\"]')?.value === '06:30'",
+  );
+  await evaluate("document.querySelector('.quiet-hours-setting').scrollIntoView({ block: 'center' })");
+  await new Promise((resolve) => setTimeout(resolve, 120));
+  await screenshot("heartsync-cdp-notification-settings-mobile.png");
   await evaluate(`new Promise((resolve, reject) => {
     const canvas = document.createElement("canvas");
     canvas.width = 64;
