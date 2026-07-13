@@ -1131,7 +1131,7 @@ function renderToday() {
             ${checkinShareMarkup(partner, theirsShared)}
           </section>
 
-          <section class="section-panel" style="margin-top: 18px;">
+          <section class="section-panel checkin-panel">
             <div class="section-panel__head">
               <h2>Check-in của bạn</h2>
               <span>Chia sẻ với người ấy</span>
@@ -1988,20 +1988,20 @@ function renderCouple() {
         <section class="section-panel">
           <div class="section-panel__head"><h2>${partner ? "Đã xác nhận hai chiều" : "Liên kết chưa hoàn chỉnh"}</h2><i data-lucide="link-2"></i></div>
           ${partner ? `
-            <p style="color: var(--ink-soft);">Hai Gmail đã nhập mã cá nhân của nhau. Chỉ hai tài khoản này có quyền đọc dữ liệu chung.</p>
+            <p class="panel-copy">Hai Gmail đã nhập mã cá nhân của nhau. Chỉ hai tài khoản này có quyền đọc dữ liệu chung.</p>
           ` : `
-            <p style="color: var(--ink-soft);">Đây là liên kết một chiều từ bản cũ. Hãy hủy liên kết rồi ghép lại để áp dụng xác nhận bằng hai mã.</p>
+            <p class="panel-copy">Đây là liên kết một chiều từ bản cũ. Hãy hủy liên kết rồi ghép lại để áp dụng xác nhận bằng hai mã.</p>
           `}
         </section>
 
         <section class="section-panel">
           <div class="section-panel__head"><h2>Quyền riêng tư</h2><i data-lucide="shield-check"></i></div>
-          <p style="color: var(--ink-soft);">Check-in, Kho, Chu kỳ và Lịch thuộc không gian chung. Chỉ hai tài khoản đã liên kết mới có quyền đọc; cả hai đều có thể cập nhật.</p>
+          <p class="panel-copy">Check-in, Kho, Chu kỳ và Lịch thuộc không gian chung. Chỉ hai tài khoản đã liên kết mới có quyền đọc; cả hai đều có thể cập nhật.</p>
         </section>
 
         <section class="section-panel">
           <div class="section-panel__head"><h2>Liên kết tài khoản</h2><span>Thao tác nhạy cảm</span></div>
-          <p style="color: var(--ink-soft);">Hủy liên kết sẽ ngắt quyền truy cập giữa hai tài khoản.</p>
+          <p class="panel-copy">Hủy liên kết sẽ ngắt quyền truy cập giữa hai tài khoản.</p>
           <button class="btn btn--danger" type="button" data-action="leave-couple"><i data-lucide="link-2"></i> Hủy liên kết</button>
         </section>
       </div>
@@ -2046,7 +2046,7 @@ function renderSettings() {
             <div><strong>Hiện nội dung lời nhắn</strong><span>Tắt để màn hình khóa chỉ báo có tin mới.</span></div>
             <button class="switch" type="button" role="switch" aria-checked="${previewEnabled}" data-action="toggle-preview" aria-label="Hiện nội dung lời nhắn trên màn hình khóa"></button>
           </div>
-          ${isIOS && !standalone ? `<div class="waiting-band" style="margin-top: 16px;"><strong>Trên iPhone</strong><span>Thêm HeartSync vào Màn hình chính trước khi bật thông báo.</span></div>` : ""}
+          ${isIOS && !standalone ? `<div class="waiting-band waiting-band--spaced"><strong>Trên iPhone</strong><span>Thêm HeartSync vào Màn hình chính trước khi bật thông báo.</span></div>` : ""}
         </section>
 
         <section class="section-panel">
@@ -2060,7 +2060,7 @@ function renderSettings() {
 
         <section class="section-panel">
           <div class="section-panel__head"><h2>An toàn dữ liệu</h2><i data-lucide="shield-check"></i></div>
-          <p style="color: var(--ink-soft);">Quyền đọc dữ liệu được kiểm tra theo tài khoản và thành viên cặp đôi trên máy chủ.</p>
+          <p class="panel-copy">Quyền đọc dữ liệu được kiểm tra theo tài khoản và thành viên cặp đôi trên máy chủ.</p>
         </section>
       </div>
     </main>

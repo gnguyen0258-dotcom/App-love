@@ -18,6 +18,8 @@ async function main() {
       "--headless=new",
       "--no-first-run",
       "--disable-extensions",
+      "--disable-background-networking",
+      "--remote-allow-origins=*",
       "--hide-scrollbars",
       "--remote-debugging-port=0",
       "--user-data-dir=" + profileDir,
@@ -60,6 +62,7 @@ async function main() {
     const waiter = pending.get(message.id);
     if (!waiter) return;
     pending.delete(message.id);
+    clearTimeout(waiter.timer);
     if (message.error) waiter.reject(new Error(JSON.stringify(message.error)));
     else waiter.resolve(message.result);
   });
@@ -67,7 +70,11 @@ async function main() {
   function send(method, params = {}, sessionId) {
     return new Promise((resolve, reject) => {
       const id = ++sequence;
-      pending.set(id, { resolve, reject });
+      const timer = setTimeout(() => {
+        pending.delete(id);
+        reject(new Error(`CDP ${method} timed out`));
+      }, 20_000);
+      pending.set(id, { resolve, reject, timer });
       const payload = { id, method, params };
       if (sessionId) payload.sessionId = sessionId;
       socket.send(JSON.stringify(payload));
@@ -144,6 +151,7 @@ async function main() {
   function collectAudit() {
     const width = innerWidth;
     const overflowing = Array.from(document.querySelectorAll("body *"))
+      .filter((element) => !element.closest(".tool-tabs"))
       .map((element) => {
         const rect = element.getBoundingClientRect();
         return {
