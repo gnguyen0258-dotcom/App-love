@@ -1,30 +1,30 @@
 :root {
   color-scheme: light;
   font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  /* Cozy editorial palette: warm paper, emotional coral and shared-data teal. */
-  --paper: #f4efe8;
-  --paper-deep: #eae1d7;
-  --surface: #fffdfa;
-  --surface-raised: #fffaf5;
-  --surface-quiet: #f0e9e1;
-  --ink: #2b2623;
-  --ink-soft: #746b64;
-  --line: #e3d5ca;
-  --coral: #bd535e;
-  --coral-dark: #93414b;
-  --coral-soft: #f5dcde;
-  --coral-wash: #fbebeb;
-  --teal: #3f756f;
-  --teal-dark: #2e5d58;
-  --teal-soft: #dce9e5;
-  --gold: #b88a3e;
-  --gold-soft: #f3e7ca;
-  --gold-ink: #6e5423;
-  --danger: #a94652;
-  --on-teal: #fffdf9;
-  --shadow: 0 18px 44px rgba(79, 57, 42, 0.1);
-  --shadow-soft: 0 7px 22px rgba(79, 57, 42, 0.07);
-  --focus-ring: rgba(189, 83, 94, 0.2);
+  /* Private Journal palette: calm paper, berry emotion and eucalyptus sharing. */
+  --paper: #f5f4f0;
+  --paper-deep: #e9e8e2;
+  --surface: #ffffff;
+  --surface-raised: #fcfbf8;
+  --surface-quiet: #efeee9;
+  --ink: #252623;
+  --ink-soft: #6d706a;
+  --line: #deddd7;
+  --coral: #c65062;
+  --coral-dark: #8f3446;
+  --coral-soft: #f5d9dd;
+  --coral-wash: #fbeaec;
+  --teal: #3e7268;
+  --teal-dark: #244a43;
+  --teal-soft: #dceae5;
+  --gold: #bd8c35;
+  --gold-soft: #f6e9bd;
+  --gold-ink: #6b511f;
+  --danger: #a54150;
+  --on-teal: #fffefa;
+  --shadow: 0 20px 56px rgba(37, 38, 35, 0.11);
+  --shadow-soft: 0 8px 24px rgba(37, 38, 35, 0.065);
+  --focus-ring: rgba(198, 80, 98, 0.2);
   --radius: 8px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -3890,5 +3890,821 @@ select:focus-visible {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Private Journal refresh
+   A quieter product frame, editorial imagery and compact, repeatable controls.
+   -------------------------------------------------------------------------- */
+
+body {
+  font-size: 15px;
+}
+
+.btn {
+  border-radius: 7px;
+  box-shadow: none;
+}
+
+.btn:hover:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(37, 38, 35, 0.1);
+}
+
+.btn--secondary {
+  background: var(--surface);
+}
+
+.field input,
+.field textarea,
+.field select,
+.code-input {
+  min-height: 48px;
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+.field label {
+  color: #42443f;
+  font-size: 0.78rem;
+}
+
+.eyebrow,
+.page-head p,
+.today-heading p {
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+/* Entry screens use a real still-life so the product feels personal immediately. */
+.auth-shell {
+  grid-template-columns: minmax(0, 1.18fr) minmax(420px, 0.82fr);
+  background: var(--surface);
+}
+
+.auth-story {
+  padding: clamp(34px, 5vw, 72px);
+  background-color: var(--teal-dark);
+  background-image: url("/media/auth-still-life.webp");
+  background-position: center;
+  background-size: cover;
+  isolation: isolate;
+}
+
+.auth-story::before,
+.onboarding-copy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(18, 43, 38, 0.64);
+  pointer-events: none;
+}
+
+.auth-story::after {
+  inset: 22px;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.auth-story h1 {
+  max-width: 700px;
+  font-size: clamp(3.6rem, 6vw, 6.35rem);
+  line-height: 0.94;
+}
+
+.auth-story__copy {
+  margin-top: auto;
+  margin-bottom: clamp(34px, 8vh, 88px);
+}
+
+.auth-story__note {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.auth-panel {
+  padding: clamp(34px, 5vw, 76px);
+  background: var(--surface);
+}
+
+.auth-form-wrap h2 {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: clamp(2.25rem, 3vw, 3.15rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.segmented {
+  border-color: transparent;
+  background: var(--surface-quiet);
+}
+
+.segmented button[aria-selected="true"] {
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(37, 38, 35, 0.08);
+}
+
+.onboarding-shell {
+  grid-template-columns: minmax(330px, 0.72fr) minmax(0, 1.28fr);
+  background: var(--paper);
+}
+
+.onboarding-copy {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--teal-dark);
+  background-image: url("/media/auth-still-life.webp");
+  background-position: 45% center;
+  background-size: cover;
+  color: var(--on-teal);
+}
+
+.onboarding-copy::before {
+  background: rgba(22, 48, 43, 0.7);
+}
+
+.onboarding-copy h1 {
+  max-width: 560px;
+  font-size: clamp(3rem, 4.7vw, 5rem);
+  line-height: 0.96;
+}
+
+.onboarding-copy p {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.onboarding-copy .btn--quiet {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(24, 46, 42, 0.38);
+  color: var(--on-teal);
+  backdrop-filter: blur(10px);
+}
+
+.onboarding-form {
+  background: var(--paper);
+}
+
+.personal-code-panel,
+.partner-code-panel {
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: 0 10px 32px rgba(37, 38, 35, 0.06);
+}
+
+/* The desktop navigation behaves like the dark spine of a shared journal. */
+.app-shell {
+  grid-template-columns: 248px minmax(0, 1fr);
+  background: var(--paper);
+}
+
+.sidebar {
+  padding: 26px 18px 20px;
+  border-right: 0;
+  background: var(--teal-dark);
+  color: var(--on-teal);
+}
+
+.sidebar .brand-lockup {
+  padding: 0 10px 8px;
+  color: var(--on-teal);
+}
+
+.sidebar .brand-mark {
+  width: 38px;
+  height: 38px;
+  box-shadow: none;
+  transform: scale(0.86);
+}
+
+.sidebar-intro {
+  margin: 0 10px 20px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.69rem;
+  line-height: 1.45;
+}
+
+.sidebar .nav-list {
+  margin-top: 6px;
+  gap: 3px;
+}
+
+.sidebar .nav-item {
+  min-height: 43px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.sidebar .nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--on-teal);
+}
+
+.sidebar .nav-item[aria-current="page"] {
+  background: var(--coral-wash);
+  color: var(--coral-dark);
+  box-shadow: none;
+}
+
+.sidebar .nav-section-label {
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.sidebar-memory {
+  margin: auto 8px 0;
+  padding: 14px 12px;
+  border-block: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-memory span,
+.sidebar-memory strong {
+  display: block;
+}
+
+.sidebar-memory span {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+.sidebar-memory strong {
+  margin-top: 3px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1.38rem;
+  font-weight: 600;
+}
+
+.sidebar .sidebar-profile {
+  margin-top: 12px;
+  padding: 12px 8px 0;
+  border-top: 0;
+}
+
+.sidebar .profile-chip__meta strong {
+  color: var(--on-teal);
+}
+
+.sidebar .profile-chip__meta span {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sidebar .avatar {
+  border: 2px solid rgba(255, 255, 255, 0.36);
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.topbar {
+  min-height: 72px;
+  padding: 0 clamp(20px, 3.4vw, 48px);
+  border-bottom-color: rgba(222, 221, 215, 0.86);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+}
+
+.topbar__identity,
+.topbar__avatars {
+  display: flex;
+  align-items: center;
+}
+
+.topbar__identity {
+  min-width: 0;
+  flex: 1;
+  gap: 13px;
+}
+
+.topbar__avatars {
+  padding-right: 6px;
+  position: relative;
+}
+
+.avatar--topbar {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--surface);
+  background: var(--teal-soft);
+  font-size: 0.68rem;
+}
+
+.avatar--topbar + .avatar--topbar {
+  margin-left: -10px;
+}
+
+.topbar__avatars .status-dot {
+  width: 9px;
+  height: 9px;
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  border: 2px solid var(--surface);
+}
+
+.topbar__pair {
+  gap: 0;
+}
+
+.topbar__pair strong {
+  font-size: 0.84rem;
+}
+
+.topbar .icon-button {
+  width: 40px;
+  height: 40px;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.topbar .icon-button:hover:not(:disabled) {
+  border-color: var(--line);
+  background: var(--surface-quiet);
+}
+
+/* Content hierarchy stays compact so the shared moments remain the focal point. */
+.view {
+  width: min(100%, 1280px);
+  padding: clamp(30px, 3.3vw, 48px);
+  padding-bottom: 104px;
+}
+
+.page-head {
+  margin-bottom: 28px;
+  align-items: flex-end;
+}
+
+.page-head p,
+.today-heading p {
+  margin-bottom: 8px;
+  color: var(--coral-dark);
+  font-size: 0.68rem;
+}
+
+.page-title,
+.today-heading h1 {
+  max-width: 760px;
+  font-size: clamp(2.55rem, 4vw, 4.15rem);
+  line-height: 0.96;
+}
+
+.today-date {
+  display: block;
+  margin-top: 10px;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  text-transform: capitalize;
+}
+
+.page-head > .eyebrow {
+  padding: 7px 10px;
+  border: 1px solid #e8d8a8;
+  border-radius: 6px;
+  background: #fbf1cf;
+  color: var(--gold-ink);
+  white-space: nowrap;
+}
+
+.section-panel {
+  padding: 22px;
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: 0 1px 0 rgba(37, 38, 35, 0.02);
+}
+
+.section-panel__head {
+  margin-bottom: 18px;
+}
+
+.section-panel__head h2 {
+  font-size: 0.96rem;
+}
+
+.section-panel__head span {
+  font-size: 0.68rem;
+}
+
+.today-grid {
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.72fr);
+  gap: 20px;
+}
+
+.pair-pulse {
+  min-height: 324px;
+  background: var(--teal-dark);
+  box-shadow: 0 18px 46px rgba(36, 74, 67, 0.16);
+}
+
+.pair-pulse::before {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.pair-pulse--custom::after {
+  background: rgba(22, 44, 40, 0.56);
+}
+
+.pulse-person .avatar {
+  width: 72px;
+  height: 72px;
+  border-width: 2px;
+}
+
+.pulse-center__heart {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.checkin-shares {
+  margin-top: 14px;
+  gap: 14px;
+}
+
+.checkin-share,
+.checkin-share--mine {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.checkin-share--mine {
+  border-top-color: #b9d6cd;
+  background: #f6faf8;
+}
+
+.checkin-panel {
+  margin-top: 20px;
+}
+
+.mood-option,
+.need-option,
+.nudge-button {
+  border-color: var(--line);
+  background: var(--surface-raised);
+}
+
+.mood-option[aria-pressed="true"],
+.need-option[aria-pressed="true"] {
+  border-color: var(--coral);
+  background: var(--coral-wash);
+  color: var(--coral-dark);
+  box-shadow: none;
+}
+
+.aside-stack {
+  gap: 14px;
+}
+
+.aside-stack .section-panel {
+  box-shadow: none;
+}
+
+.activity-item {
+  padding-block: 11px;
+}
+
+.activity-icon {
+  background: var(--teal-soft);
+  color: var(--teal-dark);
+}
+
+/* Chat is a single focused workspace rather than another card in the page. */
+.view--chat {
+  width: min(100%, 1280px);
+  padding-top: 24px;
+}
+
+.chat-layout {
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: 0 12px 36px rgba(37, 38, 35, 0.06);
+}
+
+.chat-head {
+  min-height: 72px;
+  padding: 12px 18px;
+  background: var(--surface);
+}
+
+.chat-head__person {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.avatar--chat {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #c9dcd6;
+}
+
+.chat-head__mark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--teal-soft);
+  color: var(--teal-dark);
+}
+
+.chat-head__mark svg {
+  width: 18px;
+  height: 18px;
+}
+
+.message-list {
+  background: #f1f3f0;
+}
+
+.message-bubble {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.message-bubble--mine {
+  border-color: #efcbd0;
+  background: var(--coral-wash);
+}
+
+.composer-dock,
+.composer {
+  background: var(--surface);
+}
+
+.composer {
+  border-top-color: var(--line);
+}
+
+.composer textarea {
+  background: var(--surface-quiet);
+}
+
+.chat-picker {
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: 0 -14px 36px rgba(37, 38, 35, 0.08);
+}
+
+/* Tool pages share one rhythm; desktop navigation already exposes every tool. */
+.tool-content,
+.relationship-layout,
+.vault-form,
+.cycle-layout,
+.events-layout,
+.love-layout,
+.couple-grid,
+.settings-grid {
+  gap: 18px;
+}
+
+.relationship-counter {
+  background: var(--teal-dark);
+  box-shadow: 0 18px 46px rgba(36, 74, 67, 0.15);
+}
+
+.relationship-counter__number strong {
+  font-size: clamp(6rem, 12vw, 9.5rem);
+}
+
+.vault-section,
+.cycle-summary,
+.cycle-calendar-panel,
+.event-calendar-panel,
+.event-form-panel,
+.event-list-panel,
+.love-signal,
+.daily-encouragement-panel,
+.daily-question-panel,
+.coupon-panel {
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.size-result,
+.cycle-stat,
+.vault-form__notice,
+.legacy-notice,
+.waiting-band {
+  border-radius: var(--radius);
+}
+
+.calendar-day {
+  border-radius: 6px;
+  background: var(--surface-quiet);
+}
+
+.calendar-day:hover:not(.calendar-day--empty) {
+  background: var(--teal-soft);
+}
+
+.member-row,
+.setting-row {
+  padding-block: 14px;
+}
+
+.settings-profile-panel {
+  background: #f7faf8;
+}
+
+@media (min-width: 901px) {
+  .tool-tabs {
+    display: none;
+  }
+
+  .tools-heading {
+    margin-bottom: 28px;
+  }
+}
+
+@media (max-width: 900px) {
+  .auth-shell,
+  .onboarding-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-story {
+    min-height: 390px;
+    padding: 28px 24px 38px;
+    background-position: 54% center;
+  }
+
+  .auth-story__copy {
+    margin: 84px 0 0;
+  }
+
+  .auth-story h1 {
+    max-width: 620px;
+    font-size: clamp(3rem, 10vw, 5rem);
+  }
+
+  .auth-panel {
+    min-height: auto;
+  }
+
+  .onboarding-copy {
+    min-height: 330px;
+    padding: 28px 24px 34px;
+    background-position: center 42%;
+  }
+
+  .onboarding-copy h1 {
+    font-size: clamp(2.8rem, 9vw, 4.6rem);
+  }
+
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .main-column {
+    width: 100%;
+  }
+
+  .today-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .topbar {
+    min-height: 66px;
+  }
+
+  .view {
+    padding: 26px 20px calc(94px + var(--safe-bottom));
+  }
+
+  .mobile-nav {
+    height: calc(72px + var(--safe-bottom));
+    padding: 7px 8px var(--safe-bottom);
+    border-top-color: rgba(222, 221, 215, 0.9);
+    background: rgba(255, 255, 255, 0.94);
+  }
+
+  .mobile-nav .nav-item[aria-current="page"] {
+    background: var(--coral-wash);
+    color: var(--coral-dark);
+    box-shadow: none;
+  }
+
+  .tool-tabs {
+    margin-bottom: 20px;
+  }
+
+  .chat-layout {
+    height: calc(100dvh - 66px - 90px - var(--safe-bottom));
+  }
+}
+
+@media (max-width: 560px) {
+  .auth-story {
+    min-height: 340px;
+    padding: 24px 20px 30px;
+  }
+
+  .auth-story::after {
+    inset: 14px;
+  }
+
+  .auth-story__copy {
+    margin-top: 68px;
+  }
+
+  .auth-story h1 {
+    font-size: clamp(2.75rem, 13vw, 4rem);
+    line-height: 0.92;
+  }
+
+  .auth-story__note {
+    max-width: 330px;
+    font-size: 0.88rem;
+  }
+
+  .auth-panel {
+    padding: 34px 20px 48px;
+  }
+
+  .auth-form-wrap h2 {
+    font-size: 2.35rem;
+  }
+
+  .onboarding-copy {
+    min-height: 300px;
+  }
+
+  .onboarding-copy h1 {
+    font-size: 2.65rem;
+  }
+
+  .topbar {
+    padding: 0 14px;
+  }
+
+  .topbar__identity {
+    gap: 9px;
+  }
+
+  .avatar--topbar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .topbar__pair strong {
+    max-width: 180px;
+  }
+
+  .topbar__pair span {
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar .icon-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .page-head {
+    margin-bottom: 22px;
+    gap: 13px;
+  }
+
+  .page-title,
+  .today-heading h1 {
+    font-size: clamp(2.4rem, 11vw, 3.25rem);
+  }
+
+  .page-head > .eyebrow {
+    margin: 0;
+  }
+
+  .pair-pulse {
+    min-height: 248px;
+  }
+
+  .checkin-shares {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pulse-person .avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .section-panel {
+    padding: 18px;
+  }
+
+  .chat-head {
+    min-height: 64px;
+    padding: 10px 13px;
+  }
+
+  .avatar--chat {
+    width: 38px;
+    height: 38px;
+  }
+
+  .message-list {
+    padding: 14px;
   }
 }

@@ -796,7 +796,7 @@ function renderPairing() {
   appRoot.innerHTML = `
     <main class="onboarding-shell">
       <section class="onboarding-copy">
-        ${brandMarkup()}
+        ${brandMarkup(true)}
         <div>
           <p class="eyebrow">Xin chào ${escapeHTML(state.profile.displayName || state.user.displayName || "bạn")}</p>
           <h1>Hai mã riêng, một xác nhận chung.</h1>
@@ -922,7 +922,12 @@ function renderApp() {
     <div class="app-shell">
       <aside class="sidebar">
         ${brandMarkup()}
+        <p class="sidebar-intro">Không gian riêng của hai người.</p>
         ${navigationMarkup("desktop")}
+        <div class="sidebar-memory" aria-label="Số ngày trong không gian chung">
+          <span>Nhật ký chung</span>
+          <strong>Ngày ${relationshipDays()}</strong>
+        </div>
         <div class="sidebar-profile">
           <div class="profile-chip">
             ${avatarMarkup({ ...state.profile, displayName: me.displayName })}
@@ -936,11 +941,17 @@ function renderApp() {
 
       <div class="main-column">
         <header class="topbar">
-          <div class="topbar__pair">
-            <span class="status-dot ${online ? "status-dot--online" : ""}" aria-hidden="true"></span>
-            <div>
-              <strong>${escapeHTML(pairName)}</strong>
-              <span>${partner ? (online ? "Đang ở đây" : "Sẽ thấy lời nhắn khi quay lại") : "Liên kết cũ chưa hoàn tất"}</span>
+          <div class="topbar__identity">
+            <div class="topbar__avatars" aria-hidden="true">
+              ${avatarMarkup(me, "avatar--topbar")}
+              ${partner ? avatarMarkup(partner, "avatar--topbar") : ""}
+              <span class="status-dot ${online ? "status-dot--online" : ""}"></span>
+            </div>
+            <div class="topbar__pair">
+              <div>
+                <strong>${escapeHTML(pairName)}</strong>
+                <span>${partner ? (online ? "Đang ở đây" : "Sẽ thấy lời nhắn khi quay lại") : "Liên kết cũ chưa hoàn tất"}</span>
+              </div>
             </div>
           </div>
           <div class="topbar__actions">
@@ -1090,6 +1101,7 @@ function renderToday() {
         <div>
           <p>${timeGreeting()}, ${escapeHTML(state.profile.displayName || "bạn")}</p>
           <h1>Hôm nay của hai đứa</h1>
+          <span class="today-date">${escapeHTML(formatDate(service.todayKey(), { weekday: "long", day: "numeric", month: "long" }))}</span>
         </div>
         <span class="eyebrow">Ngày ${relationshipDays()}</span>
       </header>
@@ -1237,11 +1249,14 @@ function renderChat() {
     <main class="view view--chat" id="main-content">
       <section class="chat-layout" aria-label="Cuộc trò chuyện">
         <header class="chat-head">
-          <div>
-            <h2>${escapeHTML(partner?.displayName || "Người ấy")}</h2>
-            <p>${partner ? (partnerOnline() ? "Đang ở đây" : "Thông báo sẽ được gửi tới thiết bị") : "Chưa tham gia không gian"}</p>
+          <div class="chat-head__person">
+            ${avatarMarkup(partner || { displayName: "Người ấy" }, "avatar--chat")}
+            <div>
+              <h2>${escapeHTML(partner?.displayName || "Người ấy")}</h2>
+              <p>${partner ? (partnerOnline() ? "Đang ở đây" : "Thông báo sẽ được gửi tới thiết bị") : "Chưa tham gia không gian"}</p>
+            </div>
           </div>
-          <i data-lucide="message-circle"></i>
+          <span class="chat-head__mark"><i data-lucide="message-circle"></i></span>
         </header>
         <div class="message-list" id="message-list" aria-live="polite">
           ${messageListMarkup()}

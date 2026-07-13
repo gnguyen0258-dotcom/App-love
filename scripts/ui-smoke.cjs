@@ -575,6 +575,18 @@ async function main() {
       },
       sessionId,
     );
+    for (const route of ["today", "chat", "couple", "settings"]) {
+      await send(
+        "Page.navigate",
+        { url: baseUrl + "/?preview=app&view=" + route },
+        sessionId,
+      );
+      await new Promise((resolve) => setTimeout(resolve, 350));
+      audits.push(await audit(route + "-" + viewport.width));
+      if (viewport.width === 1440) {
+        await screenshot("heartsync-cdp-" + route + "-desktop.png");
+      }
+    }
     for (const tool of ["days", "vault", "cycle", "calendar", "love"]) {
       await send(
         "Page.navigate",
